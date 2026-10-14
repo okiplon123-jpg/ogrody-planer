@@ -7,7 +7,15 @@ import { Field, ItemThumb, MatSwatch, NumField, Seg, Select } from "./ui";
 import { polyFromPoints } from "@/lib/geometry";
 
 export const PANEL_TITLES: Record<PanelId, string> = {
-  plot: "Działka", buildings: "Budynki", surfaces: "Nawierzchnie", garden: "Ogród", elements: "Elementy", lighting: "Oświetlenie", settings: "Ustawienia",
+  plot: "Działka", buildings: "Dom", surfaces: "Nawierzchnie", garden: "Ogród", preview: "Podgląd 3D", settings: "Ustawienia",
+};
+export const PANEL_HINTS: Record<PanelId, string> = {
+  plot: "Ustaw wymiary działki. Wymiary są orientacyjne — możesz je zmienić w każdej chwili.",
+  buildings: "Przeciągnij dom (i garaż) z listy na plan, potem przesuń go w docelowe miejsce.",
+  surfaces: "Przeciągnij materiał na obszar w planie albo kliknij „Rysuj obszar” i zaznacz kształt podjazdu, tarasu lub ścieżki.",
+  garden: "Przeciągnij drzewa, krzewy i trawniki na plan. Włącz „sadzenie wielokrotne”, by stawiać wiele sztuk kliknięciami.",
+  preview: "Zobacz projekt w 3D, zmień porę dnia i dodaj lampy. Gotowe? Przejdź do podsumowania.",
+  settings: "Jednostki, siatka, zapas materiału i jakość 3D.",
 };
 
 function H({ children }: { children: React.ReactNode }) {
@@ -22,7 +30,7 @@ function LibGrid({ items }: { items: LibItem[] }) {
   return (
     <div className="grid grid-cols-2 gap-2">
       {items.map((it) => (
-        <button key={it.id} onClick={() => (s.multi && !it.group ? s.set({ armed: it, tool: "select", mode: "2d" }) : (s.set({ mode: "2d" }), s.addFromLib(it)))}
+        <button key={it.id} draggable onDragStart={(e) => { e.dataTransfer.setData("text/lib", it.id); e.dataTransfer.effectAllowed = "copy"; }} title="Przeciągnij na plan lub kliknij" onClick={() => (s.multi && !it.group ? s.set({ armed: it, tool: "select", mode: "2d" }) : (s.set({ mode: "2d" }), s.addFromLib(it)))}
           className={`group flex flex-col gap-2 border p-2 text-left transition hover:border-sage ${s.armed?.id === it.id ? "border-sage bg-botanic" : "border-[#2a342e] bg-[#181f1b]"}`}>
           <ItemThumb item={it} />
           <span className="text-[12px] leading-tight text-[#e2e9e2]">{it.name}</span>
@@ -90,7 +98,7 @@ function SurfacesPanel() {
       </div>
       <div className="grid grid-cols-3 gap-2">
         {MATERIALS.filter((m) => m.cat === cat).map((m) => (
-          <button key={m.id} onClick={() => s.applyMaterial(m.id)} className={`flex flex-col gap-1 border p-1.5 text-left transition hover:border-sage ${activeMat === m.id ? "border-sage ring-1 ring-sage" : "border-[#2a342e]"}`}>
+          <button key={m.id} draggable onDragStart={(e) => { e.dataTransfer.setData("text/mat", m.id); e.dataTransfer.effectAllowed = "copy"; }} title="Przeciągnij na obszar w planie lub kliknij" onClick={() => s.applyMaterial(m.id)} className={`flex flex-col gap-1 border p-1.5 text-left transition hover:border-sage ${activeMat === m.id ? "border-sage ring-1 ring-sage" : "border-[#2a342e]"}`}>
             <MatSwatch id={m.id} size={72} />
             <span className="text-[11px] leading-tight text-[#dfe7df]">{m.name}</span>
           </button>
@@ -135,9 +143,6 @@ function GardenPanel() {
   );
 }
 
-function ElementsPanel() {
-  return <div className="space-y-3"><LibGrid items={ELEMENT_ITEMS} /><Note>Ogrodzenie ustaw w planie i obróć uchwytem. Ogrodzenie całej działki włączysz w panelu „Działka”.</Note></div>;
-}
 function BuildingsPanel() {
   return <div className="space-y-3"><LibGrid items={BUILDING_ITEMS} /><Note>Ustaw budynek na działce, a wymiary, wysokość i elewację zmienisz w pasku właściwości pod planem. Wymiary są przybliżone.</Note></div>;
 }
@@ -147,7 +152,8 @@ function LightingPanel() {
   const lamps = s.project.objects.filter((o) => o.kind === "light").length;
   return (
     <div className="space-y-3">
-      <H>Pora dnia (widok 3D)</H>
+      <button className="pl-btn pl-btn-primary w-full !py-2.5" onClick={() => s.set({ mode: "3d" })}>Pokaż widok 3D</button>
+      <H>Pora dnia</H>
       <Seg<Lighting> value={s.project.lighting} onChange={(v) => s.patchProject({ lighting: v })} options={[{ id: "day", name: "Dzień" }, { id: "golden", name: "Złota godzina" }, { id: "evening", name: "Wieczór" }]} />
       <H>Lampy ogrodowe</H>
       <LibGrid items={[LIGHT_ITEM]} />
@@ -188,8 +194,7 @@ export function PanelContent({ id }: { id: PanelId }) {
     case "buildings": return <BuildingsPanel />;
     case "surfaces": return <SurfacesPanel />;
     case "garden": return <GardenPanel />;
-    case "elements": return <ElementsPanel />;
-    case "lighting": return <LightingPanel />;
+    case "preview": return <LightingPanel />;
     case "settings": return <SettingsPanel />;
   }
 }

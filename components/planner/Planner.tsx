@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { hasSaved, useStore, type PanelId, type ViewPreset } from "@/lib/store";
-import { PanelContent, PANEL_TITLES } from "./Panels";
+import { PanelContent, PANEL_HINTS, PANEL_TITLES } from "./Panels";
 import { PlanEditor } from "./PlanEditor";
 import { PropertiesBar } from "./PropertiesBar";
 import { Summary } from "./Summary";
@@ -17,12 +17,11 @@ const ICONS: Record<PanelId, string> = {
   buildings: "M3 21V9l9-6 9 6v12zM9 21v-6h6v6",
   surfaces: "M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z",
   garden: "M12 21V10M12 10c0-4 3-6 6-6 0 4-2 6-6 6zM12 14c0-3-2-5-5-5 0 3 2 5 5 5z",
-  elements: "M4 20V8l8-4 8 4v12M9 20v-6h6v6",
-  lighting: "M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10c1 1 1 2 1 3h6c0-1 0-2 1-3a6 6 0 0 0-4-10z",
+  preview: "M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12zM12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6z",
   settings: "M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM3 12h3M18 12h3M12 3v3M12 18v3",
 };
-const ORDER: PanelId[] = ["plot", "buildings", "surfaces", "garden", "elements", "lighting", "settings"];
-const STEPS: Record<PanelId, string> = { plot: "Krok 1 · Działka", buildings: "Krok 2 · Budynki", surfaces: "Krok 3 · Nawierzchnie", garden: "Krok 4 · Ogród", elements: "Krok 4 · Elementy", lighting: "Krok 5 · Oświetlenie", settings: "Ustawienia" };
+const ORDER: PanelId[] = ["plot", "buildings", "surfaces", "garden", "preview"];
+const STEP_NAME = (id: PanelId) => (id === "settings" ? "Ustawienia" : `Krok ${ORDER.indexOf(id) + 1} z ${ORDER.length} · ${PANEL_TITLES[id]}`);
 
 function Icon({ d }: { d: string }) {
   return <svg viewBox="0 0 24 24" width={20} height={20} fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round"><path d={d} /></svg>;
@@ -89,7 +88,9 @@ export default function Planner() {
     if (m === "2d" && s.mode === "3d") { const d = captureRef.current?.(); if (d) s.set({ preview3d: d }); }
     s.set({ mode: m, tool: "select", armed: null, drawPts: [] });
   };
-  const pick = (id: PanelId) => s.set(s.panel === id && s.panelOpen ? { panelOpen: false } : { panel: id, panelOpen: true });
+  const goto = (id: PanelId) => { if (s.mode === "3d" && id !== "preview") setMode("2d"); s.set({ panel: id, panelOpen: true, ...(id === "preview" ? { mode: "3d" as const } : {}) }); };
+  const pick = (id: PanelId) => (s.panel === id && s.panelOpen ? s.set({ panelOpen: false }) : goto(id));
+  const idx = ORDER.indexOf(s.panel);
   const view = (v: ViewPreset) => s.set({ view3d: v, cameraNonce: s.cameraNonce + 1 });
 
   return (
@@ -103,14 +104,14 @@ export default function Planner() {
         <div className="mx-1 hidden h-8 w-px bg-[#243029] md:block" />
         <div className="hidden min-w-0 md:block">
           <div className="truncate text-[13px] font-medium">{s.project.name}</div>
-          <div className="text-[10px] uppercase tracking-[.16em] text-sage">{STEPS[s.panel]}</div>
+          <div className="text-[10px] uppercase tracking-[.16em] text-sage">{STEP_NAME(s.panel)}</div>
         </div>
         <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
           <button className="pl-btn" aria-label="Cofnij" title="Cofnij (Ctrl+Z)" disabled={!s.past.length} onClick={s.undo}>↶<span className="hidden xl:inline"> Cofnij</span></button>
           <button className="pl-btn" aria-label="Ponów" title="Ponów" disabled={!s.future.length} onClick={s.redo}>↷<span className="hidden xl:inline"> Ponów</span></button>
+          <button className="pl-btn" aria-label="Ustawienia" title="Ustawienia" onClick={() => s.set({ panel: "settings", panelOpen: true })}>⚙</button>
           <button className="pl-btn hidden sm:block" onClick={s.save}>Zapisz</button>
-          <button className="pl-btn hidden sm:block" onClick={() => setMode("3d")}>Podgląd</button>
-          <button className="pl-btn pl-btn-primary !px-3 sm:!px-4" onClick={() => s.set({ summaryOpen: true })}>Podsumowanie</button>
+                    <button className="pl-btn pl-btn-primary !px-3 sm:!px-4" onClick={() => s.set({ summaryOpen: true })}>Podsumowanie</button>
         </div>
       </header>
       {mobileNote && (
@@ -126,7 +127,7 @@ export default function Planner() {
           {ORDER.map((id) => (
             <button key={id} onClick={() => pick(id)} aria-pressed={s.panel === id && s.panelOpen} title={PANEL_TITLES[id]}
               className={`flex min-w-[56px] flex-1 flex-col items-center gap-1 px-1 py-2.5 text-[9.5px] uppercase tracking-wider transition lg:flex-none lg:py-3.5 ${s.panel === id && s.panelOpen ? "bg-botanic text-sage lg:border-l-2 lg:border-sage" : "text-[#9aa79b] hover:bg-[#182019] hover:text-white lg:border-l-2 lg:border-transparent"}`}>
-              <Icon d={ICONS[id]} />{PANEL_TITLES[id]}
+              <Icon d={ICONS[id]} /><span><b className="mr-1 text-sage">{ORDER.indexOf(id) + 1}</b>{PANEL_TITLES[id]}</span>
             </button>
           ))}
         </nav>
@@ -138,7 +139,14 @@ export default function Planner() {
               <h2 className="font-serif text-2xl text-white">{PANEL_TITLES[s.panel]}</h2>
               <button className="text-stone hover:text-white lg:hidden" aria-label="Zamknij panel" onClick={() => s.set({ panelOpen: false })}>✕</button>
             </div>
+            <p className="mb-4 border-l-2 border-sage bg-botanic/40 px-3 py-2 text-[12px] leading-relaxed text-[#dfe9df]">{PANEL_HINTS[s.panel]}</p>
             <PanelContent id={s.panel} />
+            {idx >= 0 && (
+              <div className="sticky bottom-0 -mx-4 mt-6 flex gap-2 border-t border-[#243029] bg-[#121714] px-4 py-3">
+                <button className="pl-btn" disabled={idx === 0} onClick={() => goto(ORDER[idx - 1])}>← Wstecz</button>
+                {idx < ORDER.length - 1 ? <button className="pl-btn pl-btn-primary flex-1" onClick={() => goto(ORDER[idx + 1])}>Dalej: {PANEL_TITLES[ORDER[idx + 1]]} →</button> : <button className="pl-btn pl-btn-primary flex-1" onClick={() => s.set({ summaryOpen: true })}>Przejdź do podsumowania →</button>}
+              </div>
+            )}
           </aside>
         )}
 

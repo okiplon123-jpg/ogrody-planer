@@ -81,6 +81,7 @@ export const GARDEN_ITEMS: LibItem[] = [
   { id: "g-trawy5", name: "Kępa traw (5)", cat: "Rośliny trawiaste", kind: "grass", species: "trawy", w: 1, h: 1, group: 5 },
   { id: "g-donica", name: "Donica", cat: "Mała architektura", kind: "planter", w: 0.9, h: 0.9 },
   { id: "g-pergola", name: "Pergola", cat: "Mała architektura", kind: "pergola", w: 4, h: 3 },
+  { id: "g-ogrodzenie", name: "Ogrodzenie (segment)", cat: "Mała architektura", kind: "fence", w: 4, h: 0.12 },
   { id: "g-lawka", name: "Ławka", cat: "Mała architektura", kind: "bench", w: 1.6, h: 0.5 },
   { id: "g-oczko", name: "Oczko wodne", cat: "Woda", kind: "water", w: 3, h: 2.2 },
 ];
@@ -108,3 +109,5 @@ export const KIND_LABEL: Record<Kind, string> = {
 /** objects whose size is a single diameter */
 export const POINT_KINDS: Kind[] = ["tree", "shrub", "grass", "planter", "light"];
 export const SHAPE_KINDS: Kind[] = ["surface", "lawn", "bed"];
+
+export const findLibItem = (id: string) => [...GARDEN_ITEMS, ...ELEMENT_ITEMS, ...BUILDING_ITEMS, LIGHT_ITEM].find((i) => i.id === id);

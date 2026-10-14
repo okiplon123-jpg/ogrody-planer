@@ -7,7 +7,7 @@ import { polyFromPoints, uid, type V2 } from "./geometry";
 
 const KEY = "ogrody-planer:project";
 export type ViewPreset = "perspective" | "top" | "eye";
-export type PanelId = "plot" | "buildings" | "surfaces" | "garden" | "elements" | "lighting" | "settings";
+export type PanelId = "plot" | "buildings" | "surfaces" | "garden" | "preview" | "settings";
 
 interface State {
   project: Project; past: Project[]; future: Project[];
@@ -49,7 +49,7 @@ export const useStore = create<State>((set, get) => ({
   armed: null, multi: false,
   defMaterial: "kb-grafit", defPattern: "classic", defEdging: "none",
   settings: { units: "m", snap: true, grid: true, dims: true, waste: 8, quality: "high" },
-  panel: "surfaces", panelOpen: true, welcome: true, summaryOpen: false,
+  panel: "plot", panelOpen: true, welcome: true, summaryOpen: false,
   preview3d: null, savedAt: null, toast: null, viewCenter: [11, 18], fitNonce: 0,
 
   commit: () => set((s) => ({ past: [...s.past.slice(-99), s.project], future: [] })),

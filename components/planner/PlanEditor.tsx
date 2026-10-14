@@ -2,7 +2,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useStore } from "@/lib/store";
 import { PlanLayer } from "./PlanLayer";
-import { POINT_KINDS, KIND_LABEL } from "@/lib/catalog";
+import { POINT_KINDS, KIND_LABEL, findLibItem, matById } from "@/lib/catalog";
 import { fmtArea, fmtLen, localToWorld, objectArea, snapTo, worldAABB, worldToLocal, type V2 } from "@/lib/geometry";
 import type { PlanObject } from "@/lib/types";
 
@@ -205,8 +205,24 @@ export function PlanEditor() {
   );
   const handles: V2[] = sel ? ([[-1, -1], [1, -1], [1, 1], [-1, 1]] as V2[]) : [];
 
+  const onDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    const w = toWorld(e);
+    const libId = e.dataTransfer.getData("text/lib"), matId = e.dataTransfer.getData("text/mat");
+    const st = useStore.getState();
+    if (libId) { const it = findLibItem(libId); if (it) st.addFromLib(it, [sn(w[0]), sn(w[1])]); }
+    else if (matId) {
+      const m = matById(matId);
+      const hit = document.elementsFromPoint(e.clientX, e.clientY).map((el) => el.closest("[data-id]")?.getAttribute("data-id")).find(Boolean);
+      const o = st.project.objects.find((x) => x.id === hit);
+      if (o && o.kind === m.kind) { st.select(o.id); st.update(o.id, { material: matId, pattern: m.pattern ?? o.pattern }); }
+      else st.notify(o ? "Ten materiał nie pasuje do tego obiektu." : "Upuść materiał na nawierzchnię, trawnik lub rabatę w planie.");
+    }
+  };
+  const empty = project.objects.length === 0 && tool === "select";
+
   return (
-    <div ref={wrap} className="absolute inset-0 select-none overflow-hidden bg-[#1a211d]" style={{ cursor: tool === "draw" || armed ? "crosshair" : "default", touchAction: "none" }}>
+    <div ref={wrap} onDragOver={(e) => e.preventDefault()} onDrop={onDrop} className="absolute inset-0 select-none overflow-hidden bg-[#1a211d]" style={{ cursor: tool === "draw" || armed ? "crosshair" : "default", touchAction: "none" }}>
       <svg ref={svgRef} className="absolute inset-0 h-full w-full" onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} onDoubleClick={() => tool === "draw" && s.finishDraw()} role="application" aria-label="Plan działki 2D">
         <g transform={`translate(${cam.x} ${cam.y}) scale(${cam.z})`}>
           <PlanLayer project={project} grid={settings.grid}>
@@ -254,7 +270,21 @@ export function PlanEditor() {
         </g>
       </svg>
 
-      <div className="pointer-events-none absolute left-3 top-3 flex flex-col gap-2 text-[11px]">
+      <div className="absolute left-3 top-14 z-10 flex flex-col border border-[#2f3a33] bg-[#101411]/95 text-[12px]">
+        <button onClick={() => s.cancelDraw()} className={`px-3 py-2 text-left ${tool === "select" ? "bg-sage text-charcoal" : "text-[#dfe7df] hover:bg-botanic"}`}>↖ Zaznacz i przesuwaj</button>
+        {([["surface", "Rysuj nawierzchnię"], ["lawn", "Rysuj trawnik"], ["bed", "Rysuj rabatę"]] as const).map(([k, n]) => (
+          <button key={k} onClick={() => s.startDraw(k, k === "surface" ? "other" : undefined)} className={`border-t border-[#243029] px-3 py-2 text-left ${tool === "draw" && s.drawKind === k ? "bg-sage text-charcoal" : "text-[#dfe7df] hover:bg-botanic"}`}>✎ {n}</button>
+        ))}
+      </div>
+      {empty && (
+        <div className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center">
+          <div className="max-w-sm border border-dashed border-sage/60 bg-charcoal/70 p-6 text-center text-[13px] leading-relaxed text-[#dfe7df]">
+            <div className="font-serif text-2xl text-white">Pusta działka</div>
+            Przeciągnij „Dom jednorodzinny” z panelu po lewej na plan — od tego zacznij.
+          </div>
+        </div>
+      )}
+      <div className="pointer-events-none absolute left-3 top-[220px] flex flex-col gap-2 text-[11px]">
         {tool === "draw" && (
           <div className="pointer-events-auto flex items-center gap-2 border border-sage/50 bg-charcoal/90 px-3 py-2 text-sage">
             Rysowanie: kliknij kolejne narożniki ({drawPts.length}). Zamknij kształt klikając pierwszy punkt lub Enter.

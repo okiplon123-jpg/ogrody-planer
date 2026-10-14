@@ -24,10 +24,9 @@ export function Hero() {
       <div ref={bg} className="absolute inset-0 will-change-transform"><Art kind="house" /></div>
       <div className="absolute inset-0 bg-gradient-to-t from-charcoal via-charcoal/40 to-charcoal/50" />
       <div className="relative mx-auto w-full max-w-[1400px] px-5 pb-40 pt-40 md:px-10">
-        <p className="h-fade eyebrow mb-6 text-sage">Nawierzchnie · ogrody · zagospodarowanie posesji</p>
-        <h1 className="font-serif text-[clamp(3.2rem,9vw,8.5rem)] font-medium leading-[0.95]">
+                <h1 className="font-serif text-[clamp(3.2rem,9vw,8.5rem)] font-medium leading-[0.95]">
           <span className="block overflow-hidden"><span className="h-line block">Przestrzeń,</span></span>
-          <span className="block overflow-hidden"><span className="h-line block italic text-sage">która robi wrażenie.</span></span>
+          <span className="block overflow-hidden"><span className="h-line block ">która robi wrażenie.</span></span>
         </h1>
         <p className="h-fade mt-8 max-w-xl text-lg leading-relaxed text-white/80">Projektujemy i realizujemy nawierzchnie, ogrody oraz kompletne zagospodarowanie posesji. Od pierwszego pomysłu po gotową przestrzeń.</p>
         <div className="h-fade mt-10 flex flex-wrap gap-4">
@@ -37,7 +36,7 @@ export function Hero() {
       </div>
       <div className="absolute inset-x-0 bottom-0 border-t border-white/20 bg-charcoal/55 backdrop-blur-sm">
         <ul className="mx-auto grid max-w-[1400px] grid-cols-2 md:grid-cols-4">
-          {STRIP.map((t, i) => <li key={t} className="flex items-center gap-3 border-white/15 px-5 py-4 text-[13px] tracking-wide md:border-l md:px-10 first:md:border-l-0"><span className="font-serif text-sage">0{i + 1}</span>{t}</li>)}
+          {STRIP.map((t) => <li key={t} className="flex items-center gap-3 border-white/15 px-5 py-4 text-[13px] tracking-wide md:border-l md:px-10 first:md:border-l-0">{t}</li>)}
         </ul>
       </div>
     </section>
