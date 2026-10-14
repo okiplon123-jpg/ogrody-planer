@@ -1,24 +1,19 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond, Inter } from "next/font/google";
+import { Bricolage_Grotesque, IBM_Plex_Mono, Instrument_Sans } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ variable: "--font-inter", subsets: ["latin", "latin-ext"] });
-const cormorant = Cormorant_Garamond({
-  variable: "--font-cormorant",
-  subsets: ["latin", "latin-ext"],
-  weight: ["400", "500", "600"],
-  style: ["normal", "italic"],
-});
+const display = Bricolage_Grotesque({ variable: "--font-display", subsets: ["latin", "latin-ext"], axes: ["opsz"] });
+const mono = IBM_Plex_Mono({ variable: "--font-plexmono", subsets: ["latin", "latin-ext"], weight: ["400", "500"] });
+const body = Instrument_Sans({ variable: "--font-body", subsets: ["latin", "latin-ext"] });
 
 export const metadata: Metadata = {
-  title: "NAZWA MARKI — kostka brukowa, ogrody i zagospodarowanie posesji",
-  description:
-    "Projektujemy i realizujemy nawierzchnie, ogrody oraz kompletne zagospodarowanie posesji. Zaprojektuj swoją posesję w interaktywnym planerze 2D/3D.",
+  title: "Kostka brukowa — podjazdy, tarasy, ścieżki | NAZWA MARKI [miasto]",
+  description: "Układamy kostkę brukową: podjazdy, tarasy, ścieżki i place. Przymierz kostkę na zdjęciu swojego domu w wizualizatorze.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pl" className={`${inter.variable} ${cormorant.variable}`}>
+    <html lang="pl" className={`${display.variable} ${mono.variable} ${body.variable}`}>
       <body>{children}</body>
     </html>
   );

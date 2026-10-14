@@ -1,20 +1,33 @@
 import Link from "next/link";
-import { Photo } from "@/components/marketing/Art";
-import { SERVICES } from "@/lib/content";
-export const metadata = { title: "Usługi — NAZWA MARKI" };
+import { PhotoSlot } from "@/components/marketing/PhotoSlot";
+export const metadata = { title: "Co układamy: podjazdy, tarasy, ścieżki z kostki — NAZWA MARKI [miasto]" };
+
+const ITEMS = [
+  ["Podjazdy i wjazdy", "Najczęstsza praca. Dobieramy szerokość pod auta, spadek odprowadzający wodę od domu i wzór, który nie męczy oka.", ["pomiar i wytyczenie", "wykop i podbudowa", "obrzeża", "kostka i fugowanie"], "podjazd z kostki — całość i detal krawędzi"],
+  ["Tarasy", "Płyta lub kostka przy domu. Najważniejszy jest spadek od ściany i odpływ wody, zanim pomyślimy o wzorze.", ["spadki i odwodnienie", "podbudowa", "płyty lub kostka"], "taras przy domu, widok z ogrodu"],
+  ["Ścieżki i chodniki", "Od furtki do drzwi i dookoła domu. Równe, antypoślizgowe, z obrzeżem, które trzyma kształt.", ["wytyczenie", "podbudowa", "kostka", "obrzeża"], "ścieżka z kostki wzdłuż trawnika"],
+  ["Place i parkingi", "Większe obciążenia wymagają grubszej podbudowy i innego doboru kostki. Liczymy to dla konkretnego gruntu.", ["badanie gruntu", "gruba podbudowa", "kostka na obciążenie"], "plac przy budynku"],
+  ["Obrzeża, schody, opaski", "Elementy, których nie widać z daleko, a które decydują, jak nawierzchnia trzyma się latami.", ["obrzeża betonowe", "schody", "opaska wokół domu"], "schody z kostki, detal"],
+];
 export default function Page() {
   return (
-    <div className="pt-36">
-      <div className="mx-auto max-w-[1400px] px-5 md:px-10"><h1 className="max-w-3xl font-serif text-6xl leading-none md:text-8xl">Wszystko, czego potrzebuje Twoja posesja</h1></div>
-      <div className="mx-auto mt-20 max-w-[1400px] space-y-24 px-5 pb-28 md:px-10">
-        {SERVICES.map((s, i) => (
-          <section key={s.id} id={s.id} className={`grid items-center gap-10 md:grid-cols-2 ${i % 2 ? "md:[&>*:first-child]:order-2" : ""}`}>
-            <div className="aspect-[4/3] overflow-hidden"><Photo kind={s.art} /></div>
-            <div><h2 className="mt-2 font-serif text-4xl md:text-5xl">{s.title}</h2><p className="mt-4 max-w-lg text-lg leading-relaxed text-charcoal/70">{s.long}</p>
-              <Link href="/planer" className="btn btn-line mt-6">Zaplanuj w planerze</Link></div>
-          </section>
-        ))}
-      </div>
+    <div>
+      <section className="border-b-[1.5px] border-ink px-5 py-14 md:px-8 md:py-24">
+        <div className="mx-auto max-w-[1500px]"><p className="eyebrow text-rust">Zakres prac</p><h1 className="mt-3 max-w-4xl font-serif text-[clamp(3rem,7vw,7rem)] leading-[0.92]">Co układamy i jak to robimy.</h1></div>
+      </section>
+      {ITEMS.map(([t, d, steps, ph], i) => (
+        <section key={t as string} className={`border-b-[1.5px] border-ink ${i % 2 ? "bg-concrete/40" : ""}`}>
+          <div className={`mx-auto grid max-w-[1500px] md:grid-cols-12 ${i % 2 ? "md:[&>*:first-child]:order-2" : ""}`}>
+            <div className="min-h-[300px] md:col-span-5"><PhotoSlot brief={ph as string} className="border-0" /></div>
+            <div className="px-5 py-10 md:col-span-7 md:px-12 md:py-14">
+              <h2 className="font-serif text-5xl leading-none md:text-6xl">{t as string}</h2>
+              <p className="mt-5 max-w-xl text-xl leading-relaxed text-ink/75">{d as string}</p>
+              <ol className="eyebrow mt-8 flex flex-wrap gap-x-2 gap-y-2">{(steps as string[]).map((s, k) => <li key={s} className="flex items-center gap-2"><span className="border-[1.5px] border-ink px-2 py-1">{s}</span>{k < (steps as string[]).length - 1 && <span className="text-rust">→</span>}</li>)}</ol>
+            </div>
+          </div>
+        </section>
+      ))}
+      <section className="px-5 py-16 md:px-8"><div className="mx-auto flex max-w-[1500px] flex-wrap items-center justify-between gap-6"><p className="max-w-xl font-serif text-4xl leading-tight">Nie wiesz, co wybrać? Przymierz kostkę na zdjęciu swojego domu.</p><Link href="/wizualizator" className="btn btn-rust">Przymierz kostkę →</Link></div></section>
     </div>
   );
 }

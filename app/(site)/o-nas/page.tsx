@@ -1,15 +1,18 @@
-import Link from "next/link";
-import { Photo } from "@/components/marketing/Art";
-export const metadata = { title: "O nas — NAZWA MARKI" };
+import { PhotoSlot } from "@/components/marketing/PhotoSlot";
+export const metadata = { title: "O nas — ekipa od kostki brukowej NAZWA MARKI [miasto]" };
 export default function Page() {
   return (
-    <div className="pt-36">
-      <div className="mx-auto grid max-w-[1400px] items-center gap-12 px-5 pb-28 md:grid-cols-2 md:px-10">
-        <div><h1 className="font-serif text-6xl leading-none md:text-8xl">Przestrzeń wokół domu to część architektury</h1>
-          <p className="mt-6 max-w-lg text-lg leading-relaxed text-charcoal/70">[Miejsce na historię firmy.] Łączymy prace ziemne, nawierzchnie, ogród i oświetlenie w jeden spójny proces — z jednym zespołem odpowiedzialnym za całość. Tekst zastąpimy opisem prawdziwej firmy.</p>
-          <ul className="mt-8 space-y-2 font-serif text-2xl">{["Kompleksowa obsługa posesji", "Przemyślany dobór materiałów", "Dbałość o detale", "Indywidualne podejście"].map((t) => <li key={t}>— {t}</li>)}</ul>
-          <Link href="/kontakt" className="btn btn-dark mt-8">Skontaktuj się z nami</Link></div>
-        <div className="aspect-[4/5] overflow-hidden"><Photo kind="garden" /></div>
+    <div className="mx-auto max-w-[1100px] px-5 py-14 md:px-8 md:py-24">
+      <p className="eyebrow text-rust">O nas</p>
+      <h1 className="mt-3 font-serif text-[clamp(3rem,7vw,6.5rem)] leading-[0.92]">Mała ekipa. Kostka od początku do końca.</h1>
+      <div className="mt-12 grid gap-8 md:grid-cols-[1fr_1.2fr]">
+        <div className="h-[420px]"><PhotoSlot brief="ekipa przy pracy na placu budowy, ujęcie z boku, bez pozowania" /></div>
+        <div className="space-y-5 text-xl leading-relaxed text-ink/80">
+          <p>[Tu historia firmy: od kiedy układacie kostkę, skąd jesteście, jak zaczęliście. Prawdziwe zdania, nie hasła.]</p>
+          <p>[Kto jest w ekipie, kto przyjeżdża na pomiar, kto układa. Imiona i zdjęcia.]</p>
+          <p>[Jedna konkretna historia trudnej realizacji: teren, problem, rozwiązanie.]</p>
+          <p className="eyebrow border-t-[1.5px] border-ink pt-4 text-ink/60">Działamy: [miasto i okolice, promień km] · Sprzęt: [lista maszyn] · Pn–pt [godziny]</p>
+        </div>
       </div>
     </div>
   );

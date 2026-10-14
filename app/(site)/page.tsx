@@ -1,91 +1,117 @@
 import Link from "next/link";
-import { Hero } from "@/components/marketing/Hero";
+import { PhotoSlot } from "@/components/marketing/PhotoSlot";
+import { Swatches } from "@/components/marketing/Swatches";
+import { Faq } from "@/components/marketing/Faq";
+import { ContactForm } from "@/components/marketing/ContactForm";
+import { VisualizerLoader } from "@/components/visualizer/VisualizerLoader";
 import { Reveal } from "@/components/marketing/Reveal";
-import { PlannerShowcase } from "@/components/marketing/PlannerShowcase";
-import { BeforeAfter } from "@/components/marketing/BeforeAfter";
-import { Portfolio } from "@/components/marketing/Portfolio";
-import { Photo } from "@/components/marketing/Art";
-import { SERVICES } from "@/lib/content";
 
-const STEPS = [["01", "Poznajemy Twoje potrzeby", "Rozmawiamy o tym, jak korzystasz z domu i ogrodu."], ["02", "Projektujemy przestrzeń", "Układamy nawierzchnie, zieleń i światło w spójną całość."], ["03", "Ustalamy zakres", "Doprecyzowujemy materiały i etapy prac."], ["04", "Realizujemy Twój projekt", "Jeden zespół prowadzi prace od przygotowania terenu do końca."]];
-const WHY = ["Kompleksowa obsługa posesji", "Przemyślany dobór materiałów", "Dbałość o detale", "Indywidualne podejście", "Jeden zespół odpowiedzialny za realizację"];
+const WORK = [
+  ["Podjazdy i wjazdy", "Szerokość pod samochody, spadek od domu, krawędź, która się nie rozjeżdża.", "podjazd z kostki, widok od ulicy"],
+  ["Tarasy", "Płyty lub kostka przy domu, na stabilnej podbudowie, z odpływem wody.", "taras przy domu, ekipa przy układaniu"],
+  ["Ścieżki i chodniki", "Od furtki do drzwi i dookoła domu — antypoślizgowo i równo.", "ścieżka z kostki między trawnikiem a domem"],
+  ["Place i miejsca postojowe", "Większe powierzchnie pod obciążenie: parkingi, place gospodarcze.", "plac z kostki przy budynku gospodarczym"],
+  ["Obrzeża, schody, opaski", "Wykończenia, które decydują o tym, jak nawierzchnia się trzyma i wygląda.", "detal obrzeża i schodków"],
+];
+const LAYERS = [
+  ["Kostka lub płyta", "Warstwa, którą widać. Wzór i kolor dobierasz do domu — możesz go przymierzyć w wizualizatorze.", "#6c6f70"],
+  ["Podsypka", "Cienka warstwa piasku lub grysu, w której osadzamy kostkę i wyrównujemy powierzchnię.", "#d8c89c"],
+  ["Podbudowa", "Kruszywo zagęszczane warstwami. To ona niesie ciężar i decyduje, czy nawierzchnia za 5 lat będzie równa. Grubość zależy od gruntu i obciążenia.", "#9a958a"],
+  ["Grunt rodzimy", "Oceniamy, co jest pod spodem, i ustalamy odwodnienie oraz spadki, zanim cokolwiek położymy.", "#4a3f33"],
+];
 
 export default function Home() {
   return (
     <>
-      <Hero />
-
-      <section className="bg-forest py-24 text-white md:py-32">
-        <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-          <Reveal className="grid items-end gap-8 md:grid-cols-2">
-            <div>
-              <h2 className="font-serif text-5xl leading-[1.02] md:text-7xl">Zobacz swój ogród, zanim powstanie.</h2>
+      <section className="border-b-[1.5px] border-ink">
+        <div className="mx-auto grid max-w-[1500px] md:grid-cols-12">
+          <div className="px-5 py-12 md:col-span-7 md:px-8 md:py-20">
+            <p className="eyebrow text-rust">Kostka brukowa · [miasto i okolice]</p>
+            <h1 className="mt-5 font-serif text-[clamp(3.4rem,8.4vw,9rem)] leading-[0.9]">Układamy kostkę brukową.</h1>
+            <p className="mt-8 max-w-xl text-xl leading-relaxed text-ink/80">Podjazdy, tarasy, ścieżki i place wokół domu — od pomiaru i podbudowy po fugowanie. Przyjeżdżamy, oglądamy teren i mówimy wprost, co się opłaca.</p>
+            <div className="mt-9 flex flex-wrap gap-3">
+              <a href="tel:+48000000000" className="btn btn-rust">Zadzwoń [telefon]</a>
+              <Link href="/wizualizator" className="btn btn-line">Przymierz kostkę na swoim zdjęciu →</Link>
             </div>
-            <p className="max-w-lg text-lg leading-relaxed text-white/75">Stwórz własny projekt posesji. Dobierz kostkę, zaplanuj podjazd, dodaj trawnik i roślinność, a następnie zobacz efekt w trójwymiarze.</p>
-          </Reveal>
-          <Reveal className="mt-14"><PlannerShowcase /></Reveal>
-          <Reveal className="mt-12 grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
-            <ul className="grid gap-6 sm:grid-cols-3">
-              {["Projektujesz samodzielnie.", "Widzisz efekt w 3D.", "Zapisujesz projekt i pobierasz wizualizację."].map((t, i) => <li key={t} className="border-t border-sage/60 pt-4"><p className="text-lg text-white/90">{t}</p></li>)}
-            </ul>
-            <Link href="/planer" className="btn btn-sage">Otwórz planer ogrodu</Link>
-          </Reveal>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-[1400px] px-5 py-24 md:px-10 md:py-32">
-        <Reveal className="mb-14 flex flex-wrap items-end justify-between gap-6">
-          <div><h2 className="font-serif text-5xl md:text-6xl">Od nawierzchni po ostatnią roślinę</h2></div>
-          <Link href="/uslugi" className="btn btn-line">Wszystkie usługi</Link>
-        </Reveal>
-        <div className="grid gap-x-6 gap-y-14 md:grid-cols-3">
-          {SERVICES.map((s, i) => (
-            <Reveal key={s.id} delay={(i % 3) * 120}>
-              <Link href="/uslugi" className="group block">
-                <div className={`overflow-hidden ${i % 2 ? "aspect-[4/5]" : "aspect-[4/4.6]"}`}><div className="h-full w-full transition duration-[1400ms] group-hover:scale-105"><Photo kind={s.art} /></div></div>
-                <h3 className="mt-5 font-serif text-3xl">{s.title}</h3>
-                <p className="mt-2 text-[15px] leading-relaxed text-charcoal/70">{s.text}</p>
-                <span className="mt-3 inline-block border-b border-forest pb-0.5 text-[12px] uppercase tracking-[.16em] text-forest transition group-hover:pl-2">Dowiedz się więcej →</span>
-              </Link>
-            </Reveal>
-          ))}
-        </div>
-      </section>
-
-      <section className="bg-sand py-24 md:py-32">
-        <div className="mx-auto max-w-[1200px] px-5 md:px-10">
-          <Reveal className="mb-10 text-center"><h2 className="font-serif text-5xl md:text-6xl">Przemiana, którą widać</h2><p className="mt-3 text-sm text-charcoal/60">Ilustracja demonstracyjna — przesuń suwak.</p></Reveal>
-          <Reveal><BeforeAfter /></Reveal>
-        </div>
-      </section>
-
-      <section className="mx-auto max-w-[1400px] px-5 py-24 md:px-10 md:py-32">
-        <Reveal className="mb-12 flex flex-wrap items-end justify-between gap-6"><div><h2 className="font-serif text-5xl md:text-6xl">Projekty demonstracyjne</h2></div></Reveal>
-        <Portfolio />
-      </section>
-
-      <section className="bg-ivory pb-24 md:pb-32">
-        <div className="mx-auto max-w-[1400px] px-5 md:px-10">
-          <Reveal className="mb-12"><h2 className="font-serif text-5xl md:text-6xl">Cztery kroki do gotowej przestrzeni</h2></Reveal>
-          <div className="grid gap-px bg-charcoal/15 md:grid-cols-4">
-            {STEPS.map(([n, t, d], i) => <Reveal key={n} delay={i * 100} className="bg-ivory p-8"><span className="font-serif text-6xl text-forest/30">{n}</span><h3 className="mt-6 font-serif text-2xl">{t}</h3><p className="mt-2 text-sm leading-relaxed text-charcoal/65">{d}</p></Reveal>)}
+          </div>
+          <div className="relative min-h-[360px] border-ink md:col-span-5 md:border-l-[1.5px]">
+            <PhotoSlot brief="gotowy podjazd z szarej kostki w jodełkę, ujęcie od ulicy, światło poranne" className="absolute inset-0 border-0" />
+            <div className="absolute left-4 right-4 top-12 flex items-center gap-3"><span className="eyebrow bg-paper px-2 py-1">[m²]</span><span className="dim-line h-4 flex-1" /><span className="eyebrow bg-paper px-2 py-1">[miejscowość]</span></div>
           </div>
         </div>
       </section>
 
-      <section className="bg-charcoal py-24 text-white md:py-28">
-        <div className="mx-auto grid max-w-[1400px] gap-12 px-5 md:grid-cols-[1fr_1.4fr] md:px-10">
-          <Reveal><h2 className="font-serif text-5xl leading-tight md:text-6xl">Detale decydują o całości</h2></Reveal>
-          <ul>{WHY.map((w) => <Reveal key={w}><li className="flex items-baseline gap-5 border-b border-white/15 py-5"><span className="font-serif text-2xl md:text-3xl">{w}</span></li></Reveal>)}</ul>
+      <section className="border-b-[1.5px] border-ink bg-concrete/40">
+        <div className="mx-auto max-w-[1500px] px-5 py-14 md:px-8 md:py-20">
+          <div className="mb-8 grid gap-4 md:grid-cols-[1.2fr_1fr] md:items-end">
+            <h2 className="font-serif text-5xl leading-none md:text-7xl">Zobacz kostkę na swoim podjeździe.</h2>
+            <p className="max-w-md text-lg text-ink/75">Wgraj zdjęcie, zaznacz cztery rogi nawierzchni i przymierz kolory oraz wzory. Zdjęcie zostaje w Twojej przeglądarce.</p>
+          </div>
+          <VisualizerLoader />
         </div>
       </section>
 
-      <section className="relative isolate overflow-hidden py-32 text-white md:py-44">
-        <div className="absolute inset-0 -z-10"><Photo kind="house" /></div><div className="absolute inset-0 -z-10 bg-charcoal/55" />
-        <Reveal className="mx-auto max-w-[1000px] px-5 text-center">
-          <h2 className="font-serif text-5xl leading-[1.02] md:text-8xl">Zacznij od pomysłu. Resztę zaprojektujemy razem.</h2>
-          <div className="mt-10 flex flex-wrap justify-center gap-4"><Link href="/planer" className="btn btn-sage">Zaprojektuj swoją posesję</Link><Link href="/kontakt" className="btn btn-ghost">Skontaktuj się z nami</Link></div>
-        </Reveal>
+      <section className="mx-auto max-w-[1500px] px-5 py-16 md:px-8 md:py-24">
+        <Reveal><h2 className="max-w-3xl font-serif text-5xl leading-none md:text-7xl">Co układamy.</h2></Reveal>
+        <div className="mt-10 border-t-[1.5px] border-ink">
+          {WORK.map(([t, d, ph], i) => (
+            <Reveal key={t}>
+              <div className={`grid items-stretch gap-0 border-b-[1.5px] border-ink md:grid-cols-[1fr_1.1fr_240px] ${i % 2 ? "md:bg-concrete/30" : ""}`}>
+                <h3 className="px-0 py-6 font-serif text-3xl md:px-6 md:text-4xl">{t}</h3>
+                <p className="max-w-lg self-center pb-4 text-lg text-ink/75 md:px-6 md:pb-0">{d}</p>
+                <div className="h-36 md:h-auto md:min-h-[120px] md:border-l-[1.5px] md:border-ink"><PhotoSlot brief={ph} className="border-0" /></div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+        <p className="mt-6 max-w-2xl text-ink/70">Przy okazji kostki zajmiemy się też tym, co jest wokół niej: ogrodzeniem, trawnikiem i rabatami. Ale kostka to to, w czym jesteśmy najlepsi. [do potwierdzenia przez firmę]</p>
+      </section>
+
+      <section className="border-y-[1.5px] border-ink bg-ink text-paper">
+        <div className="mx-auto grid max-w-[1500px] gap-10 px-5 py-16 md:grid-cols-[1fr_1.3fr] md:px-8 md:py-24">
+          <div className="md:sticky md:top-24 md:self-start">
+            <p className="eyebrow text-rust">Przekrój B-B</p>
+            <h2 className="mt-3 font-serif text-5xl leading-none md:text-7xl">Dobra kostka zaczyna się pod kostką.</h2>
+            <p className="mt-6 max-w-md text-lg text-paper/75">Wiele problemów — zapadnięcia, kałuże, rozchodzące się spoiny — bierze się z podbudowy. Dlatego od niej zaczynamy.</p>
+          </div>
+          <div className="border-[1.5px] border-paper/80">
+            {LAYERS.map(([t, d, c], i) => (
+              <div key={t} className={`grid grid-cols-[18px_1fr] ${i ? "border-t-[1.5px] border-paper/80" : ""}`}>
+                <div style={{ background: c }} />
+                <div className="p-5 md:p-7"><h3 className="font-serif text-3xl">{t}</h3><p className="mt-2 text-paper/75">{d}</p></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-[1500px] px-5 py-16 md:px-8 md:py-24">
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-4"><h2 className="font-serif text-5xl leading-none md:text-7xl">Kostki, które układamy.</h2><Link href="/wizualizator" className="btn btn-line">Przymierz na zdjęciu →</Link></div>
+        <Swatches />
+        <p className="mt-3 text-sm text-ink/60">Wzory poglądowe. Dokładne kolory i producentów pokażemy na próbkach. [do uzupełnienia]</p>
+      </section>
+
+      <section className="border-y-[1.5px] border-ink bg-concrete/40">
+        <div className="mx-auto max-w-[1500px] px-5 py-16 md:px-8 md:py-24">
+          <div className="mb-10 flex flex-wrap items-end justify-between gap-4"><h2 className="font-serif text-5xl leading-none md:text-7xl">Z ostatnich realizacji.</h2><Link href="/realizacje" className="btn btn-line">Wszystkie →</Link></div>
+          <div className="space-y-12">
+            {[["Podjazd, szara kostka, jodełka", "right"], ["Taras przy domu, płyty wielkoformatowe", "left"], ["Ścieżka i opaska wokół domu", "right"]].map(([t, side], i) => (
+              <article key={t} className={`grid gap-6 md:grid-cols-12 md:items-end ${side === "left" ? "md:[&>*:first-child]:order-2" : ""}`}>
+                <div className={`h-[300px] md:h-[420px] ${i === 1 ? "md:col-span-5" : "md:col-span-7"}`}><PhotoSlot brief={`${t} — ujęcie całości`} /></div>
+                <div className={i === 1 ? "md:col-span-7" : "md:col-span-5"}>
+                  <h3 className="font-serif text-4xl leading-tight md:text-5xl">{t}</h3>
+                  <dl className="eyebrow mt-4 grid grid-cols-3 gap-3 border-t-[1.5px] border-ink pt-3"><div><dt className="text-ink/50">Powierzchnia</dt><dd>[m²]</dd></div><div><dt className="text-ink/50">Materiał</dt><dd>[kostka]</dd></div><div><dt className="text-ink/50">Czas</dt><dd>[dni]</dd></div></dl>
+                  <p className="mt-4 text-ink/70">[Krótki opis: jaki był teren, co było trudne, jak to rozwiązaliśmy.]</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto grid max-w-[1500px] gap-12 px-5 py-16 md:grid-cols-[1.3fr_1fr] md:px-8 md:py-24">
+        <div><h2 className="mb-8 font-serif text-5xl leading-none md:text-7xl">Pytania, które słyszymy.</h2><Faq /></div>
+        <div className="border-[1.5px] border-ink bg-concrete/40 p-6 md:self-start"><ContactForm /><p className="eyebrow mt-5 text-ink/60">albo zadzwoń: [telefon] · pn–pt [godziny]</p></div>
       </section>
     </>
   );
