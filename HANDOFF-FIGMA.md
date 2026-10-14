@@ -10,12 +10,7 @@ Nie ma formularza wyceny ani przycisku „do wyceny”. Planer kończy się ekra
 https://github.com/okiplon123-jpg/ogrody-planer (publiczne, gałąź `main`)
 
 ## Zgłoszone problemy (najważniejsze do dalszej pracy)
-1. **Planer był mało intuicyjny.** Już poprawione zachowawczo w kodzie:
-   - 5 numerowanych kroków (Działka → Dom → Nawierzchnie → Ogród → Podgląd 3D) z podpowiedzią i przyciskami Wstecz/Dalej; ostatni krok prowadzi do podsumowania.
-   - Przeciąganie z biblioteki na plan; materiał przeciągany na nawierzchnię/trawnik/rabatę.
-   - Podpisana paleta narzędzi na planie: Zaznacz i przesuwaj / Rysuj nawierzchnię / trawnik / rabatę. Pusta działka podpowiada pierwszy ruch.
-   - Zniknęły zakładki „Elementy” i „Oświetlenie” (ogrodzenie w Ogrodzie, lampy i pora dnia w Podglądzie 3D); ustawienia pod ikoną ⚙.
-   Nadal do przemyślenia przez projektanta: uchwyty zmiany rozmiaru/obrotu, czytelność stanu zaznaczenia, pasek właściwości pod planem, osobny prostszy układ mobilny (dziś tylko ostrzeżenie), onboarding przy pierwszym uruchomieniu.
+1. **Planer został odchudzony do podstaw.** Jeden panel „Dodaj do działki” z 9 elementami (Dom, Podjazd, Taras, Ścieżka, Trawnik, Rabata, Drzewo, Krzewy, Lampa) — klik albo przeciągnięcie na plan. Wymiary działki wpisuje się w pasku u góry. Po zaznaczeniu obiektu pojawia się mały pasek: próbki materiału, układ kostki, gatunek, Obróć/Duplikuj/Usuń; rozmiar zmienia się uchwytami na planie. Przełącznik Plan / 3D oraz przycisk „Gotowe” (podsumowanie). Bez kroków, bez ekranu powitalnego, bez ustawień. Do zaprojektowania przez projektanta: wygląd całości, stan pusty, uchwyty, wersja mobilna.
 2. **Wygląd „jak od AI” — NIE rozwiązane.** Zamiast zdjęć są ilustracje SVG (`components/marketing/Art.tsx`); zdjęcia podmienia się przez prop `src` komponentu `Photo`. Usunięto tylko część szablonowych elementów (etykiety nad nagłówkami, numerację, kursywę w kolorze akcentu). Brakuje własnego języka wizualnego, prawdziwej fotografii i copywritingu — to zadanie dla projektanta.
 
 ## Co działa (logika do zachowania)
@@ -24,7 +19,7 @@ https://github.com/okiplon123-jpg/ogrody-planer (publiczne, gałąź `main`)
 - Katalog materiałów/roślin: `lib/catalog.ts`; tekstury proceduralne: `lib/textures.ts`.
 - Stan + undo/redo + zapis (localStorage): `lib/store.ts`; projekt przykładowy: `lib/sample.ts`.
 - Plan 2D: `components/planner/PlanLayer.tsx` (render), `PlanEditor.tsx` (interakcje).
-- Scena 3D: `components/planner/Scene3D.tsx`.
+- Scena 3D: `components/planner/Scene3D.tsx` (czysta bryła architektoniczna: gładkie rośliny, światło otoczenia, ambient occlusion; to nie jest fotorealizm — wyższy poziom wymaga gotowych modeli glTF albo renderu poza przeglądarką).
 - UI planera: `Planner.tsx`, `Panels.tsx`, `PropertiesBar.tsx`, `Summary.tsx`.
 - Strona: `app/(site)/*`, `components/marketing/*`, treści w `lib/content.ts`.
 

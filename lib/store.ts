@@ -43,13 +43,13 @@ interface State {
 let toastTimer: ReturnType<typeof setTimeout> | undefined;
 
 export const useStore = create<State>((set, get) => ({
-  project: sampleProject(), past: [], future: [],
+  project: emptyProject(20, 30), past: [], future: [],
   selectedId: null, mode: "2d", view3d: "perspective", cameraNonce: 0,
   tool: "select", drawPts: [], drawKind: "surface", drawUse: "other",
   armed: null, multi: false,
   defMaterial: "kb-grafit", defPattern: "classic", defEdging: "none",
   settings: { units: "m", snap: true, grid: true, dims: true, waste: 8, quality: "high" },
-  panel: "plot", panelOpen: true, welcome: true, summaryOpen: false,
+  panel: "plot", panelOpen: true, welcome: false, summaryOpen: false,
   preview3d: null, savedAt: null, toast: null, viewCenter: [11, 18], fitNonce: 0,
 
   commit: () => set((s) => ({ past: [...s.past.slice(-99), s.project], future: [] })),
@@ -99,7 +99,8 @@ export const useStore = create<State>((set, get) => ({
     const base: Omit<PlanObject, "id" | "x" | "y"> = {
       kind: item.kind, w: item.w, h: item.h, rot: 0, species: item.species, height: item.height,
       material: item.material, facade: item.kind === "house" || item.kind === "garage" ? "white" : undefined,
-      ...(item.kind === "lawn" || item.kind === "bed" ? { poly: [[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]] as V2[] } : {}),
+      pattern: item.pattern, use: item.use,
+      ...(item.kind === "lawn" || item.kind === "bed" || item.kind === "surface" ? { poly: [[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]] as V2[] } : {}),
     };
     get().commit();
     let last = "";

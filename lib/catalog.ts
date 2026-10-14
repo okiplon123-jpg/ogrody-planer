@@ -57,7 +57,7 @@ export const SPECIES: Record<string, Species> = {
 
 export interface LibItem {
   id: string; name: string; cat: string; kind: Kind; species?: string;
-  w: number; h: number; height?: number; group?: number; material?: string; use?: SurfaceUse;
+  w: number; h: number; height?: number; group?: number; material?: string; use?: SurfaceUse; pattern?: Pattern;
 }
 export const GARDEN_CATS = [
   "Trawniki", "Drzewa", "Krzewy", "Żywopłoty", "Rabaty", "Rośliny ozdobne", "Rośliny trawiaste", "Mała architektura", "Woda",
@@ -110,4 +110,18 @@ export const KIND_LABEL: Record<Kind, string> = {
 export const POINT_KINDS: Kind[] = ["tree", "shrub", "grass", "planter", "light"];
 export const SHAPE_KINDS: Kind[] = ["surface", "lawn", "bed"];
 
-export const findLibItem = (id: string) => [...GARDEN_ITEMS, ...ELEMENT_ITEMS, ...BUILDING_ITEMS, LIGHT_ITEM].find((i) => i.id === id);
+
+/** The only things the simplified planner offers. */
+export const SIMPLE_ITEMS: LibItem[] = [
+  { id: "s-dom", name: "Dom", cat: "", kind: "house", w: 12, h: 9, height: 6.5 },
+  { id: "s-podjazd", name: "Podjazd", cat: "", kind: "surface", w: 3.5, h: 8, material: "ks-czarna", pattern: "herringbone", use: "driveway" },
+  { id: "s-taras", name: "Taras", cat: "", kind: "surface", w: 5, h: 4, material: "pt-wielko", pattern: "modern", use: "terrace" },
+  { id: "s-sciezka", name: "Ścieżka", cat: "", kind: "surface", w: 1.2, h: 6, material: "kb-szara", pattern: "classic", use: "path" },
+  { id: "s-trawnik", name: "Trawnik", cat: "", kind: "lawn", w: 6, h: 4, material: "tr-rolowany" },
+  { id: "s-rabata", name: "Rabata", cat: "", kind: "bed", w: 4, h: 1.6, material: "rb-kora" },
+  { id: "s-drzewo", name: "Drzewo", cat: "", kind: "tree", species: "klon", w: 4, h: 4 },
+  { id: "s-krzewy", name: "Krzewy", cat: "", kind: "shrub", species: "hortensja", w: 1.2, h: 1.2, group: 3 },
+  { id: "s-lampa", name: "Lampa", cat: "", kind: "light", w: 0.4, h: 0.4 },
+];
+
+export const findLibItem = (id: string) => [...SIMPLE_ITEMS, ...GARDEN_ITEMS, ...ELEMENT_ITEMS, ...BUILDING_ITEMS, LIGHT_ITEM].find((i) => i.id === id);

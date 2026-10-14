@@ -2,6 +2,8 @@
 import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
+import { EffectComposer, N8AO } from "@react-three/postprocessing";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import * as THREE from "three";
 import type { Lighting, PlanObject, Project } from "@/lib/types";
 import { localPoly } from "@/lib/geometry";
@@ -12,10 +14,10 @@ import type { ViewPreset } from "@/lib/store";
 const rad = (d: number) => (d * Math.PI) / 180;
 const hash = (a: number, b: number) => { const x = Math.sin(a * 127.1 + b * 311.7) * 43758.5453; return x - Math.floor(x); };
 
-const PRESETS: Record<Lighting, { bg: string; sun: [number, number, number]; sunColor: string; sunI: number; sky: string; ground: string; hemiI: number; lamp: number; ground2: string }> = {
-  day: { bg: "#cfe2ec", sun: [20, 30, 14], sunColor: "#fff3de", sunI: 2.8, sky: "#dcebf6", ground: "#7b8a62", hemiI: 1.0, lamp: 0.0, ground2: "#8aa070" },
-  golden: { bg: "#e9b88b", sun: [-30, 11, 18], sunColor: "#ffae62", sunI: 3.2, sky: "#ffd8b0", ground: "#6d6048", hemiI: 0.55, lamp: 1.0, ground2: "#8b8a5a" },
-  evening: { bg: "#0d1728", sun: [-12, 16, -16], sunColor: "#7f9ad4", sunI: 0.55, sky: "#25385e", ground: "#161d14", hemiI: 0.45, lamp: 2.6, ground2: "#2b3a24" },
+const PRESETS: Record<Lighting, { bg: string; sun: [number, number, number]; sunColor: string; sunI: number; sky: string; ground: string; hemiI: number; lamp: number; ground2: string; env: number }> = {
+  day: { bg: "#e6edf0", sun: [22, 30, 14], sunColor: "#fff6e6", sunI: 2.6, sky: "#e9f0f5", ground: "#9aa58a", hemiI: 0.55, lamp: 0.0, ground2: "#dfe2d6", env: 0.55 },
+  golden: { bg: "#f0d8be", sun: [-30, 11, 18], sunColor: "#ffb26e", sunI: 3.0, sky: "#ffe2c4", ground: "#8a7d62", hemiI: 0.35, lamp: 1.0, ground2: "#d9d2bd", env: 0.3 },
+  evening: { bg: "#18233a", sun: [-12, 16, -16], sunColor: "#8aa3d8", sunI: 0.5, sky: "#2b3d63", ground: "#1b2418", hemiI: 0.3, lamp: 2.6, ground2: "#2a3326", env: 0.12 },
 };
 
 const texCache = new Map<string, THREE.CanvasTexture>();
@@ -33,9 +35,9 @@ function getTex(matId: string, pattern?: string) {
   return t;
 }
 
-const ICO = new THREE.IcosahedronGeometry(1, 1);
-const CONE = new THREE.ConeGeometry(1, 1, 9);
-const CYL = new THREE.CylinderGeometry(1, 1, 1, 10);
+const ICO = new THREE.IcosahedronGeometry(1, 3);
+const CONE = new THREE.ConeGeometry(1, 1, 24);
+const CYL = new THREE.CylinderGeometry(1, 1, 1, 24);
 const BLADE = new THREE.ConeGeometry(1, 1, 4).translate(0, 0.5, 0);
 const ROT_Y = (o: PlanObject) => [0, -rad(o.rot), 0] as [number, number, number];
 
@@ -73,6 +75,7 @@ function Glass({ w, h, x, y, z, ry = 0, lit }: { w: number; h: number; x: number
     <mesh position={[x, y, z]} rotation={[0, ry, 0]}>
       <boxGeometry args={[w, h, 0.06]} />
       <meshStandardMaterial color="#1e2a33" metalness={0.7} roughness={0.12} emissive="#ffc67a" emissiveIntensity={lit * 0.9} />
+      <mesh position={[0, 0, -0.015]}><boxGeometry args={[w + 0.12, h + 0.12, 0.03]} /><meshStandardMaterial color="#25292b" roughness={0.5} /></mesh>
     </mesh>
   );
 }
@@ -119,7 +122,7 @@ function Tree({ o, lit }: { o: PlanObject; lit: boolean }) {
   const f = o.w / sp.d, H = sp.height * f, r = o.w / 2;
   const seed = o.x * 13 + o.y * 7;
   const dark = lit ? 0.75 : 1;
-  const mat = (c: string) => <meshStandardMaterial color={c} flatShading roughness={0.95} />;
+  const mat = (c: string) => <meshStandardMaterial color={c} roughness={0.9} />;
   const trunk = (h: number, rr: number, c = "#5a4330") => <mesh geometry={CYL} position={[0, h / 2, 0]} scale={[rr, h, rr]} castShadow><meshStandardMaterial color={c} roughness={1} /></mesh>;
   void dark;
   if (sp.style === "cone") {
@@ -148,8 +151,8 @@ function Tree({ o, lit }: { o: PlanObject; lit: boolean }) {
     <group position={[o.x, 0, o.y]}>
       {trunk(th + canopyH * 0.2, (sp.style === "birch" ? 0.07 : 0.11) * Math.max(f, 0.8) + 0.04, light ? "#e5e3dc" : "#5a4330")}
       <mesh geometry={ICO} position={[0, th + canopyH * 0.5, 0]} scale={[r * (light ? 0.7 : 0.85), canopyH * 0.5, r * (light ? 0.7 : 0.85)]} castShadow>{mat(sp.color)}</mesh>
-      {Array.from({ length: light ? 5 : 6 }, (_, i) => {
-        const a = (i / 6) * 6.28 + seed;
+      {Array.from({ length: light ? 7 : 10 }, (_, i) => {
+        const a = (i / 7) * 6.28 * 1.1 + seed;
         const rr = r * (light ? 0.3 : 0.5);
         return <mesh key={i} geometry={ICO} position={[Math.cos(a) * rr, th + canopyH * (0.25 + hash(i, seed) * 0.55), Math.sin(a) * rr]} scale={[r * 0.45, canopyH * 0.26, r * 0.45]} castShadow>{mat(i % 3 === 0 && sp.accent && !light ? "#6d8a3a" : sp.color)}</mesh>;
       })}
@@ -161,8 +164,8 @@ function Hedge({ o }: { o: PlanObject }) {
   const sp = SPECIES.zywoplot;
   return (
     <group position={[o.x, 0, o.y]} rotation={ROT_Y(o)}>
-      <mesh position={[0, sp.height / 2, 0]} castShadow receiveShadow><boxGeometry args={[o.w, sp.height, o.h]} /><meshStandardMaterial color={sp.color} roughness={1} flatShading /></mesh>
-      {Array.from({ length: Math.round(Math.max(o.w, o.h) / 0.8) }, (_, i) => { const t = ((i + 0.5) / Math.round(Math.max(o.w, o.h) / 0.8) - 0.5) * Math.max(o.w, o.h); return <mesh key={i} geometry={ICO} position={o.h > o.w ? [0, sp.height, t] : [t, sp.height, 0]} scale={[Math.min(o.w, o.h) * 0.5, 0.3, Math.min(o.w, o.h) * 0.5]}><meshStandardMaterial color="#336b45" flatShading /></mesh>; })}
+      <mesh position={[0, sp.height / 2, 0]} castShadow receiveShadow><boxGeometry args={[o.w, sp.height, o.h]} /><meshStandardMaterial color={sp.color} roughness={1} /></mesh>
+      {Array.from({ length: Math.round(Math.max(o.w, o.h) / 0.8) }, (_, i) => { const t = ((i + 0.5) / Math.round(Math.max(o.w, o.h) / 0.8) - 0.5) * Math.max(o.w, o.h); return <mesh key={i} geometry={ICO} position={o.h > o.w ? [0, sp.height, t] : [t, sp.height, 0]} scale={[Math.min(o.w, o.h) * 0.5, 0.3, Math.min(o.w, o.h) * 0.5]}><meshStandardMaterial color="#336b45" /></mesh>; })}
     </group>
   );
 }
@@ -219,7 +222,7 @@ function Misc({ o, lamp, lampLight }: { o: PlanObject; lamp: number; lampLight: 
       return (
         <group position={pos} rotation={ROT_Y(o)}>
           <mesh position={[0, 0.3, 0]} castShadow><boxGeometry args={[o.w, 0.6, o.w]} /><meshStandardMaterial color="#3e4244" roughness={0.6} /></mesh>
-          <mesh geometry={ICO} position={[0, 0.75, 0]} scale={[o.w * 0.42, 0.35, o.w * 0.42]} castShadow><meshStandardMaterial color="#5f8f45" flatShading /></mesh>
+          <mesh geometry={ICO} position={[0, 0.75, 0]} scale={[o.w * 0.42, 0.35, o.w * 0.42]} castShadow><meshStandardMaterial color="#5f8f45" /></mesh>
         </group>
       );
     case "water":
@@ -297,7 +300,14 @@ function Atmosphere({ lighting, quality }: { lighting: Lighting; quality: "high"
   const P = PRESETS[lighting];
   const sun = useRef<THREE.DirectionalLight>(null);
   const hemi = useRef<THREE.HemisphereLight>(null);
-  const { scene } = useThree();
+  const { scene, gl } = useThree();
+  useEffect(() => {
+    const pm = new THREE.PMREMGenerator(gl);
+    const env = pm.fromScene(new RoomEnvironment(), 0.04).texture;
+    scene.environment = env;
+    return () => { scene.environment = null; env.dispose(); pm.dispose(); };
+  }, [gl, scene]);
+  useEffect(() => { scene.environmentIntensity = P.env; }, [scene, P.env]);
   const tgt = useMemo(() => ({ bg: new THREE.Color(P.bg), sun: new THREE.Color(P.sunColor), sky: new THREE.Color(P.sky), gr: new THREE.Color(P.ground), pos: new THREE.Vector3(...P.sun) }), [P]);
   useFrame((_, dt) => {
     const k = Math.min(1, dt * 3);
@@ -309,7 +319,7 @@ function Atmosphere({ lighting, quality }: { lighting: Lighting; quality: "high"
   return (
     <>
       <color attach="background" args={[P.bg]} />
-      <fog attach="fog" args={[P.bg, 90, 300]} />
+      <fog attach="fog" args={[P.bg, 70, 230]} />
       <hemisphereLight ref={hemi} args={[P.sky, P.ground, P.hemiI]} />
       <directionalLight ref={sun} position={P.sun} intensity={P.sunI} color={P.sunColor} castShadow={quality === "high"} shadow-mapSize={[2048, 2048]} shadow-camera-left={-34} shadow-camera-right={34} shadow-camera-top={34} shadow-camera-bottom={-34} shadow-camera-near={1} shadow-camera-far={140} shadow-bias={-0.0004} shadow-normalBias={0.04} />
     </>
@@ -360,7 +370,7 @@ function World({ project, quality }: { project: Project; quality: "high" | "low"
         <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, L / 2 + 1]} receiveShadow><planeGeometry args={[600, 1.8]} /><meshStandardMaterial color="#a2a49e" roughness={0.9} /></mesh>
         <Neighbours project={project} col={project.lighting === "evening" ? "#c8c8c2" : "#e4e1d8"} />
       </group>
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[W / 2, 0.003, L / 2]} receiveShadow><planeGeometry args={[W, L]} /><meshStandardMaterial color="#a89f88" roughness={1} /></mesh>
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[W / 2, 0.003, L / 2]} receiveShadow><planeGeometry args={[W, L]} /><meshStandardMaterial color="#cdc6b3" roughness={1} /></mesh>
       {objs.map((o, i) => {
         const lit = lampK * 0.7 + 0.15;
         switch (o.kind) {
@@ -395,6 +405,11 @@ export default function Scene3D({ project, view, nonce, quality, visible = true,
       <Atmosphere lighting={project.lighting} quality={quality} />
       <World project={project} quality={quality} />
       <OrbitControls makeDefault enableDamping dampingFactor={0.08} maxPolarAngle={Math.PI / 2 - 0.02} minDistance={2} maxDistance={160} enableZoom={!lockZoom} autoRotate={autoRotate} autoRotateSpeed={0.5} />
+      {quality === "high" && (
+        <EffectComposer multisampling={4}>
+          <N8AO aoRadius={1.6} distanceFalloff={1} intensity={2.4} color="black" quality="medium" />
+        </EffectComposer>
+      )}
       <Rig view={view} nonce={nonce} plot={project.plot} reduced={!!reduced} />
       <Capture fn={captureRef ?? fallback} />
     </Canvas>
