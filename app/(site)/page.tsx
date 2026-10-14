@@ -7,11 +7,11 @@ import { VisualizerLoader } from "@/components/visualizer/VisualizerLoader";
 import { Reveal } from "@/components/marketing/Reveal";
 
 const WORK: string[][] = [
-  ["Podjazdy i wjazdy", "Szerokość pod samochody, spadek od domu, krawędź, która się nie rozjeżdża.", "podjazd z kostki, widok od ulicy", "/zdjecia/trawnik-przed-domem.jpg", "stock"],
-  ["Tarasy", "Płyty lub kostka przy domu, na stabilnej podbudowie, z odpływem wody.", "taras przy domu", "/zdjecia/taras-drewno-1.jpg", "stock"],
-  ["Ścieżki i chodniki", "Od furtki do drzwi i dookoła domu — antypoślizgowo i równo.", "ścieżka z kostki między trawnikiem a domem", "/zdjecia/dom-ogrod-rosliny.jpg", "stock"],
+  ["Podjazdy i wjazdy", "Szerokość pod samochody, spadek od domu, krawędź, która się nie rozjeżdża.", "podjazd z kostki, widok od ulicy"],
+  ["Tarasy", "Płyty lub kostka przy domu, na stabilnej podbudowie, z odpływem wody.", "taras przy domu"],
+  ["Ścieżki i chodniki", "Od furtki do drzwi i dookoła domu — antypoślizgowo i równo.", "ścieżka z kostki między trawnikiem a domem"],
   ["Place i miejsca postojowe", "Większe powierzchnie pod obciążenie: parkingi, place gospodarcze.", "plac z kostki przy budynku gospodarczym", "/zdjecia/plac-przy-kosciele.jpg", ""],
-  ["Obrzeża, schody, opaski", "Wykończenia, które decydują o tym, jak nawierzchnia się trzyma i wygląda.", "detal obrzeża i schodków", "/zdjecia/sciezka-kamien.jpg", "stock"],
+  ["Obrzeża, schody, opaski", "Wykończenia, które decydują o tym, jak nawierzchnia się trzyma i wygląda.", "detal obrzeża i schodków"],
 ];
 const LAYERS = [
   ["Kostka lub płyta", "Warstwa, którą widać. Wzór i kolor dobierasz do domu — możesz go przymierzyć w wizualizatorze.", "#6c6f70"],
@@ -64,11 +64,7 @@ export default function Home() {
             </Reveal>
           ))}
         </div>
-        <div className="mt-10 grid gap-5 md:grid-cols-[1fr_1fr_1.1fr] md:items-end">
-          <div className="h-[260px]"><PhotoSlot src="/zdjecia/dom-patio-trawnik.jpg" stock alt="Dom z tarasem i trawnikiem" brief="trawnik i taras" /></div>
-          <div className="h-[260px]"><PhotoSlot src="/zdjecia/dom-ogrod-rosliny.jpg" stock alt="Ogród ze ścieżką z kamienia" brief="ogród i ścieżka" className="object-[50%_70%]" /></div>
-          <p className="text-lg leading-relaxed text-ink/75">Przy okazji kostki zajmiemy się też tym, co jest wokół niej: trawnikiem, rabatami i ogrodzeniem. Ale kostka to to, w czym jesteśmy najlepsi. [do potwierdzenia przez firmę]</p>
-        </div>
+        <p className="mt-8 max-w-2xl text-lg leading-relaxed text-ink/75">Przy okazji kostki zajmiemy się też tym, co jest wokół niej: trawnikiem, rabatami i ogrodzeniem. Ale kostka to to, w czym jesteśmy najlepsi. [do potwierdzenia przez firmę]</p>
       </section>
 
       <section className="border-y-[1.5px] border-ink bg-ink text-paper">
