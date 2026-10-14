@@ -1,20 +1,24 @@
-"use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { MATERIALS } from "@/lib/catalog";
-import { textureUrl } from "@/lib/textures";
 
-const PICK = ["kb-grafit", "kb-szara", "kb-melanz", "kb-piasek", "ks-czarna", "ks-jasna", "pt-wielko", "kn-granit"];
+const ITEMS = [
+  ["kostka-geometryczna", "Szara, kształt Z", "50% 35%"],
+  ["kostka-jodelka-szara", "Szara, jodełka", "50% 50%"],
+  ["kostka-jodelka-brazowa", "Brązowa, jodełka", "50% 40%"],
+  ["kostka-czerwona", "Ceglasta, jodełka", "50% 50%"],
+];
+/** Photos are generic close-ups (Pexels). Replace with photos of the company's own sample boards. */
 export function Swatches() {
-  const [ok, setOk] = useState(false);
-  useEffect(() => setOk(true), []);
   return (
     <div className="grid grid-cols-2 border-[1.5px] border-ink md:grid-cols-4">
-      {PICK.map((id, i) => { const m = MATERIALS.find((x) => x.id === id)!; return (
-        <Link href="/wizualizator" key={id} className={`group block border-ink ${i % 4 ? "md:border-l-[1.5px]" : ""} ${i % 2 ? "border-l-[1.5px] md:border-l-[1.5px]" : ""} ${i > 1 ? "border-t-[1.5px]" : ""} ${i > 3 ? "md:border-t-[1.5px]" : "md:border-t-0"}`}>
-          <div className="aspect-[4/3] overflow-hidden" style={ok ? { backgroundImage: `url(${textureUrl(id, m.pattern)})`, backgroundSize: "260px" } : { background: m.color }} />
-          <div className="flex items-baseline justify-between px-3 py-2"><span className="font-serif text-lg">{m.name}</span><span className="eyebrow text-rust opacity-0 transition group-hover:opacity-100">przymierz →</span></div>
-        </Link>); })}
+      {ITEMS.map(([f, name, pos], i) => (
+        <Link href="/wizualizator" key={f} className={`group block border-ink ${i % 2 ? "border-l-[1.5px]" : ""} ${i > 1 ? "border-t-[1.5px] md:border-t-0" : ""} ${i > 0 ? "md:border-l-[1.5px]" : ""}`}>
+          <div className="aspect-[4/3] overflow-hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={`/zdjecia/${f}.jpg`} alt={`Kostka: ${name}`} loading="lazy" className="h-full w-full object-cover transition duration-700 group-hover:scale-105" style={{ objectPosition: pos }} />
+          </div>
+          <div className="flex items-baseline justify-between px-3 py-2"><span className="font-serif text-lg">{name}</span><span className="eyebrow text-rust opacity-0 transition group-hover:opacity-100">przymierz →</span></div>
+        </Link>
+      ))}
     </div>
   );
 }

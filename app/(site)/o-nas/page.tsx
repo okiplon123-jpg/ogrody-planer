@@ -6,7 +6,7 @@ export default function Page() {
       <p className="eyebrow text-rust">O nas</p>
       <h1 className="mt-3 font-serif text-[clamp(3rem,7vw,6.5rem)] leading-[0.92]">Mała ekipa. Kostka od początku do końca.</h1>
       <div className="mt-12 grid gap-8 md:grid-cols-[1fr_1.2fr]">
-        <div className="h-[420px]"><PhotoSlot src="/zdjecia/plac-przy-kosciele.jpg" alt="Zagęszczarka na świeżo ułożonym placu" brief="ekipa przy pracy" className="object-[50%_62%]" /></div>
+        <div className="h-[420px]"><PhotoSlot brief="[zdjęcie z realizacji]" /></div>
         <div className="space-y-5 text-xl leading-relaxed text-ink/80">
           <p>[Tu historia firmy: od kiedy układacie kostkę, skąd jesteście, jak zaczęliście. Prawdziwe zdania, nie hasła.]</p>
           <p>[Kto jest w ekipie, kto przyjeżdża na pomiar, kto układa. Imiona i zdjęcia.]</p>

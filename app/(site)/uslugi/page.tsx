@@ -6,7 +6,7 @@ const ITEMS: (string | string[])[][] = [
   ["Podjazdy i wjazdy", "Najczęstsza praca. Dobieramy szerokość pod auta, spadek odprowadzający wodę od domu i wzór, który nie męczy oka.", ["pomiar i wytyczenie", "wykop i podbudowa", "obrzeża", "kostka i fugowanie"], "podjazd z kostki — całość i detal krawędzi"],
   ["Tarasy", "Płyta lub kostka przy domu. Najważniejszy jest spadek od ściany i odpływ wody, zanim pomyślimy o wzorze.", ["spadki i odwodnienie", "podbudowa", "płyty lub kostka"], "taras przy domu, widok z ogrodu"],
   ["Ścieżki i chodniki", "Od furtki do drzwi i dookoła domu. Równe, antypoślizgowe, z obrzeżem, które trzyma kształt.", ["wytyczenie", "podbudowa", "kostka", "obrzeża"], "ścieżka z kostki wzdłuż trawnika"],
-  ["Place i parkingi", "Większe obciążenia wymagają grubszej podbudowy i innego doboru kostki. Liczymy to dla konkretnego gruntu.", ["badanie gruntu", "gruba podbudowa", "kostka na obciążenie"], "plac przy budynku", "/zdjecia/plac-przy-kosciele.jpg", ""],
+  ["Place i parkingi", "Większe obciążenia wymagają grubszej podbudowy i innego doboru kostki. Liczymy to dla konkretnego gruntu.", ["badanie gruntu", "gruba podbudowa", "kostka na obciążenie"], "plac przy budynku"],
   ["Obrzeża, schody, opaski", "Elementy, których nie widać z daleko, a które decydują, jak nawierzchnia trzyma się latami.", ["obrzeża betonowe", "schody", "opaska wokół domu"], "schody z kostki, detal"],
 ];
 export default function Page() {
