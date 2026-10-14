@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { PhotoSlot } from "@/components/marketing/PhotoSlot";
 import { Swatches } from "@/components/marketing/Swatches";
 import { Faq } from "@/components/marketing/Faq";
 import { ContactForm } from "@/components/marketing/ContactForm";
@@ -34,9 +33,14 @@ export default function Home() {
               <Link href="/wizualizator" className="btn btn-line">Przymierz kostkę na swoim zdjęciu →</Link>
             </div>
           </div>
-          <div className="relative min-h-[360px] border-ink md:col-span-5 md:border-l-[1.5px]">
-            <div className="absolute inset-0"><PhotoSlot src="/zdjecia/podjazd-cegla-luk.jpg" stock alt="Zakrzywiona ścieżka z kostki w ogrodzie" brief="nawierzchnia z kostki" className="object-[50%_96%]" /></div>
-            <div className="absolute left-4 right-4 top-12 flex items-center gap-3"><span className="eyebrow bg-paper px-2 py-1">ścieżka z kostki w ogrodzie</span><span className="dim-line h-4 flex-1" /><span className="eyebrow bg-paper px-2 py-1">[m²] · [miejscowość]</span></div>
+          <div className="grid min-h-[380px] grid-cols-2 border-ink md:col-span-5 md:border-l-[1.5px]">
+            {[["kostka-jodelka-szara", "szara · jodełka"], ["kostka-geometryczna", "szara · kształt Z"], ["kostka-jodelka-brazowa", "brąz · jodełka"], ["kostka-czerwona", "ceglasta · jodełka"]].map(([f, n], i) => (
+              <Link key={f} href="/wizualizator" className={`group relative block overflow-hidden border-ink ${i % 2 ? "border-l-[1.5px]" : ""} ${i > 1 ? "border-t-[1.5px]" : ""}`}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={`/zdjecia/${f}.jpg`} alt={`Kostka ${n}`} className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-105" />
+                <span className="eyebrow absolute bottom-2 left-2 bg-paper px-2 py-1">{n}</span>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
@@ -54,17 +58,16 @@ export default function Home() {
       <section className="mx-auto max-w-[1500px] px-5 py-16 md:px-8 md:py-24">
         <Reveal><h2 className="max-w-3xl font-serif text-5xl leading-none md:text-7xl">Co układamy.</h2></Reveal>
         <div className="mt-10 border-t-[1.5px] border-ink">
-          {WORK.map(([t, d, ph, src, st], i) => (
+          {WORK.map(([t, d]) => (
             <Reveal key={t}>
-              <div className={`grid items-stretch gap-0 border-b-[1.5px] border-ink md:grid-cols-[1fr_1.1fr_240px] ${i % 2 ? "md:bg-concrete/30" : ""}`}>
-                <h3 className="px-0 py-6 font-serif text-3xl md:px-6 md:text-4xl">{t}</h3>
-                <p className="max-w-lg self-center pb-4 text-lg text-ink/75 md:px-6 md:pb-0">{d}</p>
-                <div className="relative h-44 md:h-auto md:min-h-[200px] md:border-l-[1.5px] md:border-ink"><div className="absolute inset-0"><PhotoSlot brief={ph} src={src || undefined} stock={st === "stock"} alt={t} className="border-0" /></div></div>
-              </div>
+              <Link href="/wizualizator" className="group grid items-center gap-2 border-b-[1.5px] border-ink py-6 transition hover:bg-concrete/40 md:grid-cols-[1fr_1.1fr_auto] md:gap-8 md:px-4">
+                <h3 className="font-serif text-3xl md:text-5xl">{t}</h3>
+                <p className="max-w-lg text-lg text-ink/75">{d}</p>
+                <span className="eyebrow text-rust md:text-right">przymierz kostkę →</span>
+              </Link>
             </Reveal>
           ))}
         </div>
-        <p className="mt-8 max-w-2xl text-lg leading-relaxed text-ink/75">Przy okazji kostki zajmiemy się też tym, co jest wokół niej: trawnikiem, rabatami i ogrodzeniem. Ale kostka to to, w czym jesteśmy najlepsi. [do potwierdzenia przez firmę]</p>
       </section>
 
       <section className="border-y-[1.5px] border-ink bg-ink text-paper">
@@ -91,25 +94,7 @@ export default function Home() {
         <p className="mt-3 text-sm text-ink/60">Zdjęcia poglądowe wzorów. Dokładne kolory i producentów pokażemy na próbkach. [do uzupełnienia]</p>
       </section>
 
-      <section className="border-y-[1.5px] border-ink bg-concrete/40">
-        <div className="mx-auto max-w-[1500px] px-5 py-16 md:px-8 md:py-24">
-          <div className="mb-10 flex flex-wrap items-end justify-between gap-4"><h2 className="font-serif text-5xl leading-none md:text-7xl">Z ostatnich realizacji.</h2><Link href="/realizacje" className="btn btn-line">Wszystkie →</Link></div>
-          <div className="space-y-12">
-            {[["Ścieżka z kostki w ogrodzie", "right"], ["Obrzeża i schody w parku", "left"], ["Ścieżka z płyt kamiennych", "right"]].map(([t, side], i) => (
-              <article key={t} className={`grid gap-6 md:grid-cols-12 md:items-end ${side === "left" ? "md:[&>*:first-child]:order-2" : ""}`}>
-                <div className={`h-[300px] md:h-[420px] ${i === 1 ? "md:col-span-5" : "md:col-span-7"}`}><PhotoSlot brief={`${t} — ujęcie całości`} src={["/zdjecia/podjazd-cegla-luk.jpg", "/zdjecia/sciezka-park.jpg", "/zdjecia/sciezka-kwiaty.jpg"][i]} stock alt={t} /></div>
-                <div className={i === 1 ? "md:col-span-7" : "md:col-span-5"}>
-                  <h3 className="font-serif text-4xl leading-tight md:text-5xl">{t}</h3>
-                  <dl className="eyebrow mt-4 grid grid-cols-3 gap-3 border-t-[1.5px] border-ink pt-3"><div><dt className="text-ink/50">Powierzchnia</dt><dd>[m²]</dd></div><div><dt className="text-ink/50">Materiał</dt><dd>[kostka]</dd></div><div><dt className="text-ink/50">Czas</dt><dd>[dni]</dd></div></dl>
-                  <p className="mt-4 text-ink/70">[Krótki opis: jaki był teren, co było trudne, jak to rozwiązaliśmy.]</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="mx-auto grid max-w-[1500px] gap-12 px-5 py-16 md:grid-cols-[1.3fr_1fr] md:px-8 md:py-24">
+            <section className="mx-auto grid max-w-[1500px] gap-12 px-5 py-16 md:grid-cols-[1.3fr_1fr] md:px-8 md:py-24">
         <div><h2 className="mb-8 font-serif text-5xl leading-none md:text-7xl">Pytania, które słyszymy.</h2><Faq /></div>
         <div className="border-[1.5px] border-ink bg-concrete/40 p-6 md:self-start"><ContactForm /><p className="eyebrow mt-5 text-ink/60">albo zadzwoń: [telefon] · pn–pt [godziny]</p></div>
       </section>

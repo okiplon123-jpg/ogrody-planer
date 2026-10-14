@@ -3,7 +3,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-const LINKS = [["/uslugi", "Co układamy"], ["/realizacje", "Realizacje"], ["/wizualizator", "Wizualizator"], ["/o-nas", "O nas"], ["/kontakt", "Kontakt"]] as const;
+const LINKS = [["/uslugi", "Co układamy"], ["/wizualizator", "Wizualizator"], ["/o-nas", "O nas"], ["/kontakt", "Kontakt"]] as const;
 export function Nav() {
   const path = usePathname();
   const [open, setOpen] = useState(false);

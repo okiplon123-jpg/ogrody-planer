@@ -1,13 +1,12 @@
 import Link from "next/link";
-import { PhotoSlot } from "@/components/marketing/PhotoSlot";
-export const metadata = { title: "Co układamy: podjazdy, tarasy, ścieżki z kostki — NAZWA MARKI [miasto]" };
+export const metadata = { title: "Co układamy: podjazdy, tarasy, ścieżki, place z kostki — NAZWA MARKI [miasto]" };
 
-const ITEMS: (string | string[])[][] = [
-  ["Podjazdy i wjazdy", "Najczęstsza praca. Dobieramy szerokość pod auta, spadek odprowadzający wodę od domu i wzór, który nie męczy oka.", ["pomiar i wytyczenie", "wykop i podbudowa", "obrzeża", "kostka i fugowanie"], "podjazd z kostki — całość i detal krawędzi", "/zdjecia/kostka-jodelka-szara.jpg", "stock"],
-  ["Tarasy", "Płyta lub kostka przy domu. Najważniejszy jest spadek od ściany i odpływ wody, zanim pomyślimy o wzorze.", ["spadki i odwodnienie", "podbudowa", "płyty lub kostka"], "taras przy domu, widok z ogrodu", "/zdjecia/kostka-jodelka-brazowa.jpg", "stock"],
-  ["Ścieżki i chodniki", "Od furtki do drzwi i dookoła domu. Równe, antypoślizgowe, z obrzeżem, które trzyma kształt.", ["wytyczenie", "podbudowa", "kostka", "obrzeża"], "ścieżka z kostki wzdłuż trawnika", "/zdjecia/sciezka-cegla-ogrod.jpg", "stock"],
-  ["Place i parkingi", "Większe obciążenia wymagają grubszej podbudowy i innego doboru kostki. Liczymy to dla konkretnego gruntu.", ["badanie gruntu", "gruba podbudowa", "kostka na obciążenie"], "plac przy budynku", "/zdjecia/kostka-geometryczna.jpg", "stock"],
-  ["Obrzeża, schody, opaski", "Elementy, których nie widać z daleko, a które decydują, jak nawierzchnia trzyma się latami.", ["obrzeża betonowe", "schody", "opaska wokół domu"], "schody z kostki, detal", "/zdjecia/schody-beton-cien.jpg", "stock"],
+const ITEMS: [string, string, string[], string][] = [
+  ["Podjazdy i wjazdy", "Najczęstsza praca. Dobieramy szerokość pod auta, spadek odprowadzający wodę od domu i wzór, który nie męczy oka.", ["pomiar i wytyczenie", "wykop i podbudowa", "obrzeża", "kostka i fugowanie"], "kostka-jodelka-szara"],
+  ["Tarasy", "Płyta lub kostka przy domu. Najważniejszy jest spadek od ściany i odpływ wody, zanim pomyślimy o wzorze.", ["spadki i odwodnienie", "podbudowa", "płyty lub kostka"], "kostka-jodelka-brazowa"],
+  ["Ścieżki i chodniki", "Od furtki do drzwi i dookoła domu. Równe, antypoślizgowe, z obrzeżem, które trzyma kształt.", ["wytyczenie", "podbudowa", "kostka", "obrzeża"], "kostka-czerwona"],
+  ["Place i parkingi", "Większe obciążenia wymagają grubszej podbudowy i innego doboru kostki. Liczymy to dla konkretnego gruntu.", ["badanie gruntu", "gruba podbudowa", "kostka na obciążenie"], "kostka-geometryczna"],
+  ["Obrzeża, schody, opaski", "Elementy, których nie widać z daleka, a które decydują, jak nawierzchnia trzyma się latami.", ["obrzeża betonowe", "schody", "opaska wokół domu"], "kostka-jodelka-szara"],
 ];
 export default function Page() {
   return (
@@ -15,14 +14,17 @@ export default function Page() {
       <section className="border-b-[1.5px] border-ink px-5 py-14 md:px-8 md:py-24">
         <div className="mx-auto max-w-[1500px]"><p className="eyebrow text-rust">Zakres prac</p><h1 className="mt-3 max-w-4xl font-serif text-[clamp(3rem,7vw,7rem)] leading-[0.92]">Co układamy i jak to robimy.</h1></div>
       </section>
-      {ITEMS.map(([t, d, steps, ph, src, st], i) => (
-        <section key={t as string} className={`border-b-[1.5px] border-ink ${i % 2 ? "bg-concrete/40" : ""}`}>
+      {ITEMS.map(([t, d, steps, tex], i) => (
+        <section key={t} className={`border-b-[1.5px] border-ink ${i % 2 ? "bg-concrete/40" : ""}`}>
           <div className={`mx-auto grid max-w-[1500px] md:grid-cols-12 ${i % 2 ? "md:[&>*:first-child]:order-2" : ""}`}>
-            <div className="relative min-h-[320px] md:col-span-5"><div className="absolute inset-0"><PhotoSlot brief={ph as string} src={(src as string) || undefined} stock={st === "stock"} alt={t as string} className="border-0" /></div></div>
-            <div className="px-5 py-10 md:col-span-7 md:px-12 md:py-14">
-              <h2 className="font-serif text-5xl leading-none md:text-6xl">{t as string}</h2>
-              <p className="mt-5 max-w-xl text-xl leading-relaxed text-ink/75">{d as string}</p>
-              <ol className="eyebrow mt-8 flex flex-wrap gap-x-2 gap-y-2">{(steps as string[]).map((s, k) => <li key={s} className="flex items-center gap-2"><span className="border-[1.5px] border-ink px-2 py-1">{s}</span>{k < (steps as string[]).length - 1 && <span className="text-rust">→</span>}</li>)}</ol>
+            <div className="relative min-h-[160px] md:col-span-3 md:min-h-[260px]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={`/zdjecia/${tex}.jpg`} alt="Wzór kostki" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
+            </div>
+            <div className="px-5 py-10 md:col-span-9 md:px-12 md:py-14">
+              <h2 className="font-serif text-5xl leading-none md:text-6xl">{t}</h2>
+              <p className="mt-5 max-w-xl text-xl leading-relaxed text-ink/75">{d}</p>
+              <ol className="eyebrow mt-8 flex flex-wrap gap-x-2 gap-y-2">{steps.map((s, k) => <li key={s} className="flex items-center gap-2"><span className="border-[1.5px] border-ink px-2 py-1">{s}</span>{k < steps.length - 1 && <span className="text-rust">→</span>}</li>)}</ol>
             </div>
           </div>
         </section>
