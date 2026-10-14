@@ -6,20 +6,17 @@ Strona firmy brukarsko‑ogrodniczej (PL) + planer ogrodu 2D/3D. Stack: Next.js,
 ## Decyzja: BEZ WYCENY
 Nie ma formularza wyceny ani przycisku „do wyceny”. Planer kończy się ekranem „Podsumowanie” (powierzchnie, ilości, zapis, pobranie wizualizacji). Zostaje tylko prosty formularz kontaktowy (`/kontakt`, symulowany).
 
-## Zgłoszone problemy (do naprawy — to jest najważniejsze)
-1. **Planer jest mało intuicyjny.** Za dużo naraz: 7 kategorii w lewym pasku + panel + pasek właściwości + przełącznik 2D/3D + ukryte uchwyty. Nowy użytkownik nie wie od czego zacząć ani co kliknąć.
-   Do przemyślenia przez projektanta:
-   - Jasny, liniowy przepływ (np. 1 Działka → 2 Dom → 3 Podjazd/taras → 4 Ogród → 5 Podgląd 3D) z widocznym „co dalej”.
-   - Dodawanie obiektów przeciągnij‑i‑upuść z biblioteki na plan (dziś: klik dodaje na środek).
-   - Widoczne, podpisane narzędzia na płótnie (zaznacz / rysuj / przesuń widok), podpowiedzi przy pierwszym użyciu.
-   - Mniej opcji domyślnie, zaawansowane schowane.
-   - Lepsze uchwyty zmiany rozmiaru/obrotu, czytelniejsze stany zaznaczenia.
-   - Wersja mobilna: dziś tylko ostrzeżenie; potrzebny osobny, prostszy układ.
-2. **Całość wygląda jak wygenerowana przez AI.** Powody:
-   - Zamiast zdjęć są ilustracje SVG (`components/marketing/Art.tsx`) — płaskie, generyczne. Docelowo prawdziwe zdjęcia (komponent `Photo` przyjmuje `src`).
-   - Szablonowy układ: duże serify + „eyebrow” kapitaliki nad każdym nagłówkiem, numerowane 01/02/03, równe siatki, ten sam rytm sekcji.
-   - Zbyt jednolita, bezpieczna paleta i powtarzalne komponenty.
-   - Do zrobienia: własny język wizualny, asymetria, fotografia, mniej „dekoracji”, prawdziwy copywriting.
+## Repo
+https://github.com/okiplon123-jpg/ogrody-planer (publiczne, gałąź `main`)
+
+## Zgłoszone problemy (najważniejsze do dalszej pracy)
+1. **Planer był mało intuicyjny.** Już poprawione zachowawczo w kodzie:
+   - 5 numerowanych kroków (Działka → Dom → Nawierzchnie → Ogród → Podgląd 3D) z podpowiedzią i przyciskami Wstecz/Dalej; ostatni krok prowadzi do podsumowania.
+   - Przeciąganie z biblioteki na plan; materiał przeciągany na nawierzchnię/trawnik/rabatę.
+   - Podpisana paleta narzędzi na planie: Zaznacz i przesuwaj / Rysuj nawierzchnię / trawnik / rabatę. Pusta działka podpowiada pierwszy ruch.
+   - Zniknęły zakładki „Elementy” i „Oświetlenie” (ogrodzenie w Ogrodzie, lampy i pora dnia w Podglądzie 3D); ustawienia pod ikoną ⚙.
+   Nadal do przemyślenia przez projektanta: uchwyty zmiany rozmiaru/obrotu, czytelność stanu zaznaczenia, pasek właściwości pod planem, osobny prostszy układ mobilny (dziś tylko ostrzeżenie), onboarding przy pierwszym uruchomieniu.
+2. **Wygląd „jak od AI” — NIE rozwiązane.** Zamiast zdjęć są ilustracje SVG (`components/marketing/Art.tsx`); zdjęcia podmienia się przez prop `src` komponentu `Photo`. Usunięto tylko część szablonowych elementów (etykiety nad nagłówkami, numerację, kursywę w kolorze akcentu). Brakuje własnego języka wizualnego, prawdziwej fotografii i copywritingu — to zadanie dla projektanta.
 
 ## Co działa (logika do zachowania)
 - Model projektu: `lib/types.ts` (jeden obiekt `Project` zasila 2D i 3D, wersjonowany).
