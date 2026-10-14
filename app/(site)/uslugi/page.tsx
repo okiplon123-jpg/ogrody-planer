@@ -3,11 +3,11 @@ import { PhotoSlot } from "@/components/marketing/PhotoSlot";
 export const metadata = { title: "Co układamy: podjazdy, tarasy, ścieżki z kostki — NAZWA MARKI [miasto]" };
 
 const ITEMS: (string | string[])[][] = [
-  ["Podjazdy i wjazdy", "Najczęstsza praca. Dobieramy szerokość pod auta, spadek odprowadzający wodę od domu i wzór, który nie męczy oka.", ["pomiar i wytyczenie", "wykop i podbudowa", "obrzeża", "kostka i fugowanie"], "podjazd z kostki — całość i detal krawędzi"],
-  ["Tarasy", "Płyta lub kostka przy domu. Najważniejszy jest spadek od ściany i odpływ wody, zanim pomyślimy o wzorze.", ["spadki i odwodnienie", "podbudowa", "płyty lub kostka"], "taras przy domu, widok z ogrodu"],
-  ["Ścieżki i chodniki", "Od furtki do drzwi i dookoła domu. Równe, antypoślizgowe, z obrzeżem, które trzyma kształt.", ["wytyczenie", "podbudowa", "kostka", "obrzeża"], "ścieżka z kostki wzdłuż trawnika"],
-  ["Place i parkingi", "Większe obciążenia wymagają grubszej podbudowy i innego doboru kostki. Liczymy to dla konkretnego gruntu.", ["badanie gruntu", "gruba podbudowa", "kostka na obciążenie"], "plac przy budynku"],
-  ["Obrzeża, schody, opaski", "Elementy, których nie widać z daleko, a które decydują, jak nawierzchnia trzyma się latami.", ["obrzeża betonowe", "schody", "opaska wokół domu"], "schody z kostki, detal"],
+  ["Podjazdy i wjazdy", "Najczęstsza praca. Dobieramy szerokość pod auta, spadek odprowadzający wodę od domu i wzór, który nie męczy oka.", ["pomiar i wytyczenie", "wykop i podbudowa", "obrzeża", "kostka i fugowanie"], "podjazd z kostki — całość i detal krawędzi", "/zdjecia/kostka-jodelka-szara.jpg", "stock"],
+  ["Tarasy", "Płyta lub kostka przy domu. Najważniejszy jest spadek od ściany i odpływ wody, zanim pomyślimy o wzorze.", ["spadki i odwodnienie", "podbudowa", "płyty lub kostka"], "taras przy domu, widok z ogrodu", "/zdjecia/kostka-jodelka-brazowa.jpg", "stock"],
+  ["Ścieżki i chodniki", "Od furtki do drzwi i dookoła domu. Równe, antypoślizgowe, z obrzeżem, które trzyma kształt.", ["wytyczenie", "podbudowa", "kostka", "obrzeża"], "ścieżka z kostki wzdłuż trawnika", "/zdjecia/sciezka-cegla-ogrod.jpg", "stock"],
+  ["Place i parkingi", "Większe obciążenia wymagają grubszej podbudowy i innego doboru kostki. Liczymy to dla konkretnego gruntu.", ["badanie gruntu", "gruba podbudowa", "kostka na obciążenie"], "plac przy budynku", "/zdjecia/kostka-geometryczna.jpg", "stock"],
+  ["Obrzeża, schody, opaski", "Elementy, których nie widać z daleko, a które decydują, jak nawierzchnia trzyma się latami.", ["obrzeża betonowe", "schody", "opaska wokół domu"], "schody z kostki, detal", "/zdjecia/schody-beton-cien.jpg", "stock"],
 ];
 export default function Page() {
   return (
@@ -18,7 +18,7 @@ export default function Page() {
       {ITEMS.map(([t, d, steps, ph, src, st], i) => (
         <section key={t as string} className={`border-b-[1.5px] border-ink ${i % 2 ? "bg-concrete/40" : ""}`}>
           <div className={`mx-auto grid max-w-[1500px] md:grid-cols-12 ${i % 2 ? "md:[&>*:first-child]:order-2" : ""}`}>
-            <div className="min-h-[300px] md:col-span-5"><PhotoSlot brief={ph as string} src={(src as string) || undefined} stock={st === "stock"} alt={t as string} className="border-0" /></div>
+            <div className="relative min-h-[320px] md:col-span-5"><div className="absolute inset-0"><PhotoSlot brief={ph as string} src={(src as string) || undefined} stock={st === "stock"} alt={t as string} className="border-0" /></div></div>
             <div className="px-5 py-10 md:col-span-7 md:px-12 md:py-14">
               <h2 className="font-serif text-5xl leading-none md:text-6xl">{t as string}</h2>
               <p className="mt-5 max-w-xl text-xl leading-relaxed text-ink/75">{d as string}</p>

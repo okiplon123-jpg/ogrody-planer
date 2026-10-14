@@ -7,11 +7,11 @@ import { VisualizerLoader } from "@/components/visualizer/VisualizerLoader";
 import { Reveal } from "@/components/marketing/Reveal";
 
 const WORK: string[][] = [
-  ["Podjazdy i wjazdy", "Szerokość pod samochody, spadek od domu, krawędź, która się nie rozjeżdża.", "podjazd z kostki, widok od ulicy"],
-  ["Tarasy", "Płyty lub kostka przy domu, na stabilnej podbudowie, z odpływem wody.", "taras przy domu"],
-  ["Ścieżki i chodniki", "Od furtki do drzwi i dookoła domu — antypoślizgowo i równo.", "ścieżka z kostki między trawnikiem a domem"],
-  ["Place i miejsca postojowe", "Większe powierzchnie pod obciążenie: parkingi, place gospodarcze.", "plac z kostki przy budynku gospodarczym"],
-  ["Obrzeża, schody, opaski", "Wykończenia, które decydują o tym, jak nawierzchnia się trzyma i wygląda.", "detal obrzeża i schodków"],
+  ["Podjazdy i wjazdy", "Szerokość pod samochody, spadek od domu, krawędź, która się nie rozjeżdża.", "podjazd z kostki", "/zdjecia/kostka-jodelka-szara.jpg", "stock"],
+  ["Tarasy", "Płyty lub kostka przy domu, na stabilnej podbudowie, z odpływem wody.", "taras przy domu", "/zdjecia/kostka-jodelka-brazowa.jpg", "stock"],
+  ["Ścieżki i chodniki", "Od furtki do drzwi i dookoła domu — antypoślizgowo i równo.", "ścieżka z kostki", "/zdjecia/sciezka-cegla-ogrod.jpg", "stock"],
+  ["Place i miejsca postojowe", "Większe powierzchnie pod obciążenie: parkingi, place gospodarcze.", "plac z kostki", "/zdjecia/kostka-geometryczna.jpg", "stock"],
+  ["Obrzeża, schody, opaski", "Wykończenia, które decydują o tym, jak nawierzchnia się trzyma i wygląda.", "obrzeże i schody", "/zdjecia/schody-beton-cien.jpg", "stock"],
 ];
 const LAYERS = [
   ["Kostka lub płyta", "Warstwa, którą widać. Wzór i kolor dobierasz do domu — możesz go przymierzyć w wizualizatorze.", "#6c6f70"],
@@ -35,8 +35,8 @@ export default function Home() {
             </div>
           </div>
           <div className="relative min-h-[360px] border-ink md:col-span-5 md:border-l-[1.5px]">
-            <PhotoSlot brief="[zdjęcie z realizacji]" />
-            <div className="absolute left-4 right-4 top-12 flex items-center gap-3"><span className="eyebrow bg-paper px-2 py-1">plac z płyt i kostki</span><span className="dim-line h-4 flex-1" /><span className="eyebrow bg-paper px-2 py-1">[m²] · [miejscowość]</span></div>
+            <div className="absolute inset-0"><PhotoSlot src="/zdjecia/podjazd-cegla-luk.jpg" stock alt="Zakrzywiona ścieżka z kostki w ogrodzie" brief="nawierzchnia z kostki" className="object-[50%_96%]" /></div>
+            <div className="absolute left-4 right-4 top-12 flex items-center gap-3"><span className="eyebrow bg-paper px-2 py-1">ścieżka z kostki w ogrodzie</span><span className="dim-line h-4 flex-1" /><span className="eyebrow bg-paper px-2 py-1">[m²] · [miejscowość]</span></div>
           </div>
         </div>
       </section>
@@ -59,7 +59,7 @@ export default function Home() {
               <div className={`grid items-stretch gap-0 border-b-[1.5px] border-ink md:grid-cols-[1fr_1.1fr_240px] ${i % 2 ? "md:bg-concrete/30" : ""}`}>
                 <h3 className="px-0 py-6 font-serif text-3xl md:px-6 md:text-4xl">{t}</h3>
                 <p className="max-w-lg self-center pb-4 text-lg text-ink/75 md:px-6 md:pb-0">{d}</p>
-                <div className="h-36 md:h-auto md:min-h-[120px] md:border-l-[1.5px] md:border-ink"><PhotoSlot brief={ph} src={src || undefined} stock={st === "stock"} alt={t} className="border-0" /></div>
+                <div className="relative h-44 md:h-auto md:min-h-[200px] md:border-l-[1.5px] md:border-ink"><div className="absolute inset-0"><PhotoSlot brief={ph} src={src || undefined} stock={st === "stock"} alt={t} className="border-0" /></div></div>
               </div>
             </Reveal>
           ))}
@@ -95,9 +95,9 @@ export default function Home() {
         <div className="mx-auto max-w-[1500px] px-5 py-16 md:px-8 md:py-24">
           <div className="mb-10 flex flex-wrap items-end justify-between gap-4"><h2 className="font-serif text-5xl leading-none md:text-7xl">Z ostatnich realizacji.</h2><Link href="/realizacje" className="btn btn-line">Wszystkie →</Link></div>
           <div className="space-y-12">
-            {[["Plac z płyt i kostki z wyodrębnioną ścieżką", "right"], ["Taras przy domu, płyty wielkoformatowe", "left"], ["Ścieżka i opaska wokół domu", "right"]].map(([t, side], i) => (
+            {[["Ścieżka z kostki w ogrodzie", "right"], ["Obrzeża i schody w parku", "left"], ["Ścieżka z płyt kamiennych", "right"]].map(([t, side], i) => (
               <article key={t} className={`grid gap-6 md:grid-cols-12 md:items-end ${side === "left" ? "md:[&>*:first-child]:order-2" : ""}`}>
-                <div className={`h-[300px] md:h-[420px] ${i === 1 ? "md:col-span-5" : "md:col-span-7"}`}><PhotoSlot brief={`${t} — ujęcie całości`} alt={t} /></div>
+                <div className={`h-[300px] md:h-[420px] ${i === 1 ? "md:col-span-5" : "md:col-span-7"}`}><PhotoSlot brief={`${t} — ujęcie całości`} src={["/zdjecia/podjazd-cegla-luk.jpg", "/zdjecia/sciezka-park.jpg", "/zdjecia/sciezka-kwiaty.jpg"][i]} stock alt={t} /></div>
                 <div className={i === 1 ? "md:col-span-7" : "md:col-span-5"}>
                   <h3 className="font-serif text-4xl leading-tight md:text-5xl">{t}</h3>
                   <dl className="eyebrow mt-4 grid grid-cols-3 gap-3 border-t-[1.5px] border-ink pt-3"><div><dt className="text-ink/50">Powierzchnia</dt><dd>[m²]</dd></div><div><dt className="text-ink/50">Materiał</dt><dd>[kostka]</dd></div><div><dt className="text-ink/50">Czas</dt><dd>[dni]</dd></div></dl>
