@@ -13,6 +13,9 @@ https://github.com/okiplon123-jpg/ogrody-planer (publiczne, gałąź `main`)
 1. **Planer został odchudzony do podstaw.** Jeden panel „Dodaj do działki” z 9 elementami (Dom, Podjazd, Taras, Ścieżka, Trawnik, Rabata, Drzewo, Krzewy, Lampa) — klik albo przeciągnięcie na plan. Wymiary działki wpisuje się w pasku u góry. Po zaznaczeniu obiektu pojawia się mały pasek: próbki materiału, układ kostki, gatunek, Obróć/Duplikuj/Usuń; rozmiar zmienia się uchwytami na planie. Przełącznik Plan / 3D oraz przycisk „Gotowe” (podsumowanie). Bez kroków, bez ekranu powitalnego, bez ustawień. Do zaprojektowania przez projektanta: wygląd całości, stan pusty, uchwyty, wersja mobilna.
 2. **Wygląd „jak od AI” — NIE rozwiązane.** Zamiast zdjęć są ilustracje SVG (`components/marketing/Art.tsx`); zdjęcia podmienia się przez prop `src` komponentu `Photo`. Usunięto tylko część szablonowych elementów (etykiety nad nagłówkami, numerację, kursywę w kolorze akcentu). Brakuje własnego języka wizualnego, prawdziwej fotografii i copywritingu — to zadanie dla projektanta.
 
+## GŁÓWNY PRODUKT: wizualizator kostki na zdjęciu klienta (`/wizualizator`)
+Firma robi głównie kostkę brukową. Klient wgrywa zdjęcie swojego podjazdu, klika 4 rogi nawierzchni, wybiera kostkę/wzór/wielkość i widzi efekt w perspektywie na swoim zdjęciu (przed/po, gumka do wyłączania aut i krzaków, pobranie obrazu). Działa w całości w przeglądarce — bez backendu i bez AI; zdjęcie nigdzie nie jest wysyłane. Kod: `components/visualizer/Visualizer.tsx`. Tekstury kostek są proceduralne — docelowo podmienić na zdjęcia prawdziwych faktur (`lib/textures.ts`). Planer 2D/3D (`/planer`) to produkt dodatkowy.
+
 ## Co działa (logika do zachowania)
 - Model projektu: `lib/types.ts` (jeden obiekt `Project` zasila 2D i 3D, wersjonowany).
 - Geometria i pola powierzchni: `lib/geometry.ts`, `lib/summary.ts`.
