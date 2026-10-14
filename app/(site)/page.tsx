@@ -6,12 +6,12 @@ import { ContactForm } from "@/components/marketing/ContactForm";
 import { VisualizerLoader } from "@/components/visualizer/VisualizerLoader";
 import { Reveal } from "@/components/marketing/Reveal";
 
-const WORK = [
-  ["Podjazdy i wjazdy", "Szerokość pod samochody, spadek od domu, krawędź, która się nie rozjeżdża.", "podjazd z kostki, widok od ulicy"],
-  ["Tarasy", "Płyty lub kostka przy domu, na stabilnej podbudowie, z odpływem wody.", "taras przy domu, ekipa przy układaniu"],
-  ["Ścieżki i chodniki", "Od furtki do drzwi i dookoła domu — antypoślizgowo i równo.", "ścieżka z kostki między trawnikiem a domem"],
-  ["Place i miejsca postojowe", "Większe powierzchnie pod obciążenie: parkingi, place gospodarcze.", "plac z kostki przy budynku gospodarczym"],
-  ["Obrzeża, schody, opaski", "Wykończenia, które decydują o tym, jak nawierzchnia się trzyma i wygląda.", "detal obrzeża i schodków"],
+const WORK: string[][] = [
+  ["Podjazdy i wjazdy", "Szerokość pod samochody, spadek od domu, krawędź, która się nie rozjeżdża.", "podjazd z kostki, widok od ulicy", "/zdjecia/trawnik-przed-domem.jpg", "stock"],
+  ["Tarasy", "Płyty lub kostka przy domu, na stabilnej podbudowie, z odpływem wody.", "taras przy domu", "/zdjecia/taras-drewno-1.jpg", "stock"],
+  ["Ścieżki i chodniki", "Od furtki do drzwi i dookoła domu — antypoślizgowo i równo.", "ścieżka z kostki między trawnikiem a domem", "/zdjecia/dom-ogrod-rosliny.jpg", "stock"],
+  ["Place i miejsca postojowe", "Większe powierzchnie pod obciążenie: parkingi, place gospodarcze.", "plac z kostki przy budynku gospodarczym", "/zdjecia/plac-przy-kosciele.jpg", ""],
+  ["Obrzeża, schody, opaski", "Wykończenia, które decydują o tym, jak nawierzchnia się trzyma i wygląda.", "detal obrzeża i schodków", "/zdjecia/sciezka-kamien.jpg", "stock"],
 ];
 const LAYERS = [
   ["Kostka lub płyta", "Warstwa, którą widać. Wzór i kolor dobierasz do domu — możesz go przymierzyć w wizualizatorze.", "#6c6f70"],
@@ -35,8 +35,8 @@ export default function Home() {
             </div>
           </div>
           <div className="relative min-h-[360px] border-ink md:col-span-5 md:border-l-[1.5px]">
-            <PhotoSlot brief="gotowy podjazd z szarej kostki w jodełkę, ujęcie od ulicy, światło poranne" className="absolute inset-0 border-0" />
-            <div className="absolute left-4 right-4 top-12 flex items-center gap-3"><span className="eyebrow bg-paper px-2 py-1">[m²]</span><span className="dim-line h-4 flex-1" /><span className="eyebrow bg-paper px-2 py-1">[miejscowość]</span></div>
+            <PhotoSlot src="/zdjecia/plac-przy-kosciele.jpg" alt="Plac z płyt i kostki w trakcie zagęszczania, zagęszczarka na świeżo ułożonej nawierzchni" brief="" className="absolute inset-0 border-0 object-[50%_62%]" />
+            <div className="absolute left-4 right-4 top-12 flex items-center gap-3"><span className="eyebrow bg-paper px-2 py-1">plac z płyt i kostki</span><span className="dim-line h-4 flex-1" /><span className="eyebrow bg-paper px-2 py-1">[m²] · [miejscowość]</span></div>
           </div>
         </div>
       </section>
@@ -54,17 +54,21 @@ export default function Home() {
       <section className="mx-auto max-w-[1500px] px-5 py-16 md:px-8 md:py-24">
         <Reveal><h2 className="max-w-3xl font-serif text-5xl leading-none md:text-7xl">Co układamy.</h2></Reveal>
         <div className="mt-10 border-t-[1.5px] border-ink">
-          {WORK.map(([t, d, ph], i) => (
+          {WORK.map(([t, d, ph, src, st], i) => (
             <Reveal key={t}>
               <div className={`grid items-stretch gap-0 border-b-[1.5px] border-ink md:grid-cols-[1fr_1.1fr_240px] ${i % 2 ? "md:bg-concrete/30" : ""}`}>
                 <h3 className="px-0 py-6 font-serif text-3xl md:px-6 md:text-4xl">{t}</h3>
                 <p className="max-w-lg self-center pb-4 text-lg text-ink/75 md:px-6 md:pb-0">{d}</p>
-                <div className="h-36 md:h-auto md:min-h-[120px] md:border-l-[1.5px] md:border-ink"><PhotoSlot brief={ph} className="border-0" /></div>
+                <div className="h-36 md:h-auto md:min-h-[120px] md:border-l-[1.5px] md:border-ink"><PhotoSlot brief={ph} src={src || undefined} stock={st === "stock"} alt={t} className="border-0" /></div>
               </div>
             </Reveal>
           ))}
         </div>
-        <p className="mt-6 max-w-2xl text-ink/70">Przy okazji kostki zajmiemy się też tym, co jest wokół niej: ogrodzeniem, trawnikiem i rabatami. Ale kostka to to, w czym jesteśmy najlepsi. [do potwierdzenia przez firmę]</p>
+        <div className="mt-10 grid gap-5 md:grid-cols-[1fr_1fr_1.1fr] md:items-end">
+          <div className="h-[260px]"><PhotoSlot src="/zdjecia/dom-patio-trawnik.jpg" stock alt="Dom z tarasem i trawnikiem" brief="trawnik i taras" /></div>
+          <div className="h-[260px]"><PhotoSlot src="/zdjecia/dom-ogrod-rosliny.jpg" stock alt="Ogród ze ścieżką z kamienia" brief="ogród i ścieżka" className="object-[50%_70%]" /></div>
+          <p className="text-lg leading-relaxed text-ink/75">Przy okazji kostki zajmiemy się też tym, co jest wokół niej: trawnikiem, rabatami i ogrodzeniem. Ale kostka to to, w czym jesteśmy najlepsi. [do potwierdzenia przez firmę]</p>
+        </div>
       </section>
 
       <section className="border-y-[1.5px] border-ink bg-ink text-paper">
@@ -95,9 +99,9 @@ export default function Home() {
         <div className="mx-auto max-w-[1500px] px-5 py-16 md:px-8 md:py-24">
           <div className="mb-10 flex flex-wrap items-end justify-between gap-4"><h2 className="font-serif text-5xl leading-none md:text-7xl">Z ostatnich realizacji.</h2><Link href="/realizacje" className="btn btn-line">Wszystkie →</Link></div>
           <div className="space-y-12">
-            {[["Podjazd, szara kostka, jodełka", "right"], ["Taras przy domu, płyty wielkoformatowe", "left"], ["Ścieżka i opaska wokół domu", "right"]].map(([t, side], i) => (
+            {[["Plac z płyt i kostki z wyodrębnioną ścieżką", "right"], ["Taras przy domu, płyty wielkoformatowe", "left"], ["Ścieżka i opaska wokół domu", "right"]].map(([t, side], i) => (
               <article key={t} className={`grid gap-6 md:grid-cols-12 md:items-end ${side === "left" ? "md:[&>*:first-child]:order-2" : ""}`}>
-                <div className={`h-[300px] md:h-[420px] ${i === 1 ? "md:col-span-5" : "md:col-span-7"}`}><PhotoSlot brief={`${t} — ujęcie całości`} /></div>
+                <div className={`h-[300px] md:h-[420px] ${i === 1 ? "md:col-span-5" : "md:col-span-7"}`}><PhotoSlot brief={`${t} — ujęcie całości`} src={i === 0 ? "/zdjecia/plac-przy-kosciele.jpg" : undefined} alt={t} /></div>
                 <div className={i === 1 ? "md:col-span-7" : "md:col-span-5"}>
                   <h3 className="font-serif text-4xl leading-tight md:text-5xl">{t}</h3>
                   <dl className="eyebrow mt-4 grid grid-cols-3 gap-3 border-t-[1.5px] border-ink pt-3"><div><dt className="text-ink/50">Powierzchnia</dt><dd>[m²]</dd></div><div><dt className="text-ink/50">Materiał</dt><dd>[kostka]</dd></div><div><dt className="text-ink/50">Czas</dt><dd>[dni]</dd></div></dl>

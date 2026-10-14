@@ -176,6 +176,15 @@ export function Visualizer() {
     im.src = url;
   };
 
+  const loadUrl = (url: string) => {
+    const im = new Image();
+    im.onload = () => {
+      const k = Math.min(1, MAX_DIM / Math.max(im.width, im.height));
+      const c = document.createElement("canvas"); c.width = Math.round(im.width * k); c.height = Math.round(im.height * k);
+      c.getContext("2d")!.drawImage(im, 0, 0, c.width, c.height); load(c);
+    };
+    im.src = url;
+  };
   const pos = (e: React.PointerEvent): Pt => {
     const r = svg.current!.getBoundingClientRect();
     return [((e.clientX - r.left) / r.width) * dims!.w, ((e.clientY - r.top) / r.height) * dims!.h];
@@ -232,7 +241,8 @@ export function Visualizer() {
               <p className="font-serif text-4xl">Wgraj zdjęcie swojego podjazdu</p>
               <p className="mt-3 text-charcoal/70">Najlepiej zdjęcie zrobione z chodnika lub z okna, tak żeby było widać całą nawierzchnię. Zdjęcie zostaje w Twojej przeglądarce — nigdzie go nie wysyłamy.</p>
               <label className="btn btn-dark mt-6 cursor-pointer">Wybierz zdjęcie<input type="file" accept="image/*" className="hidden" onChange={(e) => onFile(e.target.files?.[0])} /></label>
-              <button className="mt-4 block w-full text-sm underline" onClick={() => load(sampleScene())}>Wypróbuj na zdjęciu przykładowym</button>
+              <button className="mt-4 block w-full text-sm underline" onClick={() => loadUrl("/zdjecia/trawnik-przed-domem.jpg")}>Wypróbuj na przykładowym podjeździe (beton)</button>
+              <button className="mt-2 block w-full text-sm underline" onClick={() => loadUrl("/zdjecia/plac-przy-kosciele.jpg")}>Wypróbuj na placu z naszej realizacji</button>
               {busy && <p className="mt-3 text-sm">Wczytuję…</p>}
               {err && <p role="alert" className="mt-3 text-sm text-red-700">{err}</p>}
             </div>
