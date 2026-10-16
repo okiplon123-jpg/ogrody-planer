@@ -5,7 +5,7 @@ import { fmtArea, objectArea } from "@/lib/geometry";
 import type { Facade } from "@/lib/types";
 import { MatSwatch } from "./ui";
 
-const SURFACE_PICKS = ["kb-grafit", "kb-szara", "kb-melanz", "kb-piasek", "ks-czarna", "ks-jasna", "pt-wielko", "pt-kamien", "zw-dekor", "in-deska"];
+const SURFACE_PICKS = ["ph-behaton", "ph-granit", "ph-bruzowa", "ph-klinkier", "ph-bruk", "ph-zwir", "kb-grafit", "kb-szara", "kb-melanz", "kb-piasek", "ks-czarna", "ks-jasna", "pt-wielko", "pt-kamien", "zw-dekor", "in-deska"];
 
 /** Floating contextual bar: only the few things a person actually wants to change. */
 export function PropertiesBar() {

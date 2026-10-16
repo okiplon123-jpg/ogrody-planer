@@ -8,3 +8,6 @@ Strona nie zawiera zdjęć realizacji (firma ich nie ma).
 
 ## Tekstury (public/textures)
 Skanowane tekstury nawierzchni z Poly Haven, licencja CC0 (domena publiczna, bez wymogu podania autora): concrete_pavers, concrete_pavers_02, brick_pavement_02, floor_klinkers_01, cobblestone_floor_01, bicolour_gravel — https://polyhaven.com/textures
+
+## Modele roślin (public/models)
+Skanowane modele z Poly Haven (CC0), uproszczone do użycia w przeglądarce (gltf-transform): tree_small_02, fir_tree_01, pine_sapling_medium, shrub_01–04, grass_medium_02, fern_02 — https://polyhaven.com/models

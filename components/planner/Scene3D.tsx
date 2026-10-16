@@ -1,7 +1,7 @@
 "use client";
-import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import { Suspense, useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
+import { OrbitControls, useGLTF, useTexture } from "@react-three/drei";
 import { EffectComposer, N8AO } from "@react-three/postprocessing";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import * as THREE from "three";
@@ -41,6 +41,15 @@ const CYL = new THREE.CylinderGeometry(1, 1, 1, 24);
 const BLADE = new THREE.ConeGeometry(1, 1, 4).translate(0, 0.5, 0);
 const ROT_Y = (o: PlanObject) => [0, -rad(o.rot), 0] as [number, number, number];
 
+function PhotoTop({ dir, tileM }: { dir: string; tileM: number }) {
+  const [map, nor, rough] = useTexture([`/textures/${dir}/${dir}_diff_1k.jpg`, `/textures/${dir}/${dir}_nor_gl_1k.jpg`, `/textures/${dir}/${dir}_rough_1k.jpg`]);
+  useLayoutEffect(() => {
+    [map, nor, rough].forEach((t) => { t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(1 / tileM, -1 / tileM); t.anisotropy = 8; t.needsUpdate = true; });
+    map.colorSpace = THREE.SRGBColorSpace;
+  }, [map, nor, rough, tileM]);
+  return <meshStandardMaterial attach="material-0" map={map} normalMap={nor} roughnessMap={rough} />;
+}
+
 function Shaped({ o, idx, lit }: { o: PlanObject; idx: number; lit: boolean }) {
   const depth = o.kind === "surface" ? 0.07 : o.kind === "bed" ? 0.1 : 0.04;
   const m = matById(o.material);
@@ -58,7 +67,7 @@ function Shaped({ o, idx, lit }: { o: PlanObject; idx: number; lit: boolean }) {
   return (
     <group position={[o.x, idx * 0.0004, o.y]} rotation={ROT_Y(o)}>
       <mesh geometry={geo} rotation={[-Math.PI / 2, 0, 0]} receiveShadow castShadow={o.kind === "bed"}>
-        <meshStandardMaterial attach="material-0" map={tex} roughness={o.kind === "lawn" ? 1 : 0.85} />
+        {m.photo ? <PhotoTop dir={m.photo.dir} tileM={m.photo.tileM} /> : <meshStandardMaterial attach="material-0" map={tex} roughness={o.kind === "lawn" ? 1 : 0.85} />}
         <meshStandardMaterial attach="material-1" color={new THREE.Color(m.color).multiplyScalar(0.55)} roughness={1} />
       </mesh>
       {edge !== "none" && (
@@ -117,7 +126,29 @@ function Garage({ o, lit }: { o: PlanObject; lit: number }) {
   );
 }
 
+const PLANT_MODEL: Record<string, string> = { klon: "tree_small_02", brzoza: "tree_small_02", swierk: "fir_tree_01", hortensja: "shrub_01", lawenda: "shrub_03" };
+/** Real scanned plant (Poly Haven CC0), decimated for the web. Scaled to the species height * size factor. */
+function ModelPlant({ o, file }: { o: PlanObject; file: string }) {
+  const sp = SPECIES[o.species ?? "klon"];
+  const { scene } = useGLTF(`/models/${file}.glb`);
+  const obj = useMemo(() => {
+    const c = scene.clone(true);
+    const b = new THREE.Box3().setFromObject(c), size = b.getSize(new THREE.Vector3());
+    const H = sp.height * (o.w / sp.d);
+    c.scale.setScalar(H / Math.max(size.y, 0.001));
+    const b2 = new THREE.Box3().setFromObject(c);
+    c.position.set(-(b2.min.x + b2.max.x) / 2, -b2.min.y, -(b2.min.z + b2.max.z) / 2);
+    const g = new THREE.Group(); g.add(c);
+    g.traverse((n) => { const m = n as THREE.Mesh; if (m.isMesh) { m.castShadow = true; m.receiveShadow = true; const mat = m.material as THREE.MeshStandardMaterial; if (mat.alphaTest === 0 && mat.transparent) mat.alphaTest = 0.4; } });
+    g.rotation.y = (o.x * 37 + o.y * 17) % 6.28;
+    return g;
+  }, [scene, o.w, sp.height, sp.d, o.x, o.y]); // eslint-disable-line react-hooks/exhaustive-deps
+  return <group position={[o.x, 0, o.y]}><primitive object={obj} /></group>;
+}
+
 function Tree({ o, lit }: { o: PlanObject; lit: boolean }) {
+  const modelFile = o.species ? PLANT_MODEL[o.species] : undefined;
+  if (modelFile) return <ModelPlant o={o} file={modelFile} />;
   const sp = SPECIES[o.species ?? "klon"];
   const f = o.w / sp.d, H = sp.height * f, r = o.w / 2;
   const seed = o.x * 13 + o.y * 7;
@@ -403,7 +434,7 @@ export default function Scene3D({ project, view, nonce, quality, visible = true,
   return (
     <Canvas shadows={quality === "high"} dpr={quality === "high" ? [1, 2] : 1} frameloop={visible ? "always" : "never"} camera={{ fov: 38, near: 0.1, far: 700, position: [m * 0.7, m * 0.8, m * 0.95] }} gl={{ antialias: quality === "high" }}>
       <Atmosphere lighting={project.lighting} quality={quality} />
-      <World project={project} quality={quality} />
+      <Suspense fallback={null}><World project={project} quality={quality} /></Suspense>
       <OrbitControls makeDefault enableDamping dampingFactor={0.08} maxPolarAngle={Math.PI / 2 - 0.02} minDistance={2} maxDistance={160} enableZoom={!lockZoom} autoRotate={autoRotate} autoRotateSpeed={0.5} />
       {quality === "high" && (
         <EffectComposer multisampling={4}>

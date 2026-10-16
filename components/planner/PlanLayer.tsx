@@ -24,13 +24,13 @@ function Patterns({ objects }: { objects: PlanObject[] }) {
       const pat = m.tex === "bricks" ? o.pattern ?? m.pattern : undefined;
       seen.set(patId(m.id, pat), { mat: m.id, pat });
     }
-    return [...seen].map(([id, v]) => ({ id, url: textureUrl(v.mat, v.pat as never) }));
+    return [...seen].map(([id, v]) => { const mm = matById(v.mat); return { id, url: mm.photo ? `/textures/${mm.photo.dir}/${mm.photo.dir}_diff_1k.jpg` : textureUrl(v.mat, v.pat as never), size: mm.photo?.tileM ?? TILE_M }; });
   }, [objects]);
   return (
     <defs>
       {defs.map((d) => (
-        <pattern key={d.id} id={d.id} patternUnits="userSpaceOnUse" width={TILE_M} height={TILE_M}>
-          <image href={d.url} width={TILE_M} height={TILE_M} preserveAspectRatio="none" />
+        <pattern key={d.id} id={d.id} patternUnits="userSpaceOnUse" width={d.size} height={d.size}>
+          <image href={d.url} width={d.size} height={d.size} preserveAspectRatio="none" />
         </pattern>
       ))}
     </defs>
