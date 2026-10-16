@@ -15,7 +15,7 @@ const rad = (d: number) => (d * Math.PI) / 180;
 const hash = (a: number, b: number) => { const x = Math.sin(a * 127.1 + b * 311.7) * 43758.5453; return x - Math.floor(x); };
 
 const PRESETS: Record<Lighting, { bg: string; sun: [number, number, number]; sunColor: string; sunI: number; sky: string; ground: string; hemiI: number; lamp: number; ground2: string; env: number }> = {
-  day: { bg: "#e6edf0", sun: [22, 30, 14], sunColor: "#fff6e6", sunI: 2.6, sky: "#e9f0f5", ground: "#9aa58a", hemiI: 0.55, lamp: 0.0, ground2: "#dfe2d6", env: 0.55 },
+  day: { bg: "#e6edf0", sun: [22, 30, 14], sunColor: "#fff6e6", sunI: 2.1, sky: "#e9f0f5", ground: "#9aa58a", hemiI: 0.5, lamp: 0.0, ground2: "#aab397", env: 0.5 },
   golden: { bg: "#f0d8be", sun: [-30, 11, 18], sunColor: "#ffb26e", sunI: 3.0, sky: "#ffe2c4", ground: "#8a7d62", hemiI: 0.35, lamp: 1.0, ground2: "#d9d2bd", env: 0.3 },
   evening: { bg: "#18233a", sun: [-12, 16, -16], sunColor: "#8aa3d8", sunI: 0.5, sky: "#2b3d63", ground: "#1b2418", hemiI: 0.3, lamp: 2.6, ground2: "#2a3326", env: 0.12 },
 };
@@ -38,6 +38,7 @@ function getTex(matId: string, pattern?: string) {
 const ICO = new THREE.IcosahedronGeometry(1, 3);
 const CONE = new THREE.ConeGeometry(1, 1, 24);
 const CYL = new THREE.CylinderGeometry(1, 1, 1, 24);
+const FLORET = new THREE.IcosahedronGeometry(1, 1);
 /** curved, tapering grass blade: unit height, base width 1 (scaled per instance) */
 const BLADE = (() => {
   const seg = 6, pos: number[] = [], idx: number[] = [], nor: number[] = [];
@@ -243,27 +244,27 @@ function Bush({ o }: { o: PlanObject }) {
   const lav = o.species === "lawenda";
   const seed = o.x * 11 + o.y * 5;
   const fl = useRef<THREE.InstancedMesh>(null);
-  const N = lav ? 55 : 46;
+  const N = lav ? 70 : 26;
   useLayoutEffect(() => {
     const m = fl.current; if (!m) return;
     const d = new THREE.Object3D(), c = new THREE.Color();
     for (let i = 0; i < N; i++) {
-      const th = hash(i, seed) * 6.283, ph = Math.acos(1 - hash(i, seed + 2) * 0.85);
-      const x = Math.sin(ph) * Math.cos(th) * r * 0.9, z = Math.sin(ph) * Math.sin(th) * r * 0.9, y = Math.cos(ph) * H * 0.5 + H * 0.5;
-      d.position.set(x, y, z); d.rotation.set(0, 0, 0);
-      if (lav) { d.rotation.set((hash(i, 3) - 0.5) * 0.5, 0, (hash(i, 4) - 0.5) * 0.5); d.position.y = H * 0.55 + hash(i, 5) * H * 0.2; d.scale.set(0.035 * f + 0.012, H * 0.55, 0.035 * f + 0.012); }
-      else { const s2 = r * (0.17 + hash(i, 6) * 0.1); d.scale.set(s2, s2 * 0.85, s2); }
+      const th = hash(i, seed) * 6.283, ph = Math.acos(1 - hash(i, seed + 2) * (lav ? 0.85 : 0.7));
+      const x = Math.sin(ph) * Math.cos(th) * r * 0.82, z = Math.sin(ph) * Math.sin(th) * r * 0.82, y = Math.cos(ph) * H * 0.42 + H * 0.5;
+      d.position.set(x, y, z); d.rotation.set(0, hash(i, 3) * 6.28, 0);
+      if (lav) { d.rotation.set((hash(i, 3) - 0.5) * 0.5, 0, (hash(i, 4) - 0.5) * 0.5); d.position.y = H * 0.55 + hash(i, 5) * H * 0.2; d.scale.set(0.03 * f + 0.01, H * 0.55, 0.03 * f + 0.01); }
+      else { const s2 = r * (0.2 + hash(i, 6) * 0.12); d.scale.set(s2, s2 * 0.7, s2); }
       d.updateMatrix(); m.setMatrixAt(i, d.matrix);
       const t = hash(i, seed + 8);
-      c.set(lav ? (t > 0.5 ? "#7b5fb5" : "#9a82cc") : t > 0.66 ? "#f3f1fa" : t > 0.33 ? "#e1def2" : "#c8c3e6"); m.setColorAt(i, c);
+      c.set(lav ? (t > 0.5 ? "#7b5fb5" : "#9a82cc") : t > 0.78 ? "#f0b7cf" : t > 0.5 ? "#e9e6f7" : t > 0.2 ? "#b4c2ee" : "#98a9e3"); m.setColorAt(i, c);
     }
     m.instanceMatrix.needsUpdate = true; if (m.instanceColor) m.instanceColor.needsUpdate = true;
   }, [r, H, f, lav, seed, N]);
   return (
     <group position={[o.x, 0, o.y]}>
-      <mesh geometry={ICO} position={[0, H * 0.38, 0]} scale={[r, H * 0.42, r]} castShadow receiveShadow><meshStandardMaterial color={sp.color} roughness={0.95} /></mesh>
+      <mesh geometry={ICO} position={[0, H * 0.38, 0]} scale={[r * 1.05, H * 0.46, r * 1.05]} castShadow receiveShadow><meshStandardMaterial color={new THREE.Color(sp.color).multiplyScalar(0.8)} roughness={0.95} /></mesh>
       {Array.from({ length: 11 }, (_, i) => { const a = (i / 11) * 6.28 + seed; const rr = r * (0.45 + hash(i, seed) * 0.35); const s2 = r * (0.34 + hash(i, seed + 4) * 0.2); return <mesh key={i} geometry={ICO} position={[Math.cos(a) * rr, H * (0.3 + hash(i, 2) * 0.3), Math.sin(a) * rr]} scale={[s2, s2 * 0.8, s2]} castShadow><meshStandardMaterial color={new THREE.Color(sp.color).offsetHSL(0, 0, (hash(i, 9) - 0.5) * 0.08)} roughness={0.95} /></mesh>; })}
-      <instancedMesh ref={fl} args={[lav ? CONE : ICO, undefined, N]} castShadow><meshStandardMaterial roughness={0.8} /></instancedMesh>
+      <instancedMesh ref={fl} args={[lav ? CONE : FLORET, undefined, N]} castShadow><meshStandardMaterial roughness={1} flatShading /></instancedMesh>
     </group>
   );
 }

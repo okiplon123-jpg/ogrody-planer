@@ -11,3 +11,6 @@ Skanowane tekstury nawierzchni z Poly Haven, licencja CC0 (domena publiczna, bez
 
 ## Modele roślin (public/models)
 Skanowane modele z Poly Haven (CC0), uproszczone do użycia w przeglądarce (gltf-transform): tree_small_02, fir_tree_01, pine_sapling_medium, shrub_01–04, grass_medium_02, fern_02 — https://polyhaven.com/models
+
+## Tekstury trawy (public/textures/grass_*)
+ambientCG, licencja CC0: Grass004 (trawnik siany), Grass005 (trawnik z rolki) — https://ambientcg.com

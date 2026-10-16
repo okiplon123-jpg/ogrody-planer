@@ -41,7 +41,7 @@ export function Seg<T extends string>({ value, options, onChange, label }: { val
 
 export function MatSwatch({ id, pattern, size = 56 }: { id: string; pattern?: Pattern; size?: number }) {
   const m = matById(id);
-  return <span className="block shrink-0" style={{ width: size, height: size, backgroundImage: `url(${textureUrl(id, pattern ?? m.pattern)})`, backgroundSize: `${size * 1.4}px` }} />;
+  return <span className="block shrink-0" style={{ width: size, height: size, backgroundImage: m.photo ? `url(/textures/${m.photo.dir}/${m.photo.dir}_diff_1k.jpg)` : `url(${textureUrl(id, pattern ?? m.pattern)})`, backgroundSize: `${size * 1.4}px` }} />;
 }
 
 export function ItemThumb({ item }: { item: LibItem }) {
