@@ -38,7 +38,20 @@ function getTex(matId: string, pattern?: string) {
 const ICO = new THREE.IcosahedronGeometry(1, 3);
 const CONE = new THREE.ConeGeometry(1, 1, 24);
 const CYL = new THREE.CylinderGeometry(1, 1, 1, 24);
-const BLADE = new THREE.ConeGeometry(1, 1, 4).translate(0, 0.5, 0);
+/** curved, tapering grass blade: unit height, base width 1 (scaled per instance) */
+const BLADE = (() => {
+  const seg = 6, pos: number[] = [], idx: number[] = [], nor: number[] = [];
+  for (let i = 0; i <= seg; i++) {
+    const t = i / seg, w = 0.5 * (1 - t * 0.92), bend = 0.45 * t * t;
+    pos.push(-w, t, bend, w, t, bend); nor.push(0, 0.2, 1, 0, 0.2, 1);
+    if (i < seg) { const a = i * 2; idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); }
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute("position", new THREE.Float32BufferAttribute(pos, 3));
+  g.setAttribute("normal", new THREE.Float32BufferAttribute(nor, 3));
+  g.setIndex(idx);
+  return g;
+})();
 const ROT_Y = (o: PlanObject) => [0, -rad(o.rot), 0] as [number, number, number];
 
 function PhotoTop({ dir, tileM }: { dir: string; tileM: number }) {
@@ -126,7 +139,7 @@ function Garage({ o, lit }: { o: PlanObject; lit: number }) {
   );
 }
 
-const PLANT_MODEL: Record<string, string> = { klon: "tree_small_02", brzoza: "tree_small_02", swierk: "fir_tree_01", hortensja: "shrub_01", lawenda: "shrub_03" };
+const PLANT_MODEL: Record<string, string> = { klon: "tree_small_02", brzoza: "tree_small_02", swierk: "fir_tree_01" };
 /** Real scanned plant (Poly Haven CC0), decimated for the web. Scaled to the species height * size factor. */
 function ModelPlant({ o, file }: { o: PlanObject; file: string }) {
   const sp = SPECIES[o.species ?? "klon"];
@@ -167,14 +180,7 @@ function Tree({ o, lit }: { o: PlanObject; lit: boolean }) {
   if (sp.style === "column") {
     return <group position={[o.x, 0, o.y]}><mesh geometry={CONE} position={[0, H / 2, 0]} scale={[r, H, r]} castShadow>{mat(sp.color)}</mesh></group>;
   }
-  if (sp.style === "bush") {
-    return (
-      <group position={[o.x, 0, o.y]}>
-        <mesh geometry={ICO} position={[0, H * 0.45, 0]} scale={[r, H * 0.5, r]} castShadow>{mat(sp.color)}</mesh>
-        {Array.from({ length: 8 }, (_, i) => { const a = (i / 8) * 6.28 + seed; const rr = r * (0.45 + hash(i, seed) * 0.3); return <mesh key={i} geometry={ICO} position={[Math.cos(a) * rr, H * (0.55 + hash(i, 3) * 0.35), Math.sin(a) * rr]} scale={r * 0.3}>{mat(sp.accent ?? sp.color)}</mesh>; })}
-      </group>
-    );
-  }
+  if (sp.style === "bush") return <Bush o={o} />;
   const th = H * (sp.style === "birch" ? 0.5 : 0.36);
   const canopyH = H - th;
   const light = sp.style === "birch";
@@ -203,28 +209,63 @@ function Hedge({ o }: { o: PlanObject }) {
 
 function GrassTufts({ items }: { items: PlanObject[] }) {
   const ref = useRef<THREE.InstancedMesh>(null);
-  const per = 22;
+  const per = 90;
   useLayoutEffect(() => {
     const m = ref.current; if (!m) return;
     const d = new THREE.Object3D(), c = new THREE.Color();
     const sp = SPECIES.trawy;
     let n = 0;
     items.forEach((o, k) => {
+      const f = o.w / sp.d;
       for (let i = 0; i < per; i++) {
-        const a = hash(k, i) * 6.283, rr = Math.sqrt(hash(i, k + 5)) * o.w * 0.45;
+        const a = hash(k + 3, i) * 6.283, rr = Math.pow(hash(i, k + 5), 0.7) * o.w * 0.42;
         d.position.set(o.x + Math.cos(a) * rr, 0, o.y + Math.sin(a) * rr);
-        const tilt = (rr / (o.w * 0.45)) * 0.5;
-        d.rotation.set(Math.sin(a) * tilt, 0, -Math.cos(a) * tilt);
-        const hh = (0.55 + hash(i, k) * 0.7) * sp.height * (o.w / sp.d);
-        d.scale.set(0.035, hh, 0.035);
+        const out = 0.15 + (rr / (o.w * 0.42)) * 0.75;
+        d.rotation.set(0, a + Math.PI / 2 + (hash(i, k) - 0.5) * 0.8, 0);
+        d.rotateX(-out * 0.5);
+        const hh = (0.45 + hash(i, k + 1) * 0.8) * sp.height * f * (1 - 0.35 * (rr / (o.w * 0.45)));
+        d.scale.set(0.045 * (0.7 + hash(i, k + 7) * 0.8), hh, 1);
         d.updateMatrix(); m.setMatrixAt(n, d.matrix);
-        c.set(hash(i, k + 9) > 0.5 ? sp.color : sp.accent!); m.setColorAt(n, c); n++;
+        const t = hash(i, k + 9);
+        c.set(t > 0.82 ? "#e6d9a0" : t > 0.45 ? "#c9b86a" : "#9bab5c"); m.setColorAt(n, c); n++;
       }
     });
     m.count = n; m.instanceMatrix.needsUpdate = true; if (m.instanceColor) m.instanceColor.needsUpdate = true;
   }, [items]);
   if (!items.length) return null;
-  return <instancedMesh key={items.length} ref={ref} args={[BLADE, undefined, items.length * per]} castShadow><meshStandardMaterial roughness={0.9} /></instancedMesh>;
+  return <instancedMesh key={items.length} ref={ref} args={[BLADE, undefined, items.length * per]} castShadow><meshStandardMaterial roughness={0.85} side={THREE.DoubleSide} /></instancedMesh>;
+}
+
+/** Dense flowering shrub: leafy mound + instanced flower heads (hydrangea) or upright spikes (lavender). */
+function Bush({ o }: { o: PlanObject }) {
+  const sp = SPECIES[o.species ?? "hortensja"];
+  const f = o.w / sp.d, H = sp.height * f, r = o.w / 2;
+  const lav = o.species === "lawenda";
+  const seed = o.x * 11 + o.y * 5;
+  const fl = useRef<THREE.InstancedMesh>(null);
+  const N = lav ? 55 : 46;
+  useLayoutEffect(() => {
+    const m = fl.current; if (!m) return;
+    const d = new THREE.Object3D(), c = new THREE.Color();
+    for (let i = 0; i < N; i++) {
+      const th = hash(i, seed) * 6.283, ph = Math.acos(1 - hash(i, seed + 2) * 0.85);
+      const x = Math.sin(ph) * Math.cos(th) * r * 0.9, z = Math.sin(ph) * Math.sin(th) * r * 0.9, y = Math.cos(ph) * H * 0.5 + H * 0.5;
+      d.position.set(x, y, z); d.rotation.set(0, 0, 0);
+      if (lav) { d.rotation.set((hash(i, 3) - 0.5) * 0.5, 0, (hash(i, 4) - 0.5) * 0.5); d.position.y = H * 0.55 + hash(i, 5) * H * 0.2; d.scale.set(0.035 * f + 0.012, H * 0.55, 0.035 * f + 0.012); }
+      else { const s2 = r * (0.17 + hash(i, 6) * 0.1); d.scale.set(s2, s2 * 0.85, s2); }
+      d.updateMatrix(); m.setMatrixAt(i, d.matrix);
+      const t = hash(i, seed + 8);
+      c.set(lav ? (t > 0.5 ? "#7b5fb5" : "#9a82cc") : t > 0.66 ? "#f3f1fa" : t > 0.33 ? "#e1def2" : "#c8c3e6"); m.setColorAt(i, c);
+    }
+    m.instanceMatrix.needsUpdate = true; if (m.instanceColor) m.instanceColor.needsUpdate = true;
+  }, [r, H, f, lav, seed, N]);
+  return (
+    <group position={[o.x, 0, o.y]}>
+      <mesh geometry={ICO} position={[0, H * 0.38, 0]} scale={[r, H * 0.42, r]} castShadow receiveShadow><meshStandardMaterial color={sp.color} roughness={0.95} /></mesh>
+      {Array.from({ length: 11 }, (_, i) => { const a = (i / 11) * 6.28 + seed; const rr = r * (0.45 + hash(i, seed) * 0.35); const s2 = r * (0.34 + hash(i, seed + 4) * 0.2); return <mesh key={i} geometry={ICO} position={[Math.cos(a) * rr, H * (0.3 + hash(i, 2) * 0.3), Math.sin(a) * rr]} scale={[s2, s2 * 0.8, s2]} castShadow><meshStandardMaterial color={new THREE.Color(sp.color).offsetHSL(0, 0, (hash(i, 9) - 0.5) * 0.08)} roughness={0.95} /></mesh>; })}
+      <instancedMesh ref={fl} args={[lav ? CONE : ICO, undefined, N]} castShadow><meshStandardMaterial roughness={0.8} /></instancedMesh>
+    </group>
+  );
 }
 
 function Pergola({ o }: { o: PlanObject }) {
