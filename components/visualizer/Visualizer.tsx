@@ -9,13 +9,32 @@ interface Area { id: number; pts: Pt[]; mat: string; pattern: Pattern; size: num
 type Mode = "mark" | "edit" | "erase";
 
 const MAX_DIM = 1600;
-const texCache = new Map<string, ImageData>();
-const getTex = (mat: string, pattern: Pattern) => {
+interface Tex { data: Uint8ClampedArray; width: number; height: number; mU: number; mV: number }
+const texCache = new Map<string, Tex>();
+const photoCache = new Map<string, Tex>();
+const getTex = (mat: string, pattern: Pattern): Tex => {
+  const ph = photoCache.get(mat);
+  if (ph) return ph;
   const key = `${mat}|${pattern}`;
   let t = texCache.get(key);
-  if (!t) { const c = makeCanvas(mat, pattern); t = c.getContext("2d")!.getImageData(0, 0, c.width, c.height); texCache.set(key, t); }
+  if (!t) { const c = makeCanvas(mat, pattern); const d = c.getContext("2d")!.getImageData(0, 0, c.width, c.height); t = { data: d.data, width: d.width, height: d.height, mU: TILE_M, mV: TILE_M }; texCache.set(key, t); }
   return t;
 };
+/** Loads real photo textures (Poly Haven, CC0) once; falls back to procedural until they arrive. */
+function loadPhotoTextures(): Promise<void> {
+  return Promise.all(MATERIALS.filter((m) => m.photo && !photoCache.has(m.id)).map((m) => new Promise<void>((res) => {
+    const im = new Image();
+    im.onload = () => {
+      const c = document.createElement("canvas"); c.width = im.width; c.height = im.height;
+      const g = c.getContext("2d")!; g.drawImage(im, 0, 0);
+      const d = g.getImageData(0, 0, c.width, c.height);
+      photoCache.set(m.id, { data: d.data, width: d.width, height: d.height, mU: m.photo!.tileM, mV: m.photo!.tileM });
+      res();
+    };
+    im.onerror = () => res();
+    im.src = `/textures/${m.photo!.dir}/${m.photo!.dir}_diff_1k.jpg`;
+  }))).then(() => undefined);
+}
 
 /** clockwise on screen, starting from the top-left-most point */
 function orderQuad(p: Pt[]): Pt[] {
@@ -128,8 +147,8 @@ export function Visualizer() {
           if (!inside(sx, sy)) continue;
           const w = iv[6] * sx + iv[7] * sy + iv[8]; if (w <= 0) continue;
           const u = (iv[0] * sx + iv[1] * sy + iv[2]) / w, v = (iv[3] * sx + iv[4] * sy + iv[5]) / w;
-          const tx = Math.floor((((u % TILE_M) + TILE_M) % TILE_M) / TILE_M * tex.width) % tex.width;
-          const ty = Math.floor((((v % TILE_M) + TILE_M) % TILE_M) / TILE_M * tex.height) % tex.height;
+          const tx = Math.floor((((u % tex.mU) + tex.mU) % tex.mU) / tex.mU * tex.width) % tex.width;
+          const ty = Math.floor((((v % tex.mV) + tex.mV) % tex.mV) / tex.mV * tex.height) % tex.height;
           const tp = (ty * tex.width + tx) * 4;
           r += tex.data[tp]; gg += tex.data[tp + 1]; b += tex.data[tp + 2]; cnt++;
         }
@@ -156,7 +175,9 @@ export function Visualizer() {
     timer.current = setTimeout(() => render(false, list), 280);
   }, [render]);
 
-  useEffect(() => { schedule(areas); }, [areas, dims, schedule]);
+  const [texVer, setTexVer] = useState(0);
+  useEffect(() => { loadPhotoTextures().then(() => setTexVer((v) => v + 1)); }, []);
+  useEffect(() => { schedule(areas); }, [areas, dims, schedule, texVer]);
 
   const load = (c: HTMLCanvasElement) => {
     photo.current = c;
@@ -304,12 +325,12 @@ export function Visualizer() {
           <div className="mt-3 grid grid-cols-3 gap-2">
             {brickMats.map((m) => (
               <button key={m.id} onClick={() => patch({ mat: m.id, pattern: m.pattern ?? "classic" })} aria-pressed={selArea?.mat === m.id} className={`border-2 text-left ${selArea?.mat === m.id ? "border-charcoal" : "border-transparent hover:border-charcoal/40"}`}>
-                <span className="block aspect-square w-full" style={{ backgroundImage: `url(${makeCanvas(m.id, m.pattern).toDataURL()})`, backgroundSize: "200%" }} />
+                <span className="block aspect-square w-full" style={{ backgroundImage: m.photo ? `url(/textures/${m.photo.dir}/${m.photo.dir}_diff_1k.jpg)` : `url(${makeCanvas(m.id, m.pattern).toDataURL()})`, backgroundSize: m.photo ? "160%" : "200%" }} />
                 <span className="block px-1 py-1 text-[11px] leading-tight">{m.name}</span>
               </button>
             ))}
           </div>
-          {matById(selArea?.mat).tex === "bricks" && (
+          {matById(selArea?.mat).tex === "bricks" && !matById(selArea?.mat).photo && (
             <div className="mt-4"><div className="mb-1 text-sm font-medium">Układ</div>
               <div className="flex flex-wrap gap-1.5">{PATTERNS.map((p) => <button key={p.id} onClick={() => patch({ pattern: p.id })} className={`border px-2.5 py-1 text-sm ${selArea?.pattern === p.id ? "border-charcoal bg-charcoal text-white" : "border-charcoal/30"}`}>{p.name}</button>)}</div></div>
           )}

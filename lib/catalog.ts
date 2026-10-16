@@ -4,6 +4,8 @@ export type TexKind = "bricks" | "gravel" | "grass" | "mulch" | "planks";
 export interface Material {
   id: string; name: string; cat: string; color: string; tex: TexKind;
   pattern?: Pattern; kind: "surface" | "lawn" | "bed";
+  /** real PBR photo texture in /public/textures/<dir> (seamless, CC0 Poly Haven); tileM = metres covered by one tile */
+  photo?: { dir: string; tileM: number };
 }
 export const MATERIAL_CATS = [
   "Kostka betonowa", "Kostka szlachetna", "Płyty tarasowe", "Kamień naturalny",
@@ -29,6 +31,12 @@ export const MATERIALS: Material[] = [
   { id: "rb-kora", name: "Kora sosnowa", cat: "Rabaty", color: "#6d4a30", tex: "mulch", kind: "bed" },
   { id: "rb-ziemia", name: "Ziemia ogrodowa", cat: "Rabaty", color: "#4b3b2d", tex: "mulch", kind: "bed" },
   { id: "in-deska", name: "Deska kompozytowa", cat: "Inne powierzchnie", color: "#7b5d44", tex: "planks", kind: S },
+  { id: "ph-behaton", name: "Behaton szary (skan)", cat: "Kostka betonowa", color: "#6f6a5f", tex: "bricks", kind: S, photo: { dir: "concrete_pavers", tileM: 1.6 } },
+  { id: "ph-bruzowa", name: "Kostka brązowa (skan)", cat: "Kostka betonowa", color: "#7a6450", tex: "bricks", kind: S, photo: { dir: "concrete_pavers_02", tileM: 1.6 } },
+  { id: "ph-granit", name: "Kostka granitowa ciemna (skan)", cat: "Kamień naturalny", color: "#3d3a36", tex: "bricks", kind: S, photo: { dir: "brick_pavement_02", tileM: 1.1 } },
+  { id: "ph-klinkier", name: "Klinkier (skan)", cat: "Kostka szlachetna", color: "#9a8a55", tex: "bricks", kind: S, photo: { dir: "floor_klinkers_01", tileM: 1.2 } },
+  { id: "ph-bruk", name: "Bruk kamienny (skan)", cat: "Kamień naturalny", color: "#8c8474", tex: "bricks", kind: S, photo: { dir: "cobblestone_floor_01", tileM: 1.3 } },
+  { id: "ph-zwir", name: "Żwir dwukolorowy (skan)", cat: "Żwir", color: "#5c5a52", tex: "gravel", kind: S, photo: { dir: "bicolour_gravel", tileM: 0.9 } },
   { id: "in-beton", name: "Beton architektoniczny", cat: "Inne powierzchnie", color: "#9d9d98", tex: "bricks", pattern: "modern", kind: S },
 ];
 export const matById = (id?: string) => MATERIALS.find((m) => m.id === id) ?? MATERIALS[0];
