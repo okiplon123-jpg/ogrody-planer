@@ -1,11 +1,13 @@
 import { VisualizerLoader } from "@/components/visualizer/VisualizerLoader";
-export const metadata = { title: "Wizualizator kostki brukowej na Twoim zdjęciu — NAZWA MARKI" };
+export const metadata = { title: "Wizualizator kostki brukowej na Twoim zdjęciu — NAZWA MARKI [miasto]", description: "Wgraj zdjęcie podjazdu, zaznacz cztery rogi nawierzchni i przymierz kostkę. Zdjęcie zostaje w Twojej przeglądarce." };
+
 export default function Page() {
   return (
-    <div className="mx-auto max-w-[1500px] px-5 py-14 md:px-8 md:py-20">
-      <h1 className="mb-2 font-serif text-[clamp(2.8rem,6vw,6rem)] leading-[0.95]">Zobacz kostkę na swoim podjeździe</h1>
-      <p className="mb-8 max-w-2xl text-charcoal/70">Wgraj zdjęcie, zaznacz nawierzchnię i przymierz różne kostki. Zajmuje to minutę, a zdjęcie nie opuszcza Twojej przeglądarki.</p>
-      <VisualizerLoader />
-    </div>
+    <section className="pad py-[clamp(3rem,8vw,7rem)]">
+      <h1 className="display max-w-[14ch]">przymierz kostkę<span className="period" aria-hidden /></h1>
+      <p className="prose-m mt-8 text-[var(--text-lg)] leading-snug">Wgraj zdjęcie podjazdu, tarasu lub ścieżki, zaznacz cztery rogi nawierzchni i wybierz kostkę. Zdjęcie zostaje w Twojej przeglądarce.</p>
+      <div className="mt-12 border-y border-[var(--color-ink)] py-6"><VisualizerLoader /></div>
+      <p className="label mt-6">wizualizacja jest poglądowa — rzeczywisty kolor kostki zależy od partii i oświetlenia</p>
+    </section>
   );
 }

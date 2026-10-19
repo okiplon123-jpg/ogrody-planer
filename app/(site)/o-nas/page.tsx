@@ -1,14 +1,24 @@
-export const metadata = { title: "O nas — ekipa od kostki brukowej NAZWA MARKI [miasto]" };
+export const metadata = { title: "O nas: ekipa od kostki brukowej — NAZWA MARKI [miasto]", description: "Kim jesteśmy, gdzie pracujemy i czym układamy kostkę. [do uzupełnienia przez firmę]" };
+
 export default function Page() {
   return (
-    <div className="mx-auto max-w-[1100px] px-5 py-14 md:px-8 md:py-24">
-      <p className="eyebrow text-rust">O nas</p>
-      <h1 className="mt-3 font-serif text-[clamp(3rem,7vw,6.5rem)] leading-[0.92]">Układamy kostkę od początku do końca.</h1>
-      <div className="mt-12 max-w-3xl space-y-6 text-xl leading-relaxed text-ink/80">
-        <p>[Tu kilka prawdziwych zdań o firmie: od kiedy układacie kostkę, skąd jesteście, ile prac za Wami. Własnymi słowami, tak jak mówicie klientowi przez telefon.]</p>
-        <p>[Kto przyjeżdża na pomiar, kto układa, czym pracujecie.]</p>
-        <p className="eyebrow border-t-[1.5px] border-ink pt-4 text-ink/60">Działamy: [miasto i okolice, promień km] · Pn–pt [godziny] · Tel. [telefon]</p>
+    <section className="pad py-[clamp(3rem,8vw,7rem)]">
+      <h1 className="h2">o nas.</h1>
+      <div className="mt-10 grid grid-cols-6 gap-y-10 md:grid-cols-12">
+        <article className="col-span-6 space-y-6 text-[var(--text-lg)] leading-relaxed md:col-span-7">
+          <p>[Tu kilka prawdziwych zdań o firmie: od kiedy układacie kostkę, skąd jesteście, ile prac macie za sobą. Własnymi słowami, tak jak mówicie klientowi przez telefon.]</p>
+          <p>[Kto przyjeżdża na pomiar, kto układa, czym pracujecie.]</p>
+          <p>[Jedna konkretna praca: jaki był teren, co sprawiło trudność, jak to rozwiązaliście.]</p>
+        </article>
+        <dl className="col-span-6 md:col-span-4 md:col-start-9">
+          {[["działamy", "[miasto i okolice, promień w km]"], ["sprzęt", "[lista maszyn]"], ["godziny", "pn–pt [godziny]"], ["telefon", "[telefon]"]].map(([k, v], i, a) => (
+            <div key={k} className={`border-t border-[var(--color-rule)] py-4 ${i === a.length - 1 ? "border-b border-[var(--color-ink)]" : ""}`}>
+              <dt className="label">{k}</dt>
+              <dd className="tnum mt-1 text-[var(--text-lg)] font-semibold">{v}</dd>
+            </div>
+          ))}
+        </dl>
       </div>
-    </div>
+    </section>
   );
 }

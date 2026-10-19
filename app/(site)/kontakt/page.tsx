@@ -1,15 +1,25 @@
 import { ContactForm } from "@/components/marketing/ContactForm";
-export const metadata = { title: "Kontakt — zadzwoń lub poproś o projekt, NAZWA MARKI [miasto]" };
+export const metadata = { title: "Kontakt: zadzwoń lub zostaw numer — NAZWA MARKI [miasto]", description: "Telefon, godziny pracy i formularz oddzwonienia. Oglądamy teren i mówimy, ile to potrwa." };
+
 export default function Page() {
   return (
-    <div className="mx-auto grid max-w-[1500px] md:grid-cols-2">
-      <div className="border-b-[1.5px] border-ink px-5 py-14 md:border-b-0 md:border-r-[1.5px] md:px-12 md:py-24">
-        <p className="eyebrow text-rust">Kontakt</p>
-        <h1 className="mt-3 font-serif text-[clamp(3rem,7vw,6.5rem)] leading-[0.92]">Najszybciej: zadzwoń.</h1>
-        <a href="tel:+48000000000" className="mt-8 block font-serif text-5xl text-rust md:text-7xl">[telefon]</a>
-        <ul className="eyebrow mt-8 space-y-2 text-ink/70"><li>[adres e-mail]</li><li>[adres firmy]</li><li>pn–pt [godziny]</li><li>Obsługujemy: [miasto i okolice]</li></ul>
+    <section className="pad py-[clamp(3rem,8vw,7rem)]">
+      <h1 className="display">zadzwoń<span className="period" aria-hidden /></h1>
+      <p className="tnum mt-6 text-[var(--text-2xl)] font-extrabold tracking-tight">[telefon]</p>
+      <div className="mt-16 grid grid-cols-6 gap-y-10 md:grid-cols-12">
+        <dl className="col-span-6 md:col-span-5">
+          {[["e-mail", "[adres e-mail]"], ["adres", "[adres firmy]"], ["godziny", "pn–pt [godziny]"], ["działamy", "[miasto i okolice, promień w km]"]].map(([k, v], i, a) => (
+            <div key={k} className={`border-t border-[var(--color-rule)] py-4 ${i === a.length - 1 ? "border-b border-[var(--color-ink)]" : ""}`}>
+              <dt className="label">{k}</dt>
+              <dd className="mt-1 text-[var(--text-lg)] font-semibold">{v}</dd>
+            </div>
+          ))}
+        </dl>
+        <div className="col-span-6 md:col-span-5 md:col-start-8">
+          <h2 className="h3">wolisz, żebyśmy oddzwonili?</h2>
+          <div className="mt-6"><ContactForm /></div>
+        </div>
       </div>
-      <div className="px-5 py-14 md:px-12 md:py-24"><ContactForm title="Wolisz, żebyśmy oddzwonili?" /></div>
-    </div>
+    </section>
   );
 }

@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-19",
+  "framework": "Next.js 16 app router",
+  "css": "Tailwind v4 (app/globals.css @import tailwindcss, @theme inline)",
+  "fonts": "Bricolage Grotesque + IBM Plex Mono + Instrument Sans via next/font/google (app/layout.tsx) — replaced by Archivo",
+  "palette": "paper #efede6, ink #141816, rust #d9622b in globals.css :root — replaced by Grid tokens (tokens.css)",
+  "motion": "gsap in package.json but unused; scroll reveals removed (motion-cut)",
+  "preserved": ["/planer", "lib/*", "visualizer logic", "public/zdjecia", "public/textures"],
+  "conflicts": []
+}

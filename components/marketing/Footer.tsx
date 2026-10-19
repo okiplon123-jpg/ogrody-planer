@@ -1,16 +1,37 @@
 import Link from "next/link";
+
+/* Ft4 dense colophon: contact and sitemap in one ruled block. */
 export function Footer() {
   return (
-    <footer className="border-t-[1.5px] border-ink bg-ink text-paper">
-      <div className="mx-auto grid max-w-[1500px] gap-10 px-5 py-14 md:grid-cols-[1.4fr_1fr_1fr] md:px-8">
-        <div>
-          <p className="font-serif text-5xl leading-none md:text-7xl">Zadzwoń:<br /><a href="tel:+48000000000" className="text-rust">[telefon]</a></p>
-          <p className="eyebrow mt-6 text-paper/60">[adres e-mail] · [adres firmy] · pn–pt [godziny]</p>
+    <footer className="colophon">
+      <div className="shell">
+        <div className="grid grid-cols-6 gap-y-8 pad py-12 md:grid-cols-12">
+          <div className="col-span-6 md:col-span-5">
+            <p className="wordmark">nazwa marki<span className="period" aria-hidden /></p>
+            <p className="label mt-3">kostka brukowa · [miasto i okolice]</p>
+          </div>
+          <address className="col-span-6 not-italic md:col-span-4">
+            <p className="label">kontakt</p>
+            <p className="mt-2"><a href="tel:+48000000000" className="tnum font-bold">[telefon]</a></p>
+            <p>[adres e-mail]</p>
+            <p>[adres firmy]</p>
+            <p>pn–pt [godziny]</p>
+          </address>
+          <nav className="col-span-6 md:col-span-3" aria-label="Mapa strony">
+            <p className="label">strona</p>
+            <ul className="mt-2 space-y-1">
+              <li><Link href="/uslugi">usługi</Link></li>
+              <li><Link href="/wizualizator">wizualizator kostki</Link></li>
+              <li><Link href="/planer">planer ogrodu (beta)</Link></li>
+              <li><Link href="/o-nas">o nas</Link></li>
+              <li><Link href="/kontakt">kontakt</Link></li>
+              <li><Link href="/polityka-prywatnosci">polityka prywatności</Link></li>
+              <li><Link href="/polityka-prywatnosci#cookies">ustawienia cookies</Link></li>
+            </ul>
+          </nav>
         </div>
-        <ul className="eyebrow space-y-3">{[["/uslugi", "Co układamy"], ["/wizualizator", "Wizualizator kostki"], ["/planer", "Planer ogrodu (beta)"], ["/o-nas", "O nas"], ["/kontakt", "Kontakt"]].map(([h, n]) => <li key={h}><Link href={h} className="hover:text-rust">{n} →</Link></li>)}</ul>
-        <div className="eyebrow space-y-3 text-paper/60"><p>Facebook [link]</p><p>Instagram [link]</p><Link href="/polityka-prywatnosci" className="block hover:text-rust">Polityka prywatności</Link><Link href="/polityka-prywatnosci#cookies" className="block hover:text-rust">Ustawienia cookies</Link></div>
+        <p className="label pad border-t border-[var(--color-rule)] py-4">© nazwa marki · wersja robocza: dane w nawiasach [ ] do uzupełnienia</p>
       </div>
-      <div className="eyebrow border-t border-paper/20 px-5 py-4 text-paper/50 md:px-8">© NAZWA MARKI · Wersja robocza: dane firmy w nawiasach [ ] do uzupełnienia.</div>
     </footer>
   );
 }

@@ -1,11 +1,15 @@
 export const metadata = { title: "Polityka prywatności — NAZWA MARKI" };
 export default function Page() {
   return (
-    <div className="mx-auto max-w-[800px] px-5 pb-28 pt-36">
-      <h1 className="font-serif text-6xl">Polityka prywatności</h1>
-      <p className="mt-6 leading-relaxed text-charcoal/70">Miejsce na właściwą politykę prywatności firmy. Ta strona jest prototypem: projekty z planera zapisują się wyłącznie lokalnie w Twojej przeglądarce (localStorage) i nie są nigdzie przesyłane.</p>
-      <h2 id="cookies" className="mt-10 font-serif text-3xl">Ustawienia cookies</h2>
-      <p className="mt-3 leading-relaxed text-charcoal/70">Prototyp nie używa plików cookies śledzących. Panel zgód zostanie dodany razem z docelowymi narzędziami analitycznymi.</p>
-    </div>
+    <section className="pad py-[clamp(3rem,8vw,7rem)]">
+      <h1 className="h2">polityka prywatności.</h1>
+      <div className="mt-10 grid grid-cols-6 md:grid-cols-12">
+        <div className="prose-m col-span-6 space-y-4 md:col-span-7">
+          <p>[Tu właściwa polityka prywatności firmy.] Ta strona jest wersją roboczą: zdjęcia wgrywane do wizualizatora i projekty z planera zostają wyłącznie w Twojej przeglądarce i nigdzie się nie wysyłają.</p>
+          <h2 id="cookies" className="h3 pt-6">ustawienia cookies.</h2>
+          <p>Wersja robocza nie używa plików cookies śledzących. Panel zgód pojawi się razem z narzędziami analitycznymi.</p>
+        </div>
+      </div>
+    </section>
   );
 }
