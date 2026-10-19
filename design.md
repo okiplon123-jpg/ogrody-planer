@@ -7,7 +7,8 @@ A locked design system for this site. Every page redesign reads this file before
 - Previous fonts: Bricolage Grotesque + IBM Plex Mono + Instrument Sans (`app/layout.tsx`) — replaced.
 - Previous palette: paper `#efede6`, rust `#d9622b` in `globals.css :root` — replaced.
 - Motion: `gsap` installed but unused (hero removed) → stance: motion-cut. Scroll reveals removed.
-- Preserved untouched: `/planer` (dark tool UI), `lib/*`, the visualizer logic (`components/visualizer/Visualizer.tsx` — behaviour only, skin changes), `public/zdjecia`, `public/textures`.
+- Preserved untouched: `lib/*`, the visualizer and planner logic (behaviour only, skin changes), `public/zdjecia`, `public/textures`, `public/models`.
+- `/planer` was first left in its old dark UI, then restyled into this same system (paper sheet, ink hairlines, square controls, signal yellow for the primary action and selection handles). The 3D scene itself keeps its own lighting palette; its UI chrome follows the system.
 
 ## Brief
 - Audience: homeowners and small businesses in [miasto i okolice] who want a driveway, terrace, path or yard laid in paving stone. They know what they want to see, not how it is built.
@@ -58,6 +59,9 @@ Macrostructure within the family, the one object per band (specimen cells, proce
 
 ## Imagery
 No stock photography of finished jobs (the firm has none to show). Imagery = the visualizer and specimen cells of real paver textures (CC0, see `public/zdjecia/ZRODLA.md`). Own job photos slot into the specimen cells when they exist.
+
+## Slop-test record (58 gates, 2026-10-19)
+Measured in the browser: no horizontal scroll at 320/375/414/768/1280/1920 on all pages (34); 264 clickable labels, none wrap (49); contrast pass on all site pages and both planner views (40–41); one font family, Archivo (37); no italic headings (38a); hero CTA visible at 1280×800 and bottom padding 1.8× top (44). Read from code: no `transition: all` (10), no bounce easings (12), no animated layout properties (14), no hex colours outside tokens in site or planner chrome (48), no placeholder names or clichés (19), no invented metrics (46). Judgement calls: FAQ questions and whole-row index links may wrap (they are headings/rows, not labels); N1a nav is justified by two destinations (42).
 
 ## Per-page allowances
 Marketing: one plate. Process / content pages: typography and ruled objects only.

@@ -20,7 +20,7 @@ export function NumField({ label, value, onCommit, min = 0, max = 999, step = 0.
       {label && <span className="pl-label mb-1 block">{label}</span>}
       <span className="relative block">
         <input className="pl-input pr-6" inputMode="decimal" value={t} step={step} onChange={(e) => setT(e.target.value)} onBlur={commit} onKeyDown={(e) => e.key === "Enter" && (e.target as HTMLInputElement).blur()} />
-        <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-stone">{suffix}</span>
+        <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-[var(--color-muted)]">{suffix}</span>
       </span>
     </label>
   );
@@ -30,9 +30,9 @@ export function Seg<T extends string>({ value, options, onChange, label }: { val
   return (
     <div>
       {label && <div className="pl-label mb-1">{label}</div>}
-      <div className="flex border border-[#2f3a33]" role="radiogroup">
+      <div className="flex border border-[var(--color-rule)]" role="radiogroup">
         {options.map((o) => (
-          <button key={o.id} role="radio" aria-checked={value === o.id} onClick={() => onChange(o.id)} className={`flex-1 px-2 py-1.5 text-[11px] transition ${value === o.id ? "bg-sage text-charcoal font-semibold" : "text-[#cfd8cf] hover:bg-botanic"}`}>{o.name}</button>
+          <button key={o.id} role="radio" aria-checked={value === o.id} onClick={() => onChange(o.id)} className={`flex-1 px-2 py-1.5 text-[11px] transition ${value === o.id ? "bg-[var(--color-accent)] text-[var(--color-accent-ink)] font-semibold" : "text-[var(--color-ink-2)] hover:bg-[var(--color-paper-2)]"}`}>{o.name}</button>
         ))}
       </div>
     </div>
@@ -49,7 +49,7 @@ export function ItemThumb({ item }: { item: LibItem }) {
   const k = 1.7 / Math.max(item.w, item.h);
   const o = { id: "t", kind: item.kind, x: 0, y: 0, w: item.w * k, h: item.h * k, rot: 0, species: item.species };
   return (
-    <svg viewBox="-1 -1 2 2" width={52} height={52} className="shrink-0 bg-[#a89f88]"><Glyph o={o} lit={false} /></svg>
+    <svg viewBox="-1 -1 2 2" width={52} height={52} aria-hidden="true" className="shrink-0 bg-[var(--color-sample-ground)]"><Glyph o={o} lit={false} /></svg>
   );
 }
 

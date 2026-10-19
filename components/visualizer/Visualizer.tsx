@@ -270,10 +270,10 @@ export function Visualizer() {
         ) : (
           <div>
             <div className="relative w-full select-none overflow-hidden bg-[var(--color-ink)]" style={{ aspectRatio: `${dims.w}/${dims.h}`, touchAction: "none" }}>
-              <canvas ref={orig} className="absolute inset-0 h-full w-full" />
-              <canvas ref={out} className="absolute inset-0 h-full w-full" style={{ clipPath: `inset(0 0 0 ${cmp}%)` }} />
+              <canvas ref={orig} className="absolute inset-0 h-full w-full" role="img" aria-label="Twoje zdjęcie przed zmianą" />
+              <canvas ref={out} className="absolute inset-0 h-full w-full" role="img" aria-label="Twoje zdjęcie z wybraną kostką" style={{ clipPath: `inset(0 0 0 ${cmp}%)` }} />
               {cmp > 0 && <div className="pointer-events-none absolute inset-y-0 w-0.5 bg-[var(--color-accent)]" style={{ left: `${cmp}%` }} />}
-              <svg ref={svg} viewBox={`0 0 ${dims.w} ${dims.h}`} className="absolute inset-0 h-full w-full" style={{ cursor: mode === "edit" ? "default" : "crosshair" }} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}>
+              <svg ref={svg} role="application" aria-label="Zaznaczanie nawierzchni na zdjęciu: kliknij cztery rogi" viewBox={`0 0 ${dims.w} ${dims.h}`} className="absolute inset-0 h-full w-full" style={{ cursor: mode === "edit" ? "default" : "crosshair" }} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}>
                 {mode === "edit" && selArea && (
                   <g>
                     <polygon points={selArea.pts.map((p) => p.join(",")).join(" ")} fill="none" className="vz-dash" strokeWidth={r / 4} strokeDasharray={`${r} ${r / 2}`} pointerEvents="none" />

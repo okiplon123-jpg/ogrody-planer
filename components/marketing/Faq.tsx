@@ -1,9 +1,9 @@
 const QA: [string, string][] = [
-  ["Ile trwa położenie podjazdu?", "To zależy od metrażu, gruntu i pogody, więc nie podamy jednej liczby przez telefon. Po obejrzeniu terenu mówimy konkretnie. [do uzupełnienia: typowe czasy]"],
-  ["Czy można układać kostkę zimą?", "Wykop, podbudowa i układanie potrzebują niezamarzniętego gruntu i dodatnich temperatur. [do uzupełnienia: kiedy firma pracuje w sezonie]"],
-  ["Czy potrzebuję pozwolenia?", "Zwykły podjazd lub chodnik na własnej działce zazwyczaj go nie wymaga. Inaczej bywa przy zjeździe z drogi publicznej i przy ogrodzeniu. Sprawdzimy to dla Twojej działki."],
-  ["Jak przygotować teren?", "Zostaw dojazd dla sprzętu i usuń rzeczy z miejsca prac. Wykop i podbudowa są po naszej stronie."],
-  ["Od czego zależy cena?", "Od powierzchni, rodzaju gruntu, grubości podbudowy, wybranej kostki i wzoru, odwodnienia oraz dojazdu sprzętu. Dokładną kwotę ustalamy na miejscu."],
+  ["Ile trwa położenie podjazdu?", "[do uzupełnienia przez firmę: typowy czas dla podjazdu, tarasu i ścieżki oraz od czego zależy]"],
+  ["Czy można układać kostkę zimą?", "[do uzupełnienia przez firmę: kiedy pracujecie w sezonie i od jakich warunków pogodowych to zależy]"],
+  ["Czy potrzebuję pozwolenia?", "[do uzupełnienia przez firmę: czy sprawdzacie wymogi formalne dla klienta i jak to robicie. Przepisy zależą od rodzaju prac i miejsca, np. zjazdu z drogi publicznej]"],
+  ["Jak przygotować teren?", "[do uzupełnienia przez firmę: co klient musi przygotować, a co jest po Waszej stronie]"],
+  ["Od czego zależy cena?", "Zależy od powierzchni, gruntu, grubości podbudowy, wybranej kostki, odwodnienia i dojazdu dla sprzętu. [do uzupełnienia: jak firma ustala kwotę]"],
   ["Czy jest gwarancja?", "[do uzupełnienia przez firmę — nic nie wpisujemy, dopóki nie jest potwierdzone]"],
 ];
 

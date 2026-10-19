@@ -18,7 +18,7 @@ export function Specimens() {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={`/zdjecia/${f}.jpg`} alt="" loading="eager" />
             </span>
-            <span className="label block border-t border-[var(--color-rule)] px-3 py-2">{n}</span>
+            <span className="label spec-cap block border-t border-[var(--color-rule)] px-3 py-2">{n}</span>
           </Link>
         </li>
       ))}

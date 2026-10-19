@@ -20,9 +20,9 @@ const SURFACES: [string, string, string][] = [
 export default function Page() {
   return (
     <>
-      <section className="pad py-[clamp(3rem,8vw,7rem)]">
+      <section className="pad pb-[clamp(4rem,8vw,7rem)] pt-[clamp(2.5rem,4.5vw,4rem)]">
         <h1 className="display max-w-[16ch]">jak układamy kostkę<span className="period" aria-hidden /></h1>
-        <p className="prose-m mt-8 text-[var(--text-lg)] leading-snug">Sześć etapów, w tej kolejności. Skracanie którejkolwiek z nich widać dopiero po pierwszej zimie.</p>
+        <p className="prose-m mt-8 text-[var(--text-lg)] leading-snug">Sześć etapów, w tej kolejności. [opis etapów do potwierdzenia przez firmę]</p>
       </section>
 
       {STAGES.map(([n, t, d]) => (

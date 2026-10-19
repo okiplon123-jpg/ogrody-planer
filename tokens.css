@@ -33,6 +33,11 @@
   --dur-short: 180ms;
   --dur-med: 240ms;
 
+  /* surface-category data colours (area breakdown in the planner summary) */
+  --data-driveway: oklch(32% 0.012 255); --data-terrace: oklch(66% 0.006 255); --data-path: oklch(58% 0.006 255);
+  --data-other: oklch(68% 0.060 80);     --data-lawn: oklch(56% 0.130 140);   --data-bed: oklch(38% 0.060 55);
+  --color-sample-ground: oklch(70% 0.030 85);
+
   --radius-card: 0; --radius-pill: 0; --radius-input: 0;
   --shell: 80rem;
   --measure: 62ch;

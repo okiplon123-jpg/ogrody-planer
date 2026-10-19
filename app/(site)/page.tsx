@@ -25,14 +25,14 @@ export default function Home() {
       {/* HERO: Workbench lite header — one statement, one action, specimens as the object */}
       <section>
         <div className="grid grid-cols-6 md:grid-cols-12">
-          <div className="col-span-6 pad py-[clamp(3rem,8vw,7rem)] md:col-span-8">
+          <div className="col-span-6 pad pb-[clamp(4rem,8vw,7rem)] pt-[clamp(2.5rem,4.5vw,4rem)] md:col-span-8">
             <h1 className="display">układamy kostkę brukową<span className="period" aria-hidden /></h1>
             <p className="prose-m mt-8 text-[var(--text-lg)] leading-snug">
-              Podjazdy, tarasy, ścieżki i place wokół domu. Przyjeżdżamy, oglądamy teren i mówimy wprost, co się opłaca. [miasto i okolice]
+              Podjazdy, tarasy, ścieżki i place wokół domu. Przyjeżdżamy, oglądamy teren i ustalamy zakres prac. [miasto i okolice · do potwierdzenia przez firmę]
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a href="tel:+48000000000" className="btn btn-signal">zadzwoń&nbsp;[telefon]</a>
-              <a href="#wizualizator" className="btn btn-line">przymierz kostkę na swoim zdjęciu&nbsp;↓</a>
+              <a href="#wizualizator" className="btn btn-line">przymierz kostkę&nbsp;↓</a>
             </div>
           </div>
           <div className="col-span-6 border-[var(--color-ink)] md:col-span-4 md:border-l">
@@ -57,9 +57,8 @@ export default function Home() {
           {WORK.map(([t, d, id], i) => (
             <Link key={id} href={`/uslugi#${id}`} className={`irow ${i === WORK.length - 1 ? "irow-last" : ""}`}>
               <span className="grid grid-cols-6 items-baseline gap-y-2 pad py-6 md:grid-cols-12">
-                <span className="h3 tnum col-span-6 text-[var(--color-muted)] md:col-span-1">0{i + 1}</span>
-                <span className="h2 slide col-span-6 md:col-span-5">{t}</span>
-                <span className="col-span-5 md:col-span-5">{d}</span>
+                <span className="h2 slide col-span-6 md:col-span-6">{t}</span>
+                <span className="prose-m col-span-5 md:col-span-5">{d}</span>
                 <span className="col-span-1 text-right text-[var(--text-xl)]" aria-hidden>→</span>
               </span>
             </Link>
@@ -73,7 +72,7 @@ export default function Home() {
           <div className="rails" aria-hidden />
           <div className="grid grid-cols-6 pad py-[clamp(4rem,9vw,8rem)] md:grid-cols-12">
             <p className="display col-span-6 md:col-span-12">zadzwoń. <span className="tnum">[telefon]</span></p>
-            <p className="col-span-6 mt-8 text-[var(--text-lg)] leading-snug md:col-span-6">pn–pt [godziny] · [miasto i okolice]. Oglądamy teren i mówimy, ile to potrwa i od czego zależy cena.</p>
+            <p className="col-span-6 mt-8 text-[var(--text-lg)] leading-snug md:col-span-6">pn–pt [godziny] · [miasto i okolice]. Oglądamy teren i ustalamy zakres. [do potwierdzenia przez firmę]</p>
           </div>
         </div>
       </section>
@@ -82,7 +81,7 @@ export default function Home() {
       <section className="band">
         <div className="grid grid-cols-6 gap-y-6 pad md:grid-cols-12">
           <h2 className="h2 col-span-6 md:col-span-7">dobra kostka zaczyna się pod kostką.</h2>
-          <p className="prose-m col-span-6 md:col-span-4 md:col-start-9">Zapadnięcia, kałuże i rozchodzące się spoiny biorą się najczęściej z podbudowy. Dlatego zaczynamy od niej, nie od wzoru.</p>
+          <p className="prose-m col-span-6 md:col-span-4 md:col-start-9">Podbudowa to warstwa, której po ułożeniu nie widać, a od której zależy równość nawierzchni i odpływ wody. Dlatego zaczynamy od niej, nie od wzoru.</p>
         </div>
         <div className="mt-10 border-y border-[var(--color-ink)]">
           {LAYERS.map(([tag, name, d, color], i) => (
@@ -91,7 +90,7 @@ export default function Home() {
                 <span className="label" style={{ color: "inherit" }}>{tag}</span>
               </div>
               <h3 className="h3 col-span-6 pad py-5 md:col-span-3">{name}</h3>
-              <p className="col-span-6 pad pb-5 md:col-span-6 md:py-5">{d}</p>
+              <p className="prose-m col-span-6 pad pb-5 md:col-span-6 md:py-5">{d}</p>
             </div>
           ))}
         </div>

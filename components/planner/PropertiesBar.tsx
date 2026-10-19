@@ -17,15 +17,15 @@ export function PropertiesBar() {
   const picks = o.kind === "surface" ? SURFACE_PICKS.map((id) => matById(id)) : MATERIALS.filter((x) => x.kind === o.kind);
   const plants = Object.entries(SPECIES).filter(([, v]) => (o.kind === "tree" ? ["round", "birch", "cone"].includes(v.style) : o.kind === "shrub" ? ["bush", "column"].includes(v.style) : false));
   return (
-    <div className="absolute inset-x-3 bottom-3 z-20 mx-auto flex max-w-[860px] flex-wrap items-center gap-x-4 gap-y-2 border border-[#33403a] bg-[#101411]/97 px-3 py-2 shadow-2xl">
+    <div className="absolute inset-x-3 bottom-3 z-20 mx-auto flex max-w-[860px] flex-wrap items-center gap-x-4 gap-y-2 border border-[var(--color-rule)] bg-[var(--color-paper)] px-3 py-2 shadow-2xl">
       <div className="min-w-[90px]">
-        <div className="font-mono text-[11px] uppercase tracking-wider text-sage">{KIND_LABEL[o.kind]}</div>
-        {["surface", "lawn", "bed", "house", "garage", "water"].includes(o.kind) && <div className="text-[11px] text-stone">{fmtArea(objectArea(o))}</div>}
+        <div className="text-[11px] uppercase tracking-wider text-[var(--color-ink)]">{KIND_LABEL[o.kind]}</div>
+        {["surface", "lawn", "bed", "house", "garage", "water"].includes(o.kind) && <div className="text-[11px] text-[var(--color-muted)]">{fmtArea(objectArea(o))}</div>}
       </div>
       {picks.length > 0 && ["surface", "lawn", "bed"].includes(o.kind) && (
         <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Materiał">
           {picks.map((x) => (
-            <button key={x.id} role="radio" aria-checked={o.material === x.id} title={x.name} onClick={() => set({ material: x.id, pattern: x.pattern ?? o.pattern })} className={`border-2 ${o.material === x.id ? "border-sage" : "border-transparent hover:border-white/40"}`}><MatSwatch id={x.id} size={34} /></button>
+            <button key={x.id} role="radio" aria-checked={o.material === x.id} title={x.name} onClick={() => set({ material: x.id, pattern: x.pattern ?? o.pattern })} className={`border-2 ${o.material === x.id ? "border-[var(--color-ink)]" : "border-transparent hover:border-[var(--color-ink)]"}`}><MatSwatch id={x.id} size={34} /></button>
           ))}
         </div>
       )}
@@ -37,13 +37,13 @@ export function PropertiesBar() {
       )}
       {(o.kind === "house" || o.kind === "garage") && (
         <div className="flex gap-1" role="radiogroup" aria-label="Elewacja">
-          {([["white", "Biała"], ["graphite", "Grafit"], ["wood", "Drewno"]] as [Facade, string][]).map(([id, n]) => <button key={id} role="radio" aria-checked={(o.facade ?? "white") === id} onClick={() => set({ facade: id })} className={`pl-btn ${(o.facade ?? "white") === id ? "!border-sage !text-sage" : ""}`}>{n}</button>)}
+          {([["white", "Biała"], ["graphite", "Grafit"], ["wood", "Drewno"]] as [Facade, string][]).map(([id, n]) => <button key={id} role="radio" aria-checked={(o.facade ?? "white") === id} onClick={() => set({ facade: id })} className={`pl-btn ${(o.facade ?? "white") === id ? "!border-[var(--color-ink)] !text-[var(--color-ink)]" : ""}`}>{n}</button>)}
         </div>
       )}
       <div className="ml-auto flex gap-1.5">
         <button className="pl-btn" onClick={() => set({ rot: (o.rot + 90) % 360 })}>Obróć</button>
         <button className="pl-btn" onClick={() => s.duplicate(o.id)}>Duplikuj</button>
-        <button className="pl-btn !border-red-900/70 !text-red-300 hover:!border-red-400" onClick={() => s.remove(o.id)}>Usuń</button>
+        <button className="pl-btn !border-[var(--color-error)] !text-[var(--color-error)] hover:!border-[var(--color-error)]" onClick={() => s.remove(o.id)}>Usuń</button>
       </div>
     </div>
   );

@@ -29,12 +29,12 @@ export function ContactForm() {
       <div className="field">
         <label htmlFor="cf-name" className="label">imię</label>
         <input id="cf-name" className="input" autoComplete="given-name" value={v.name} onChange={(e) => setV({ ...v, name: e.target.value })} aria-invalid={!!err.name} aria-describedby={err.name ? "cf-name-e" : undefined} />
-        {err.name && <p id="cf-name-e" role="alert" className="err">{err.name}</p>}
+        <div className="err-slot" aria-live="polite">{err.name && <p id="cf-name-e" className="err">{err.name}</p>}</div>
       </div>
       <div className="field">
         <label htmlFor="cf-phone" className="label">telefon</label>
         <input id="cf-phone" className="input tnum" type="tel" autoComplete="tel" value={v.phone} onChange={(e) => setV({ ...v, phone: e.target.value })} aria-invalid={!!err.phone} aria-describedby={err.phone ? "cf-phone-e" : undefined} />
-        {err.phone && <p id="cf-phone-e" role="alert" className="err">{err.phone}</p>}
+        <div className="err-slot" aria-live="polite">{err.phone && <p id="cf-phone-e" className="err">{err.phone}</p>}</div>
       </div>
       <div className="field">
         <label htmlFor="cf-msg" className="label">co chcesz położyć (opcjonalnie)</label>
@@ -45,7 +45,7 @@ export function ContactForm() {
           <input type="checkbox" className="mt-1 h-4 w-4 accent-[var(--color-ink)]" checked={v.consent} onChange={(e) => setV({ ...v, consent: e.target.checked })} aria-invalid={!!err.consent} />
           <span>Zgadzam się, żeby firma oddzwoniła w tej sprawie. <a href="/polityka-prywatnosci" className="underline underline-offset-4">Polityka prywatności</a></span>
         </label>
-        {err.consent && <p role="alert" className="err">{err.consent}</p>}
+        <div className="err-slot" aria-live="polite">{err.consent && <p className="err">{err.consent}</p>}</div>
       </div>
       <button type="submit" className="btn btn-signal">poproś o oddzwonienie</button>
     </form>

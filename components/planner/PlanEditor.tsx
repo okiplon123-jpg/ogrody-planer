@@ -201,7 +201,7 @@ export function PlanEditor() {
   const fs = 11 / cam.z;
   const u = settings.units;
   const dimText = (x: number, y: number, t: string, rot = 0) => (
-    <text x={x} y={y} fontSize={fs} fill="#1d2420" textAnchor="middle" transform={rot ? `rotate(${rot} ${x} ${y})` : undefined} style={{ paintOrder: "stroke", stroke: "rgba(246,244,238,.9)", strokeWidth: fs * 0.35, pointerEvents: "none" }}>{t}</text>
+    <text x={x} y={y} fontSize={fs} fill="var(--color-ink)" textAnchor="middle" transform={rot ? `rotate(${rot} ${x} ${y})` : undefined} style={{ paintOrder: "stroke", stroke: "var(--color-paper)", strokeWidth: fs * 0.35, pointerEvents: "none" }}>{t}</text>
   );
   const handles: V2[] = sel ? ([[-1, -1], [1, -1], [1, 1], [-1, 1]] as V2[]) : [];
 
@@ -222,29 +222,29 @@ export function PlanEditor() {
   const empty = project.objects.length === 0 && tool === "select";
 
   return (
-    <div ref={wrap} onDragOver={(e) => e.preventDefault()} onDrop={onDrop} className="absolute inset-0 select-none overflow-hidden bg-[#1a211d]" style={{ cursor: tool === "draw" || armed ? "crosshair" : "default", touchAction: "none" }}>
+    <div ref={wrap} onDragOver={(e) => e.preventDefault()} onDrop={onDrop} className="absolute inset-0 select-none overflow-hidden bg-[var(--color-paper-3)]" style={{ cursor: tool === "draw" || armed ? "crosshair" : "default", touchAction: "none" }}>
       <svg ref={svgRef} className="absolute inset-0 h-full w-full" onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} onDoubleClick={() => tool === "draw" && s.finishDraw()} role="application" aria-label="Plan działki 2D">
         <g transform={`translate(${cam.x} ${cam.y}) scale(${cam.z})`}>
           <PlanLayer project={project} grid={settings.grid}>
             {settings.dims && (
               <g>
-                <line x1={0} x2={project.plot.w} y1={-0.6} y2={-0.6} stroke="#1d2420" strokeWidth={0.03} />
+                <line x1={0} x2={project.plot.w} y1={-0.6} y2={-0.6} stroke="var(--color-ink)" strokeWidth={0.03} />
                 {dimText(project.plot.w / 2, -0.85, `działka ${fmtLen(project.plot.w, u)}`)}
-                <line x1={-0.6} x2={-0.6} y1={0} y2={project.plot.l} stroke="#1d2420" strokeWidth={0.03} />
+                <line x1={-0.6} x2={-0.6} y1={0} y2={project.plot.l} stroke="var(--color-ink)" strokeWidth={0.03} />
                 {dimText(-0.9, project.plot.l / 2, fmtLen(project.plot.l, u), -90)}
                 {dimText(project.plot.w / 2, project.plot.l + 3.6, "ULICA", 0)}
               </g>
             )}
-            {guides.v.map((v, i) => <line key={"v" + i} x1={v} x2={v} y1={-3} y2={project.plot.l + 3} stroke="#b4d08a" strokeWidth={0.04} strokeDasharray="0.3 0.2" pointerEvents="none" />)}
-            {guides.h.map((v, i) => <line key={"h" + i} y1={v} y2={v} x1={-3} x2={project.plot.w + 3} stroke="#b4d08a" strokeWidth={0.04} strokeDasharray="0.3 0.2" pointerEvents="none" />)}
+            {guides.v.map((v, i) => <line key={"v" + i} x1={v} x2={v} y1={-3} y2={project.plot.l + 3} stroke="var(--color-ink)" strokeWidth={0.04} strokeDasharray="0.3 0.2" pointerEvents="none" />)}
+            {guides.h.map((v, i) => <line key={"h" + i} y1={v} y2={v} x1={-3} x2={project.plot.w + 3} stroke="var(--color-ink)" strokeWidth={0.04} strokeDasharray="0.3 0.2" pointerEvents="none" />)}
             {sel && (
               <g>
                 <g transform={`translate(${sel.x} ${sel.y}) rotate(${sel.rot})`}>
-                  <rect x={-sel.w / 2} y={-sel.h / 2} width={sel.w} height={sel.h} fill="none" stroke="#b4d08a" strokeWidth={2 / cam.z} strokeDasharray={`${6 / cam.z} ${4 / cam.z}`} pointerEvents="none" />
-                  <line x1={0} y1={-sel.h / 2} x2={0} y2={-sel.h / 2 - 22 / cam.z} stroke="#b4d08a" strokeWidth={1.5 / cam.z} />
-                  <circle data-handle="rot" cx={0} cy={-sel.h / 2 - 22 / cam.z} r={7 / cam.z} fill="#141816" stroke="#b4d08a" strokeWidth={2 / cam.z} style={{ cursor: "grab" }} />
+                  <rect x={-sel.w / 2} y={-sel.h / 2} width={sel.w} height={sel.h} fill="none" stroke="var(--color-ink)" strokeWidth={2 / cam.z} strokeDasharray={`${6 / cam.z} ${4 / cam.z}`} pointerEvents="none" />
+                  <line x1={0} y1={-sel.h / 2} x2={0} y2={-sel.h / 2 - 22 / cam.z} stroke="var(--color-ink)" strokeWidth={1.5 / cam.z} />
+                  <circle data-handle="rot" cx={0} cy={-sel.h / 2 - 22 / cam.z} r={7 / cam.z} fill="var(--color-accent)" stroke="var(--color-ink)" strokeWidth={2 / cam.z} style={{ cursor: "grab" }} />
                   {handles.map(([sx, sy]) => (
-                    <rect key={`${sx},${sy}`} data-handle={`${sx},${sy}`} x={(sx * sel.w) / 2 - 6 / cam.z} y={(sy * sel.h) / 2 - 6 / cam.z} width={12 / cam.z} height={12 / cam.z} fill="#b4d08a" stroke="#141816" strokeWidth={1.5 / cam.z} style={{ cursor: "nwse-resize" }} />
+                    <rect key={`${sx},${sy}`} data-handle={`${sx},${sy}`} x={(sx * sel.w) / 2 - 6 / cam.z} y={(sy * sel.h) / 2 - 6 / cam.z} width={12 / cam.z} height={12 / cam.z} fill="var(--color-accent)" stroke="var(--color-ink)" strokeWidth={1.5 / cam.z} style={{ cursor: "nwse-resize" }} />
                   ))}
                 </g>
                 {settings.dims && (() => {
@@ -262,8 +262,8 @@ export function PlanEditor() {
             )}
             {tool === "draw" && drawPts.length > 0 && (
               <g pointerEvents="none">
-                <polyline points={[...drawPts, ...(cursor ? [[sn(cursor[0]), sn(cursor[1])]] : [])].map((p) => p.join(",")).join(" ")} fill="rgba(180,208,138,.18)" stroke="#b4d08a" strokeWidth={2 / cam.z} />
-                {drawPts.map((p, i) => <circle key={i} cx={p[0]} cy={p[1]} r={(i === 0 ? 7 : 4) / cam.z} fill={i === 0 ? "#b4d08a" : "#141816"} stroke="#b4d08a" strokeWidth={1.5 / cam.z} />)}
+                <polyline points={[...drawPts, ...(cursor ? [[sn(cursor[0]), sn(cursor[1])]] : [])].map((p) => p.join(",")).join(" ")} fill="rgba(0,0,0,0)" stroke="var(--color-ink)" strokeWidth={2 / cam.z} />
+                {drawPts.map((p, i) => <circle key={i} cx={p[0]} cy={p[1]} r={(i === 0 ? 7 : 4) / cam.z} fill={i === 0 ? "var(--color-accent)" : "var(--color-ink)"} stroke="var(--color-ink)" strokeWidth={1.5 / cam.z} />)}
               </g>
             )}
           </PlanLayer>
@@ -272,8 +272,8 @@ export function PlanEditor() {
 
       {empty && (
         <div className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center">
-          <div className="pointer-events-auto max-w-xs border border-dashed border-sage/60 bg-charcoal/80 p-5 text-center text-[13px] leading-relaxed text-[#dfe7df]">
-            <div className="font-serif text-2xl text-white">Zacznij od domu</div>
+          <div className="pointer-events-auto max-w-xs border border-dashed border-[var(--color-ink)] bg-[var(--color-paper)] p-5 text-center text-[13px] leading-relaxed text-[var(--color-ink-2)]">
+            <div className="h3">Zacznij od domu</div>
             Kliknij „Dom” po lewej albo przeciągnij go na plan.
             <button className="pl-btn mt-3 block w-full" onClick={() => s.loadSample()}>Wczytaj przykładowy projekt</button>
           </div>
@@ -281,33 +281,33 @@ export function PlanEditor() {
       )}
       <div className="pointer-events-none absolute left-3 top-14 flex flex-col gap-2 text-[11px]">
         {tool === "draw" && (
-          <div className="pointer-events-auto flex items-center gap-2 border border-sage/50 bg-charcoal/90 px-3 py-2 text-sage">
+          <div className="pointer-events-auto flex items-center gap-2 border border-[var(--color-ink)] bg-[var(--color-paper)] px-3 py-2 text-[var(--color-ink)]">
             Rysowanie: kliknij kolejne narożniki ({drawPts.length}). Zamknij kształt klikając pierwszy punkt lub Enter.
             <button className="pl-btn pl-btn-primary" onClick={s.finishDraw} disabled={drawPts.length < 3}>Zakończ</button>
             <button className="pl-btn" onClick={s.cancelDraw}>Anuluj</button>
           </div>
         )}
         {armed && (
-          <div className="pointer-events-auto flex items-center gap-2 border border-sage/50 bg-charcoal/90 px-3 py-2 text-sage">
+          <div className="pointer-events-auto flex items-center gap-2 border border-[var(--color-ink)] bg-[var(--color-paper)] px-3 py-2 text-[var(--color-ink)]">
             Sadzenie wielokrotne: „{armed.name}” — klikaj na planie. <button className="pl-btn" onClick={() => s.set({ armed: null })}>Zakończ (Esc)</button>
           </div>
         )}
       </div>
 
-      <div className="absolute bottom-3 right-3 flex flex-col border border-[#2f3a33] bg-charcoal/90">
+      <div className="absolute bottom-3 right-3 flex flex-col border border-[var(--color-rule)] bg-[var(--color-paper)]">
         {[["+", 1.25], ["−", 0.8]].map(([l, k]) => (
-          <button key={l as string} aria-label={l === "+" ? "Przybliż" : "Oddal"} className="h-9 w-9 text-lg text-white hover:bg-botanic" onClick={() => setCam((c) => { const z = Math.max(3, Math.min(120, c.z * (k as number))); const mx = size.w / 2, my = size.h / 2, q = z / c.z; return { z, x: mx - (mx - c.x) * q, y: my - (my - c.y) * q }; })}>{l}</button>
+          <button key={l as string} aria-label={l === "+" ? "Przybliż" : "Oddal"} className="h-9 w-9 text-lg text-[var(--color-ink)] hover:bg-[var(--color-paper-2)]" onClick={() => setCam((c) => { const z = Math.max(3, Math.min(120, c.z * (k as number))); const mx = size.w / 2, my = size.h / 2, q = z / c.z; return { z, x: mx - (mx - c.x) * q, y: my - (my - c.y) * q }; })}>{l}</button>
         ))}
-        <button aria-label="Dopasuj widok" className="h-9 w-9 border-t border-[#2f3a33] text-[10px] text-white hover:bg-botanic" onClick={fit}>FIT</button>
+        <button aria-label="Dopasuj widok" className="h-9 w-9 border-t border-[var(--color-rule)] text-[10px] text-[var(--color-ink)] hover:bg-[var(--color-paper-2)]" onClick={fit}>FIT</button>
       </div>
-      <div className="pointer-events-none absolute bottom-3 left-3 flex items-end gap-3 text-[10px] text-stone">
+      <div className="pointer-events-none absolute bottom-3 left-3 flex items-end gap-3 text-[10px] text-[var(--color-muted)]">
         <div>
-          <div className="h-1.5 border-x border-b border-stone" style={{ width: cam.z * (cam.z > 12 ? 1 : 5) }} />
+          <div className="h-1.5 border-x border-b border-[var(--color-ink)]" style={{ width: cam.z * (cam.z > 12 ? 1 : 5) }} />
           {cam.z > 12 ? "1 m" : "5 m"}
         </div>
         <span className="max-w-[300px] leading-snug">Plan poglądowy — wymiary orientacyjne, nie są mapą geodezyjną.</span>
       </div>
-      {sel && <div className="pointer-events-none absolute right-3 top-3 border border-[#2f3a33] bg-charcoal/90 px-2 py-1 text-[11px] text-sage">{KIND_LABEL[sel.kind]}</div>}
+      {sel && <div className="pointer-events-none absolute right-3 top-3 border border-[var(--color-rule)] bg-[var(--color-paper)] px-2 py-1 text-[11px] text-[var(--color-ink)]">{KIND_LABEL[sel.kind]}</div>}
     </div>
   );
 }
