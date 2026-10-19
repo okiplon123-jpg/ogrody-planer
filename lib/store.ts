@@ -13,7 +13,7 @@ export const DRAW_TARGETS: Record<DrawTarget, { name: string; kind: "surface" | 
   lawn: { name: "Trawnik", kind: "lawn", width: 3, smooth: true },
   bed: { name: "Rabata", kind: "bed", width: 1.4, smooth: true },
 };
-import { getNodes, rebuildShape, shapeFromWorld, uid, type V2 } from "./geometry";
+import { getNodes, rebuildShape, shapeFromWorld, uid, worldAABB, type V2 } from "./geometry";
 
 const KEY = "ogrody-planer:project";
 export type ViewPreset = "perspective" | "top" | "eye";
@@ -65,7 +65,7 @@ let toastTimer: ReturnType<typeof setTimeout> | undefined;
 export const useStore = create<State>((set, get) => ({
   project: emptyProject(20, 30), past: [], future: [],
   selectedId: null, mode: "2d", view3d: "perspective", cameraNonce: 0,
-  tool: "select", drawPts: [], drawMode: "points", drawTarget: "path", drawSmooth: true, drawWidth: 1.2,
+  tool: "select", drawPts: [], drawMode: "band", drawTarget: "path", drawSmooth: true, drawWidth: 1.2,
   armed: null, multi: false,
   defMaterial: "kb-grafit", defPattern: "classic", defEdging: "none",
   settings: { units: "m", snap: true, grid: true, dims: true, waste: 8, quality: "high" },
@@ -114,7 +114,20 @@ export const useStore = create<State>((set, get) => ({
 
   addFromLib: (item, at) => {
     const s = get();
-    const [cx, cy] = at ?? s.viewCenter;
+    let [cx, cy] = at ?? s.viewCenter;
+    if (!at && SHAPE_KINDS.includes(item.kind)) {
+      // ground shapes: look for a spot that is not under a building
+      const blockers = s.project.objects.filter((o) => o.kind === "house" || o.kind === "garage").map(worldAABB);
+      const hit = (x: number, y: number) => blockers.some((b) => x + item.w / 2 > b.minX && x - item.w / 2 < b.maxX && y + item.h / 2 > b.minY && y - item.h / 2 < b.maxY);
+      const { w: pw, l: pl } = s.project.plot;
+      search: for (let ring = 0; ring < 14; ring++) {
+        for (let k = 0; k < Math.max(1, ring * 8); k++) {
+          const a = (k / Math.max(1, ring * 8)) * Math.PI * 2, d = ring * 2.5;
+          const x = cx + Math.cos(a) * d, y = cy + Math.sin(a) * d;
+          if (x - item.w / 2 > 0 && x + item.w / 2 < pw && y - item.h / 2 > 0 && y + item.h / 2 < pl && !hit(x, y)) { cx = x; cy = y; break search; }
+        }
+      }
+    }
     const n = item.group ?? 1;
     const base: Omit<PlanObject, "id" | "x" | "y"> = {
       kind: item.kind, w: item.w, h: item.h, rot: 0, species: item.species, height: item.height,
@@ -136,7 +149,7 @@ export const useStore = create<State>((set, get) => ({
 
   startDraw: () => set({ tool: "draw", drawPts: [], armed: null, selectedId: null, mode: "2d" }),
   setDraw: (p) => set(p as Partial<State>),
-  setDrawTarget: (t) => set({ drawTarget: t, drawWidth: DRAW_TARGETS[t].width, drawSmooth: DRAW_TARGETS[t].smooth }),
+  setDrawTarget: (t) => set({ drawTarget: t, drawWidth: DRAW_TARGETS[t].width, drawSmooth: DRAW_TARGETS[t].smooth, drawMode: t === "path" ? "band" : "points" }),
   addDrawPt: (p) => set((st) => ({ drawPts: [...st.drawPts, p] })),
   undoDrawPt: () => set((st) => ({ drawPts: st.drawPts.slice(0, -1) })),
   finishDraw: (override) => {
