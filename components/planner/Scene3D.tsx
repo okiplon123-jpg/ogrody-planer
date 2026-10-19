@@ -6,7 +6,7 @@ import { EffectComposer, N8AO } from "@react-three/postprocessing";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import * as THREE from "three";
 import type { Lighting, PlanObject, Project } from "@/lib/types";
-import { localPoly } from "@/lib/geometry";
+import { localPoly, localToWorld, objectArea, pointInPoly } from "@/lib/geometry";
 import { SPECIES, matById } from "@/lib/catalog";
 import { TILE_M, makeCanvas } from "@/lib/textures";
 import type { ViewPreset } from "@/lib/store";
@@ -210,7 +210,7 @@ function Hedge({ o }: { o: PlanObject }) {
 
 function GrassTufts({ items }: { items: PlanObject[] }) {
   const ref = useRef<THREE.InstancedMesh>(null);
-  const per = 90;
+  const per = 140;
   useLayoutEffect(() => {
     const m = ref.current; if (!m) return;
     const d = new THREE.Object3D(), c = new THREE.Color();
@@ -237,36 +237,114 @@ function GrassTufts({ items }: { items: PlanObject[] }) {
   return <instancedMesh key={items.length} ref={ref} args={[BLADE, undefined, items.length * per]} castShadow><meshStandardMaterial roughness={0.85} side={THREE.DoubleSide} /></instancedMesh>;
 }
 
-/** Dense flowering shrub: leafy mound + instanced flower heads (hydrangea) or upright spikes (lavender). */
+/** Leafy shrub: hundreds of instanced leaves facing outward, plus flower heads (hydrangea) or spikes (lavender). */
+const LEAF = new THREE.IcosahedronGeometry(1, 1).scale(1, 0.62, 0.16);
 function Bush({ o }: { o: PlanObject }) {
   const sp = SPECIES[o.species ?? "hortensja"];
   const f = o.w / sp.d, H = sp.height * f, r = o.w / 2;
   const lav = o.species === "lawenda";
   const seed = o.x * 11 + o.y * 5;
+  const leaves = useRef<THREE.InstancedMesh>(null);
   const fl = useRef<THREE.InstancedMesh>(null);
-  const N = lav ? 70 : 26;
+  const NL = lav ? 70 : 190, NF = lav ? 80 : 110;
   useLayoutEffect(() => {
-    const m = fl.current; if (!m) return;
     const d = new THREE.Object3D(), c = new THREE.Color();
-    for (let i = 0; i < N; i++) {
-      const th = hash(i, seed) * 6.283, ph = Math.acos(1 - hash(i, seed + 2) * (lav ? 0.85 : 0.7));
-      const x = Math.sin(ph) * Math.cos(th) * r * 0.82, z = Math.sin(ph) * Math.sin(th) * r * 0.82, y = Math.cos(ph) * H * 0.42 + H * 0.5;
-      d.position.set(x, y, z); d.rotation.set(0, hash(i, 3) * 6.28, 0);
-      if (lav) { d.rotation.set((hash(i, 3) - 0.5) * 0.5, 0, (hash(i, 4) - 0.5) * 0.5); d.position.y = H * 0.55 + hash(i, 5) * H * 0.2; d.scale.set(0.03 * f + 0.01, H * 0.55, 0.03 * f + 0.01); }
-      else { const s2 = r * (0.2 + hash(i, 6) * 0.12); d.scale.set(s2, s2 * 0.7, s2); }
-      d.updateMatrix(); m.setMatrixAt(i, d.matrix);
-      const t = hash(i, seed + 8);
-      c.set(lav ? (t > 0.5 ? "#7b5fb5" : "#9a82cc") : t > 0.78 ? "#f0b7cf" : t > 0.5 ? "#e9e6f7" : t > 0.2 ? "#b4c2ee" : "#98a9e3"); m.setColorAt(i, c);
+    const m = leaves.current;
+    if (m) {
+      for (let i = 0; i < NL; i++) {
+        const th = hash(i, seed) * 6.283, u = hash(i, seed + 2);
+        if (lav) {
+          // narrow upright leaves at the base
+          const rr = Math.sqrt(hash(i, seed + 3)) * r * 0.9;
+          d.position.set(Math.cos(th) * rr, 0, Math.sin(th) * rr);
+          d.rotation.set((hash(i, 5) - 0.5) * 0.7, th, (hash(i, 6) - 0.5) * 0.7);
+          d.scale.set(0.016 * f + 0.008, H * (0.35 + hash(i, 7) * 0.35), 0.012);
+          d.updateMatrix(); m.setMatrixAt(i, d.matrix); d.rotation.set(0, 0, 0);
+          c.set(sp.color).offsetHSL(0, 0, (hash(i, 8) - 0.5) * 0.12 + 0.08);
+        } else {
+          const phi = Math.acos(1 - u * 0.96);
+          const rad = r * (0.78 + 0.22 * hash(i, seed + 4));
+          const px = Math.sin(phi) * Math.cos(th) * rad, pz = Math.sin(phi) * Math.sin(th) * rad, py = Math.cos(phi) * H * 0.5 + H * 0.42;
+          d.position.set(px, py, pz);
+          d.lookAt(px * 2, py + (py - H * 0.42) * 0.6, pz * 2);
+          const sz = r * (0.2 + hash(i, 9) * 0.14);
+          d.scale.set(sz, sz, sz);
+          d.updateMatrix(); m.setMatrixAt(i, d.matrix);
+          c.set(sp.color).offsetHSL((hash(i, 10) - 0.5) * 0.03, (hash(i, 11) - 0.5) * 0.1, (hash(i, 12) - 0.5) * 0.16);
+        }
+        m.setColorAt(i, c);
+      }
+      m.instanceMatrix.needsUpdate = true; if (m.instanceColor) m.instanceColor.needsUpdate = true;
     }
-    m.instanceMatrix.needsUpdate = true; if (m.instanceColor) m.instanceColor.needsUpdate = true;
-  }, [r, H, f, lav, seed, N]);
+    const q = fl.current;
+    if (q) {
+      d.rotation.set(0, 0, 0); d.quaternion.identity();
+      const heads = lav ? NF : Math.floor(NF / 5);
+      for (let h = 0; h < heads; h++) {
+        const th = hash(h, seed + 20) * 6.283, ph = Math.acos(1 - hash(h, seed + 21) * 0.8);
+        const hx = Math.sin(ph) * Math.cos(th) * r * 0.85, hz = Math.sin(ph) * Math.sin(th) * r * 0.85, hy = Math.cos(ph) * H * 0.45 + H * 0.58;
+        const tone = hash(h, seed + 22);
+        if (lav) {
+          d.position.set(hx * 0.8, H * 0.6 + hash(h, 23) * H * 0.2, hz * 0.8);
+          d.scale.set(0.026 * f + 0.01, H * 0.5, 0.026 * f + 0.01);
+          d.rotation.set((hash(h, 24) - 0.5) * 0.5, 0, (hash(h, 25) - 0.5) * 0.5);
+          d.updateMatrix(); q.setMatrixAt(h, d.matrix);
+          q.setColorAt(h, c.set(tone > 0.5 ? "#7b5fb5" : "#9a82cc"));
+        } else {
+          d.rotation.set(0, 0, 0);
+          for (let k = 0; k < 5; k++) {
+            const idx = h * 5 + k; if (idx >= NF) break;
+            const ox = (k === 0 ? 0 : Math.cos(k * 1.57) * r * 0.1), oz = (k === 0 ? 0 : Math.sin(k * 1.57) * r * 0.1), oy = k === 0 ? r * 0.06 : 0;
+            d.position.set(hx + ox, hy + oy, hz + oz);
+            const sz = r * (0.085 + hash(idx, 26) * 0.03); d.scale.set(sz, sz, sz);
+            d.updateMatrix(); q.setMatrixAt(idx, d.matrix);
+            q.setColorAt(idx, c.set(tone > 0.8 ? "#f2bfd4" : tone > 0.5 ? "#ece9f8" : tone > 0.2 ? "#b9c6f0" : "#9aaee6"));
+          }
+        }
+      }
+      q.count = lav ? heads : Math.min(NF, heads * 5);
+      q.instanceMatrix.needsUpdate = true; if (q.instanceColor) q.instanceColor.needsUpdate = true;
+    }
+  }, [r, H, f, lav, seed, NL, NF, sp.color]);
   return (
-    <group position={[o.x, 0, o.y]}>
-      <mesh geometry={ICO} position={[0, H * 0.38, 0]} scale={[r * 1.05, H * 0.46, r * 1.05]} castShadow receiveShadow><meshStandardMaterial color={new THREE.Color(sp.color).multiplyScalar(0.8)} roughness={0.95} /></mesh>
-      {Array.from({ length: 11 }, (_, i) => { const a = (i / 11) * 6.28 + seed; const rr = r * (0.45 + hash(i, seed) * 0.35); const s2 = r * (0.34 + hash(i, seed + 4) * 0.2); return <mesh key={i} geometry={ICO} position={[Math.cos(a) * rr, H * (0.3 + hash(i, 2) * 0.3), Math.sin(a) * rr]} scale={[s2, s2 * 0.8, s2]} castShadow><meshStandardMaterial color={new THREE.Color(sp.color).offsetHSL(0, 0, (hash(i, 9) - 0.5) * 0.08)} roughness={0.95} /></mesh>; })}
-      <instancedMesh ref={fl} args={[lav ? CONE : FLORET, undefined, N]} castShadow><meshStandardMaterial roughness={1} flatShading /></instancedMesh>
+    <group position={[o.x, 0, o.y]} rotation={ROT_Y(o)}>
+      {!lav && <mesh geometry={ICO} position={[0, H * 0.4, 0]} scale={[r * 0.8, H * 0.38, r * 0.8]} castShadow receiveShadow><meshStandardMaterial color={new THREE.Color(sp.color).multiplyScalar(0.55)} roughness={1} /></mesh>}
+      <instancedMesh ref={leaves} args={[lav ? CONE : LEAF, undefined, NL]} castShadow receiveShadow><meshStandardMaterial roughness={0.8} side={THREE.DoubleSide} /></instancedMesh>
+      <instancedMesh ref={fl} args={[lav ? CONE : ICO, undefined, NF]} castShadow><meshStandardMaterial roughness={0.85} /></instancedMesh>
     </group>
   );
+}
+
+/** Thousands of short curved blades scattered over each lawn polygon (high quality only). */
+function LawnBlades({ lawns }: { lawns: PlanObject[] }) {
+  const ref = useRef<THREE.InstancedMesh>(null);
+  const data = useMemo(() => {
+    const out: { x: number; z: number; h: number; ry: number; lean: number; c: number }[] = [];
+    lawns.forEach((o, k) => {
+      const poly = localPoly(o), target = Math.min(9000, Math.round(objectArea(o) * 55));
+      let placed = 0;
+      for (let t = 0; t < target * 5 && placed < target; t++) {
+        const lx = (hash(t + k * 977, 1) - 0.5) * o.w, ly = (hash(t + k * 977, 2) - 0.5) * o.h;
+        if (!pointInPoly([lx, ly], poly)) continue;
+        const [x, z] = localToWorld(o, [lx, ly]);
+        out.push({ x, z, h: 0.05 + hash(t, 3 + k) * 0.08, ry: hash(t, 4) * 6.283, lean: (hash(t, 5) - 0.3) * 0.5, c: hash(t, 6) });
+        placed++;
+      }
+    });
+    return out.slice(0, 26000);
+  }, [lawns]);
+  useLayoutEffect(() => {
+    const m = ref.current; if (!m) return;
+    const d = new THREE.Object3D(), c = new THREE.Color();
+    data.forEach((b, i) => {
+      d.position.set(b.x, 0.035, b.z); d.rotation.set(b.lean, b.ry, 0); d.scale.set(0.018, b.h, 1); d.updateMatrix();
+      m.setMatrixAt(i, d.matrix);
+      m.setColorAt(i, c.set(b.c > 0.7 ? "#9cc468" : b.c > 0.3 ? "#6f9f45" : "#558a35"));
+    });
+    m.count = data.length; m.instanceMatrix.needsUpdate = true; if (m.instanceColor) m.instanceColor.needsUpdate = true;
+  }, [data]);
+  if (!data.length) return null;
+  return <instancedMesh key={data.length} ref={ref} args={[BLADE, undefined, data.length]} receiveShadow><meshStandardMaterial roughness={0.9} side={THREE.DoubleSide} /></instancedMesh>;
 }
 
 function Pergola({ o }: { o: PlanObject }) {
@@ -434,6 +512,7 @@ function World({ project, quality }: { project: Project; quality: "high" | "low"
   const lampK = P.lamp;
   const objs = project.objects;
   const grass = useMemo(() => objs.filter((o) => o.kind === "grass"), [objs]);
+  const lawns = useMemo(() => objs.filter((o) => o.kind === "lawn"), [objs]);
   let lampCount = 0;
   return (
     <group position={[-W / 2, 0, -L / 2]}>
@@ -459,6 +538,7 @@ function World({ project, quality }: { project: Project; quality: "high" | "low"
         }
       })}
       <GrassTufts items={grass} />
+      {quality === "high" && <LawnBlades lawns={lawns} />}
       {project.fence.enabled && <BoundaryFence project={project} />}
     </group>
   );

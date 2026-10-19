@@ -20,6 +20,10 @@ export interface PlanObject {
   rot: number; // degrees, clockwise in plan
   /** normalised polygon in [-0.5,0.5] box (centre-relative). Absent = rectangle/ellipse. */
   poly?: [number, number][];
+  /** editable control points (metres, local to the object centre). poly is derived from them. */
+  nodes?: [number, number][];
+  smooth?: boolean; // curved edges through the nodes
+  band?: number;    // set = a path/strip drawn along the nodes with this width (m)
   material?: string;
   pattern?: Pattern;
   edging?: Edging;

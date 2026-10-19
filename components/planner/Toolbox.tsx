@@ -1,7 +1,7 @@
 "use client";
 import { SIMPLE_ITEMS } from "@/lib/catalog";
-import { useStore } from "@/lib/store";
-import { ItemThumb } from "./ui";
+import { DRAW_TARGETS, useStore, type DrawMode, type DrawTarget } from "@/lib/store";
+import { ItemThumb, NumField, Seg } from "./ui";
 
 export function Toolbox() {
   const s = useStore();
@@ -19,6 +19,23 @@ export function Toolbox() {
             <ItemThumb item={it} />{it.name}
           </button>
         ))}
+      </div>
+      <div className="border-t border-[var(--color-ink)] pt-4">
+        <h2 className="text-[11px] uppercase tracking-wider text-[var(--color-ink)]">Narysuj własny kształt</h2>
+        <p className="mt-1 text-[12px] leading-snug text-[var(--color-muted)]">Kręta ścieżka, oczko trawnika, zaokrąglona rabata. Po narysowaniu przeciągaj kółka na krawędzi; dwuklik na krawędzi dodaje punkt.</p>
+        <div className="mt-3 space-y-3">
+          <label className="block"><span className="pl-label mb-1 block">Co rysujesz</span>
+            <select className="pl-input" value={s.drawTarget} onChange={(e) => s.setDrawTarget(e.target.value as DrawTarget)}>
+              {(Object.keys(DRAW_TARGETS) as DrawTarget[]).map((t) => <option key={t} value={t}>{DRAW_TARGETS[t].name}</option>)}
+            </select>
+          </label>
+          <Seg<DrawMode> value={s.drawMode} onChange={(v) => s.setDraw({ drawMode: v })} options={[{ id: "points", name: "Punkty" }, { id: "free", name: "Odręcznie" }, { id: "band", name: "Pas" }]} />
+          <label className="flex items-center gap-2 text-[12px] text-[var(--color-ink-2)]">
+            <input type="checkbox" checked={s.drawSmooth} onChange={(e) => s.setDraw({ drawSmooth: e.target.checked })} /> Gładkie, zaokrąglone krawędzie
+          </label>
+          {s.drawMode === "band" && <NumField label="Szerokość pasa" value={s.drawWidth} min={0.4} max={12} onCommit={(v) => s.setDraw({ drawWidth: v })} />}
+          <button className={`pl-btn w-full ${s.tool === "draw" ? "" : "pl-btn-primary"}`} onClick={() => (s.tool === "draw" ? s.cancelDraw() : s.startDraw())}>{s.tool === "draw" ? "Anuluj rysowanie" : `Rysuj: ${DRAW_TARGETS[s.drawTarget].name.toLowerCase()}`}</button>
+        </div>
       </div>
       <label className="flex items-center gap-2 text-[12px] text-[var(--color-ink-2)]">
         <input type="checkbox" checked={s.project.fence.enabled} onChange={(e) => s.patchProject({ fence: { ...s.project.fence, enabled: e.target.checked } })} /> Ogrodzenie wokół działki

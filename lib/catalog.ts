@@ -65,14 +65,14 @@ export const SPECIES: Record<string, Species> = {
 
 export interface LibItem {
   id: string; name: string; cat: string; kind: Kind; species?: string;
-  w: number; h: number; height?: number; group?: number; material?: string; use?: SurfaceUse; pattern?: Pattern;
+  w: number; h: number; height?: number; group?: number; material?: string; use?: SurfaceUse; pattern?: Pattern; shape?: "rect" | "blob" | "curve";
 }
 export const GARDEN_CATS = [
   "Trawniki", "Drzewa", "Krzewy", "Żywopłoty", "Rabaty", "Rośliny ozdobne", "Rośliny trawiaste", "Mała architektura", "Woda",
 ] as const;
 
 export const GARDEN_ITEMS: LibItem[] = [
-  { id: "g-trawnik", name: "Trawnik", cat: "Trawniki", kind: "lawn", w: 6, h: 4, material: "tr-rolowany" },
+  { id: "g-trawnik", name: "Trawnik", cat: "Trawniki", kind: "lawn", w: 6, h: 4, material: "tr-rolowany", shape: "blob" },
   { id: "g-trawnik2", name: "Trawnik siany", cat: "Trawniki", kind: "lawn", w: 6, h: 4, material: "tr-siany" },
   { id: "g-klon", name: "Klon", cat: "Drzewa", kind: "tree", species: "klon", w: 4.5, h: 4.5 },
   { id: "g-brzoza", name: "Brzoza", cat: "Drzewa", kind: "tree", species: "brzoza", w: 2.8, h: 2.8 },
@@ -81,7 +81,7 @@ export const GARDEN_ITEMS: LibItem[] = [
   { id: "g-hortensja", name: "Hortensje", cat: "Krzewy", kind: "shrub", species: "hortensja", w: 1.2, h: 1.2 },
   { id: "g-hortensja3", name: "Grupa hortensji (3)", cat: "Krzewy", kind: "shrub", species: "hortensja", w: 1.2, h: 1.2, group: 3 },
   { id: "g-zywoplot", name: "Żywopłot tujowy", cat: "Żywopłoty", kind: "hedge", species: "zywoplot", w: 5, h: 0.9 },
-  { id: "g-rabata", name: "Rabata (kora)", cat: "Rabaty", kind: "bed", w: 4, h: 1.6, material: "rb-kora" },
+  { id: "g-rabata", name: "Rabata (kora)", cat: "Rabaty", kind: "bed", w: 4, h: 1.6, material: "rb-kora", shape: "blob" },
   { id: "g-rabata2", name: "Rabata (ziemia)", cat: "Rabaty", kind: "bed", w: 4, h: 1.6, material: "rb-ziemia" },
   { id: "g-lawenda", name: "Lawenda", cat: "Rośliny ozdobne", kind: "shrub", species: "lawenda", w: 0.7, h: 0.7 },
   { id: "g-lawenda5", name: "Grupa lawendy (5)", cat: "Rośliny ozdobne", kind: "shrub", species: "lawenda", w: 0.7, h: 0.7, group: 5 },
@@ -124,9 +124,9 @@ export const SIMPLE_ITEMS: LibItem[] = [
   { id: "s-dom", name: "Dom", cat: "", kind: "house", w: 12, h: 9, height: 6.5 },
   { id: "s-podjazd", name: "Podjazd", cat: "", kind: "surface", w: 3.5, h: 8, material: "ks-czarna", pattern: "herringbone", use: "driveway" },
   { id: "s-taras", name: "Taras", cat: "", kind: "surface", w: 5, h: 4, material: "pt-wielko", pattern: "modern", use: "terrace" },
-  { id: "s-sciezka", name: "Ścieżka", cat: "", kind: "surface", w: 1.2, h: 6, material: "kb-szara", pattern: "classic", use: "path" },
-  { id: "s-trawnik", name: "Trawnik", cat: "", kind: "lawn", w: 6, h: 4, material: "tr-rolowany" },
-  { id: "s-rabata", name: "Rabata", cat: "", kind: "bed", w: 4, h: 1.6, material: "rb-kora" },
+  { id: "s-sciezka", name: "Ścieżka", cat: "", kind: "surface", w: 7, h: 1.2, material: "kb-szara", pattern: "classic", use: "path", shape: "curve" },
+  { id: "s-trawnik", name: "Trawnik", cat: "", kind: "lawn", w: 6, h: 4, material: "tr-rolowany", shape: "blob" },
+  { id: "s-rabata", name: "Rabata", cat: "", kind: "bed", w: 4, h: 1.8, material: "rb-kora", shape: "blob" },
   { id: "s-drzewo", name: "Drzewo", cat: "", kind: "tree", species: "klon", w: 4, h: 4 },
   { id: "s-krzewy", name: "Krzewy", cat: "", kind: "shrub", species: "hortensja", w: 1.2, h: 1.2, group: 3 },
   { id: "s-lampa", name: "Lampa", cat: "", kind: "light", w: 0.4, h: 0.4 },

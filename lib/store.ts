@@ -2,8 +2,18 @@
 import { create } from "zustand";
 import type { Edging, Lighting, Pattern, PlanObject, Project, Settings, SurfaceUse } from "./types";
 import { emptyProject, sampleProject } from "./sample";
-import { LibItem, SPECIES, matById } from "./catalog";
-import { polyFromPoints, uid, type V2 } from "./geometry";
+import { LibItem, SHAPE_KINDS, SPECIES, matById } from "./catalog";
+
+export type DrawMode = "points" | "free" | "band";
+export type DrawTarget = "driveway" | "terrace" | "path" | "lawn" | "bed";
+export const DRAW_TARGETS: Record<DrawTarget, { name: string; kind: "surface" | "lawn" | "bed"; use?: SurfaceUse; width: number; smooth: boolean }> = {
+  driveway: { name: "Podjazd", kind: "surface", use: "driveway", width: 3.5, smooth: false },
+  terrace: { name: "Taras", kind: "surface", use: "terrace", width: 3, smooth: false },
+  path: { name: "Ścieżka", kind: "surface", use: "path", width: 1.2, smooth: true },
+  lawn: { name: "Trawnik", kind: "lawn", width: 3, smooth: true },
+  bed: { name: "Rabata", kind: "bed", width: 1.4, smooth: true },
+};
+import { getNodes, rebuildShape, shapeFromWorld, uid, type V2 } from "./geometry";
 
 const KEY = "ogrody-planer:project";
 export type ViewPreset = "perspective" | "top" | "eye";
@@ -13,7 +23,7 @@ interface State {
   project: Project; past: Project[]; future: Project[];
   selectedId: string | null;
   mode: "2d" | "3d"; view3d: ViewPreset; cameraNonce: number;
-  tool: "select" | "draw"; drawPts: V2[]; drawKind: "surface" | "lawn" | "bed"; drawUse: SurfaceUse;
+  tool: "select" | "draw"; drawPts: V2[]; drawMode: DrawMode; drawTarget: DrawTarget; drawSmooth: boolean; drawWidth: number;
   armed: LibItem | null; multi: boolean;
   defMaterial: string; defPattern: Pattern; defEdging: Edging;
   settings: Settings;
@@ -31,8 +41,9 @@ interface State {
   undo: () => void; redo: () => void;
   select: (id: string | null) => void;
   addFromLib: (item: LibItem, at?: V2) => void;
-  startDraw: (kind: "surface" | "lawn" | "bed", use?: SurfaceUse) => void;
-  addDrawPt: (p: V2) => void; finishDraw: () => void; cancelDraw: () => void;
+  startDraw: () => void; setDraw: (p: Partial<{ drawMode: DrawMode; drawSmooth: boolean; drawWidth: number }>) => void; setDrawTarget: (t: DrawTarget) => void;
+  addDrawPt: (p: V2) => void; undoDrawPt: () => void; finishDraw: (pts?: V2[]) => void; cancelDraw: () => void;
+  reshape: (id: string, p: { smooth?: boolean; band?: number }) => void;
   applyMaterial: (id: string) => void; applyPattern: (p: Pattern) => void; applyEdging: (e: Edging) => void;
   set: (patch: Partial<State>) => void;
   setSettings: (p: Partial<Settings>) => void;
@@ -40,12 +51,21 @@ interface State {
   save: () => void; load: () => boolean; loadSample: () => void; newProject: (w: number, l: number) => void;
 }
 
+function presetShape(item: LibItem, cx: number, cy: number) {
+  const w = item.w, h = item.h, sh = item.shape ?? "rect";
+  let nodes: V2[] = [[-w / 2, -h / 2], [w / 2, -h / 2], [w / 2, h / 2], [-w / 2, h / 2]];
+  let smooth = false, band: number | undefined;
+  if (sh === "blob") { smooth = true; nodes = [1, 0.84, 1.06, 0.9, 1.02, 0.86].map((r, k) => { const a = (k / 6) * Math.PI * 2; return [Math.cos(a) * (w / 2) * r, Math.sin(a) * (h / 2) * r] as V2; }); }
+  if (sh === "curve") { smooth = true; band = h; nodes = [[-w / 2, 0], [-w / 6, -0.9], [w / 6, 0.9], [w / 2, 0]]; }
+  return shapeFromWorld(nodes.map(([x, y]) => [x + cx, y + cy] as V2), smooth, band);
+}
+
 let toastTimer: ReturnType<typeof setTimeout> | undefined;
 
 export const useStore = create<State>((set, get) => ({
   project: emptyProject(20, 30), past: [], future: [],
   selectedId: null, mode: "2d", view3d: "perspective", cameraNonce: 0,
-  tool: "select", drawPts: [], drawKind: "surface", drawUse: "other",
+  tool: "select", drawPts: [], drawMode: "points", drawTarget: "path", drawSmooth: true, drawWidth: 1.2,
   armed: null, multi: false,
   defMaterial: "kb-grafit", defPattern: "classic", defEdging: "none",
   settings: { units: "m", snap: true, grid: true, dims: true, waste: 8, quality: "high" },
@@ -100,7 +120,6 @@ export const useStore = create<State>((set, get) => ({
       kind: item.kind, w: item.w, h: item.h, rot: 0, species: item.species, height: item.height,
       material: item.material, facade: item.kind === "house" || item.kind === "garage" ? "white" : undefined,
       pattern: item.pattern, use: item.use,
-      ...(item.kind === "lawn" || item.kind === "bed" || item.kind === "surface" ? { poly: [[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]] as V2[] } : {}),
     };
     get().commit();
     let last = "";
@@ -111,25 +130,34 @@ export const useStore = create<State>((set, get) => ({
       const id = uid(); last = id;
       added.push({ ...base, id, x: cx + Math.cos(a) * r + jit, y: cy + Math.sin(a) * r + jit, w: base.w * (1 + (n > 1 ? (((i * 53) % 7) - 3) * 0.04 : 0)), h: base.h });
     }
-    added.forEach((o) => { if (o.w !== o.h && ["tree", "shrub", "grass", "planter"].includes(o.kind)) o.h = o.w; });
+    added.forEach((o) => { if (SHAPE_KINDS.includes(o.kind)) Object.assign(o, presetShape(item, cx, cy)); if (o.w !== o.h && ["tree", "shrub", "grass", "planter"].includes(o.kind)) o.h = o.w; });
     set((st) => ({ project: { ...st.project, objects: [...st.project.objects, ...added] }, selectedId: last, viewCenter: [cx + 0.9, cy + 0.9] }));
   },
 
-  startDraw: (kind, use = "other") => set({ tool: "draw", drawKind: kind, drawUse: use, drawPts: [], armed: null, selectedId: null, mode: "2d" }),
-  addDrawPt: (p) => set((s) => ({ drawPts: [...s.drawPts, p] })),
-  finishDraw: () => {
-    const s = get();
-    if (s.drawPts.length < 3) { set({ tool: "select", drawPts: [] }); return; }
-    const mat = s.drawKind === "lawn" ? "tr-rolowany" : s.drawKind === "bed" ? "rb-kora" : s.defMaterial;
-    const m = matById(mat);
+  startDraw: () => set({ tool: "draw", drawPts: [], armed: null, selectedId: null, mode: "2d" }),
+  setDraw: (p) => set(p as Partial<State>),
+  setDrawTarget: (t) => set({ drawTarget: t, drawWidth: DRAW_TARGETS[t].width, drawSmooth: DRAW_TARGETS[t].smooth }),
+  addDrawPt: (p) => set((st) => ({ drawPts: [...st.drawPts, p] })),
+  undoDrawPt: () => set((st) => ({ drawPts: st.drawPts.slice(0, -1) })),
+  finishDraw: (override) => {
+    const st = get();
+    const raw = override ?? st.drawPts;
+    const pts = raw.filter((p, i) => i === 0 || Math.hypot(p[0] - raw[i - 1][0], p[1] - raw[i - 1][1]) > 0.05);
+    const band = st.drawMode === "band";
+    if (pts.length < (band ? 2 : 3)) { set({ tool: "select", drawPts: [] }); return; }
+    const t = DRAW_TARGETS[st.drawTarget];
+    const material = t.kind === "lawn" ? "tr-rolowany" : t.kind === "bed" ? "rb-kora" : st.defMaterial;
     const id = get().addObject({
-      kind: s.drawKind, ...polyFromPoints(s.drawPts),
-      material: m.kind === s.drawKind ? mat : s.drawKind === "surface" ? s.defMaterial : mat,
-      pattern: s.defPattern, edging: s.defEdging, use: s.drawKind === "surface" ? s.drawUse : undefined,
+      kind: t.kind, ...shapeFromWorld(pts, st.drawSmooth, band ? st.drawWidth : undefined),
+      material, pattern: st.defPattern, edging: st.defEdging, use: t.use,
     });
     set({ tool: "select", drawPts: [], selectedId: id });
   },
   cancelDraw: () => set({ tool: "select", drawPts: [] }),
+  reshape: (id, p) => {
+    get().commit();
+    set((st) => ({ project: { ...st.project, objects: st.project.objects.map((o) => { if (o.id !== id) return o; const o2 = { ...o, ...p }; return { ...o2, ...rebuildShape(o2, getNodes(o)) }; }) } }));
+  },
 
   applyMaterial: (id) => {
     const s = get(); const m = matById(id);

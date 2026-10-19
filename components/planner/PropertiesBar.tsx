@@ -1,9 +1,9 @@
 "use client";
 import { useStore } from "@/lib/store";
-import { KIND_LABEL, MATERIALS, PATTERNS, SPECIES, matById } from "@/lib/catalog";
+import { KIND_LABEL, MATERIALS, PATTERNS, SHAPE_KINDS, SPECIES, matById } from "@/lib/catalog";
 import { fmtArea, objectArea } from "@/lib/geometry";
 import type { Facade } from "@/lib/types";
-import { MatSwatch } from "./ui";
+import { MatSwatch, NumField } from "./ui";
 
 const SURFACE_PICKS = ["ph-behaton", "ph-granit", "ph-bruzowa", "ph-klinkier", "ph-bruk", "ph-zwir", "kb-grafit", "kb-szara", "kb-melanz", "kb-piasek", "ks-czarna", "ks-jasna", "pt-wielko", "pt-kamien", "zw-dekor", "in-deska"];
 
@@ -22,6 +22,12 @@ export function PropertiesBar() {
         <div className="text-[11px] uppercase tracking-wider text-[var(--color-ink)]">{KIND_LABEL[o.kind]}</div>
         {["surface", "lawn", "bed", "house", "garage", "water"].includes(o.kind) && <div className="text-[11px] text-[var(--color-muted)]">{fmtArea(objectArea(o))}</div>}
       </div>
+      {SHAPE_KINDS.includes(o.kind) && (
+        <label className="flex items-center gap-2 text-[12px] text-[var(--color-ink-2)]">
+          <input type="checkbox" checked={!!o.smooth} onChange={(e) => s.reshape(o.id, { smooth: e.target.checked })} /> Gładkie krawędzie
+        </label>
+      )}
+      {o.band ? <div className="w-[110px]"><NumField label="Szerokość" value={o.band} min={0.4} max={12} onCommit={(v) => s.reshape(o.id, { band: v })} /></div> : null}
       {picks.length > 0 && ["surface", "lawn", "bed"].includes(o.kind) && (
         <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Materiał">
           {picks.map((x) => (
