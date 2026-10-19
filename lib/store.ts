@@ -148,8 +148,8 @@ export const useStore = create<State>((set, get) => ({
   },
 
   startDraw: () => set({ tool: "draw", drawPts: [], armed: null, selectedId: null, mode: "2d" }),
-  setDraw: (p) => set(p as Partial<State>),
-  setDrawTarget: (t) => set({ drawTarget: t, drawWidth: DRAW_TARGETS[t].width, drawSmooth: DRAW_TARGETS[t].smooth, drawMode: get().drawMode === "free" ? "free" : t === "path" ? "band" : "points" }),
+  setDraw: (p) => set(p.drawMode === "free" ? ({ ...p, drawSmooth: true } as Partial<State>) : (p as Partial<State>)),
+  setDrawTarget: (t) => set({ drawTarget: t, drawWidth: DRAW_TARGETS[t].width, drawSmooth: get().drawMode === "free" ? true : DRAW_TARGETS[t].smooth, drawMode: get().drawMode === "free" ? "free" : t === "path" ? "band" : "points" }),
   addDrawPt: (p) => set((st) => ({ drawPts: [...st.drawPts, p] })),
   undoDrawPt: () => set((st) => ({ drawPts: st.drawPts.slice(0, -1) })),
   finishDraw: (override) => {
