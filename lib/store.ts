@@ -13,7 +13,7 @@ export const DRAW_TARGETS: Record<DrawTarget, { name: string; kind: "surface" | 
   lawn: { name: "Trawnik", kind: "lawn", width: 3, smooth: true },
   bed: { name: "Rabata", kind: "bed", width: 1.4, smooth: true },
 };
-import { getNodes, rebuildShape, shapeFromWorld, uid, worldAABB, type V2 } from "./geometry";
+import { getNodes, polyArea, rebuildShape, shapeFromWorld, uid, worldAABB, type V2 } from "./geometry";
 
 const KEY = "ogrody-planer:project";
 export type ViewPreset = "perspective" | "top" | "eye";
@@ -149,7 +149,7 @@ export const useStore = create<State>((set, get) => ({
 
   startDraw: () => set({ tool: "draw", drawPts: [], armed: null, selectedId: null, mode: "2d" }),
   setDraw: (p) => set(p as Partial<State>),
-  setDrawTarget: (t) => set({ drawTarget: t, drawWidth: DRAW_TARGETS[t].width, drawSmooth: DRAW_TARGETS[t].smooth, drawMode: t === "path" ? "band" : "points" }),
+  setDrawTarget: (t) => set({ drawTarget: t, drawWidth: DRAW_TARGETS[t].width, drawSmooth: DRAW_TARGETS[t].smooth, drawMode: get().drawMode === "free" ? "free" : t === "path" ? "band" : "points" }),
   addDrawPt: (p) => set((st) => ({ drawPts: [...st.drawPts, p] })),
   undoDrawPt: () => set((st) => ({ drawPts: st.drawPts.slice(0, -1) })),
   finishDraw: (override) => {
@@ -159,9 +159,16 @@ export const useStore = create<State>((set, get) => ({
     const band = st.drawMode === "band";
     if (pts.length < (band ? 2 : 3)) { set({ tool: "select", drawPts: [] }); return; }
     const t = DRAW_TARGETS[st.drawTarget];
+    const shape = shapeFromWorld(pts, st.drawSmooth, band ? st.drawWidth : undefined);
+    const area = polyArea(shape.poly ?? []) * shape.w * shape.h;
+    if (area < 0.4) {
+      set({ drawPts: [] });
+      get().notify(band ? "Ścieżka jest za krótka. Kliknij co najmniej dwa punkty daleko od siebie." : "Obrys jest za mały albo prosty. Narysuj większy kształt (obrys musi coś obejmować).");
+      return;
+    }
     const material = t.kind === "lawn" ? "tr-rolowany" : t.kind === "bed" ? "rb-kora" : st.defMaterial;
     const id = get().addObject({
-      kind: t.kind, ...shapeFromWorld(pts, st.drawSmooth, band ? st.drawWidth : undefined),
+      kind: t.kind, ...shape,
       material, pattern: st.defPattern, edging: st.defEdging, use: t.use,
     });
     set({ tool: "select", drawPts: [], selectedId: id });
