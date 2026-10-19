@@ -92,50 +92,142 @@ function Shaped({ o, idx, lit }: { o: PlanObject; idx: number; lit: boolean }) {
   );
 }
 
-const FACADE = { white: "#ece8df", graphite: "#3d4246", wood: "#8c6747" } as const;
-function Glass({ w, h, x, y, z, ry = 0, lit }: { w: number; h: number; x: number; y: number; z: number; ry?: number; lit: number }) {
-  return (
-    <mesh position={[x, y, z]} rotation={[0, ry, 0]}>
-      <boxGeometry args={[w, h, 0.06]} />
-      <meshStandardMaterial color="#1e2a33" metalness={0.7} roughness={0.12} emissive="#ffc67a" emissiveIntensity={lit * 0.9} />
-      <mesh position={[0, 0, -0.015]}><boxGeometry args={[w + 0.12, h + 0.12, 0.03]} /><meshStandardMaterial color="#25292b" roughness={0.5} /></mesh>
-    </mesh>
-  );
+const FACADE = { white: "#ebe7de", graphite: "#4a4f53", wood: "#a07a54" } as const;
+
+/* ---------- procedural surface textures for buildings (neutral, tinted by the material colour) ---------- */
+const bTex = new Map<string, THREE.CanvasTexture>();
+function buildingTex(kind: "plaster" | "roof" | "wood", rx: number, ry: number) {
+  const key = `${kind}|${rx}|${ry}`;
+  let t = bTex.get(key);
+  if (t) return t;
+  const c = document.createElement("canvas"); c.width = c.height = 256;
+  const g = c.getContext("2d")!;
+  if (kind === "plaster") {
+    g.fillStyle = "#f2f2f2"; g.fillRect(0, 0, 256, 256);
+    for (let i = 0; i < 3500; i++) { g.fillStyle = `rgba(${hash(i, 1) > 0.5 ? "0,0,0" : "255,255,255"},${0.03 + hash(i, 2) * 0.05})`; g.fillRect(hash(i, 3) * 256, hash(i, 4) * 256, 1 + hash(i, 5) * 2, 1 + hash(i, 6) * 2); }
+  } else if (kind === "roof") {
+    g.fillStyle = "#cfcfcf"; g.fillRect(0, 0, 256, 256);
+    for (let r = 0; r < 8; r++) for (let q = 0; q < 8; q++) {
+      const x = q * 32 + (r % 2) * 16, y = r * 32;
+      g.fillStyle = `rgb(${200 + hash(r * 9 + q, 7) * 40},${200 + hash(r * 9 + q, 7) * 40},${200 + hash(r * 9 + q, 7) * 40})`;
+      g.fillRect(x + 1, y + 1, 30, 30);
+      g.fillStyle = "rgba(0,0,0,.28)"; g.fillRect(x, y + 28, 32, 4);
+    }
+  } else {
+    g.fillStyle = "#e6e6e6"; g.fillRect(0, 0, 256, 256);
+    for (let i = 0; i < 8; i++) { g.fillStyle = `rgba(0,0,0,${0.05 + hash(i, 8) * 0.07})`; g.fillRect(i * 32, 0, 32, 256); g.fillStyle = "rgba(0,0,0,.35)"; g.fillRect(i * 32, 0, 2, 256); }
+    for (let i = 0; i < 700; i++) { g.fillStyle = "rgba(0,0,0,.05)"; g.fillRect(hash(i, 9) * 256, hash(i, 10) * 256, 1, 8 + hash(i, 11) * 20); }
+  }
+  t = new THREE.CanvasTexture(c);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(rx, ry); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
+  bTex.set(key, t);
+  return t;
 }
-function House({ o, lit }: { o: PlanObject; lit: number }) {
-  const H = o.height ?? 6, w = o.w, d = o.h;
-  const body = FACADE[o.facade ?? "white"];
+
+const Frame = "#2a2e31";
+/** Window / glazed door: frame, glass with reflections, mullions, sill. Faces local +z. */
+function Win({ x, y, z, w, h, ry = 0, lit, door = false, cross = true }: { x: number; y: number; z: number; w: number; h: number; ry?: number; lit: number; door?: boolean; cross?: boolean }) {
   return (
-    <group position={[o.x, 0, o.y]} rotation={ROT_Y(o)}>
-      <mesh position={[0, H / 2, 0]} castShadow receiveShadow><boxGeometry args={[w, H, d]} /><meshStandardMaterial color={body} roughness={0.9} /></mesh>
-      <mesh position={[0, H + 0.13, 0]} castShadow><boxGeometry args={[w + 0.5, 0.26, d + 0.5]} /><meshStandardMaterial color="#2a2d2f" roughness={0.7} /></mesh>
-      <mesh position={[-w * 0.18, H + 0.26 + 1.35, 0]} castShadow><boxGeometry args={[w * 0.5, 2.7, d * 0.66]} /><meshStandardMaterial color={o.facade === "wood" ? FACADE.white : FACADE.wood} roughness={0.85} /></mesh>
-      <mesh position={[-w * 0.18, H + 2.75, 0]}><boxGeometry args={[w * 0.5 + 0.4, 0.2, d * 0.66 + 0.4]} /><meshStandardMaterial color="#2a2d2f" /></mesh>
-      {/* front (+z) */}
-      <Glass w={w * 0.34} h={2.3} x={w * 0.2} y={1.5} z={d / 2 + 0.02} lit={lit} />
-      <Glass w={1.5} h={1.5} x={-w * 0.35} y={4.1} z={d / 2 + 0.02} lit={lit} />
-      <Glass w={1.5} h={1.5} x={-w * 0.05} y={4.1} z={d / 2 + 0.02} lit={lit} />
-      <Glass w={1.5} h={1.5} x={w * 0.25} y={4.1} z={d / 2 + 0.02} lit={lit} />
-      <mesh position={[-w * 0.2, 1.15, d / 2 + 0.03]}><boxGeometry args={[1.15, 2.3, 0.08]} /><meshStandardMaterial color="#5a3d28" roughness={0.7} /></mesh>
-      <mesh position={[-w * 0.2, 2.6, d / 2 + 0.5]} castShadow><boxGeometry args={[2.2, 0.12, 1.1]} /><meshStandardMaterial color="#2a2d2f" /></mesh>
-      {/* back (-z) */}
-      <Glass w={w * 0.5} h={2.5} x={0} y={1.4} z={-d / 2 - 0.02} lit={lit} />
-      <Glass w={w * 0.5} h={1.6} x={0} y={4.1} z={-d / 2 - 0.02} lit={lit} />
+    <group position={[x, y, z]} rotation={[0, ry, 0]}>
+      <mesh position={[0, 0, 0.02]}><boxGeometry args={[w + 0.16, h + 0.16, 0.1]} /><meshStandardMaterial color={Frame} roughness={0.5} /></mesh>
+      <mesh position={[0, 0, 0.075]}>
+        <boxGeometry args={[w, h, 0.03]} />
+        <meshStandardMaterial color="#1f2d38" metalness={0.85} roughness={0.07} emissive="#ffc67a" emissiveIntensity={lit * 0.9} envMapIntensity={1.6} />
+      </mesh>
+      <mesh position={[0, 0, 0.1]}><boxGeometry args={[0.05, h, 0.04]} /><meshStandardMaterial color={Frame} /></mesh>
+      {cross && h > 1.3 && <mesh position={[0, door ? h * 0.15 : 0, 0.1]}><boxGeometry args={[w, 0.05, 0.04]} /><meshStandardMaterial color={Frame} /></mesh>}
+      {!door && <mesh position={[0, -h / 2 - 0.1, 0.1]} castShadow><boxGeometry args={[w + 0.3, 0.07, 0.24]} /><meshStandardMaterial color="#d8d5ce" roughness={0.8} /></mesh>}
     </group>
   );
 }
-function Garage({ o, lit }: { o: PlanObject; lit: number }) {
-  const H = o.height ?? 3;
-  const big = o.w > 4.2;
+
+function House({ o, lit }: { o: PlanObject; lit: number }) {
+  const w = o.w, d = o.h, Hw = o.height ?? 6;
+  const gable = (o.roof ?? "gable") === "gable";
+  const floors = Hw > 4.2 ? 2 : 1, fh = Hw / floors;
+  const Hr = gable ? Math.min(3.4, d * 0.3) : 0, ov = 0.55;
+  const wall = FACADE[o.facade ?? "white"];
+  const plaster = buildingTex("plaster", Math.max(2, w / 3), Math.max(2, Hw / 3));
+  const roofTex = buildingTex("roof", Math.max(3, w / 2), 4);
+  const ang = Math.atan2(Hr, d / 2), slopeLen = (d / 2 + ov) / Math.cos(ang || 1e-6);
+  const gableGeo = useMemo(() => {
+    if (!gable) return null;
+    const sh = new THREE.Shape([new THREE.Vector2(-d / 2, 0), new THREE.Vector2(d / 2, 0), new THREE.Vector2(0, Hr)]);
+    return new THREE.ExtrudeGeometry(sh, { depth: w - 0.04, bevelEnabled: false });
+  }, [gable, d, Hr, w]);
+  const n = Math.max(2, Math.floor(w / 3.6));
+  const xs = Array.from({ length: n }, (_, i) => -w / 2 + ((i + 0.5) * w) / n);
+  const doorX = -w * 0.22;
+  const roofMat = <meshStandardMaterial color="#35393d" map={roofTex} roughness={0.75} />;
   return (
     <group position={[o.x, 0, o.y]} rotation={ROT_Y(o)}>
-      <mesh position={[0, H / 2, 0]} castShadow receiveShadow><boxGeometry args={[o.w, H, o.h]} /><meshStandardMaterial color={FACADE[o.facade ?? "white"]} roughness={0.9} /></mesh>
-      <mesh position={[0, H + 0.1, 0]} castShadow><boxGeometry args={[o.w + 0.4, 0.2, o.h + 0.4]} /><meshStandardMaterial color="#2a2d2f" /></mesh>
-      {big && <>
-        <mesh position={[0, 1.15, o.h / 2 + 0.03]}><boxGeometry args={[o.w * 0.78, 2.3, 0.06]} /><meshStandardMaterial color="#44494c" roughness={0.6} /></mesh>
-        {[0.45, 0.9, 1.35, 1.8].map((y) => <mesh key={y} position={[0, y, o.h / 2 + 0.07]}><boxGeometry args={[o.w * 0.78, 0.03, 0.02]} /><meshStandardMaterial color="#202325" /></mesh>)}
-        <mesh position={[0, 2.6, o.h / 2 + 0.05]}><boxGeometry args={[o.w * 0.7, 0.06, 0.04]} /><meshStandardMaterial color="#fff0c8" emissive="#ffd9a0" emissiveIntensity={lit * 1.5} /></mesh>
-      </>}
+      <mesh position={[0, 0.2, 0]} receiveShadow><boxGeometry args={[w + 0.12, 0.4, d + 0.12]} /><meshStandardMaterial color="#3b3f43" roughness={0.9} /></mesh>
+      <mesh position={[0, Hw / 2 + 0.2, 0]} castShadow receiveShadow><boxGeometry args={[w, Hw - 0.4 + 0.4, d]} /><meshStandardMaterial color={wall} map={plaster} roughness={0.95} /></mesh>
+      {floors === 2 && <mesh position={[0, fh + 0.2, 0]}><boxGeometry args={[w + 0.05, 0.1, d + 0.05]} /><meshStandardMaterial color={new THREE.Color(wall).multiplyScalar(0.8)} roughness={0.9} /></mesh>}
+
+      {gable ? (
+        <>
+          {gableGeo && <mesh geometry={gableGeo} position={[-(w - 0.04) / 2, Hw + 0.2, 0]} rotation={[0, Math.PI / 2, 0]} castShadow><meshStandardMaterial color={wall} map={plaster} roughness={0.95} /></mesh>}
+          {[1, -1].map((sd) => (
+            <mesh key={sd} position={[0, Hw + 0.2 + Hr / 2 - ((ov * Math.tan(ang)) / 2) + 0.05, (sd * (d / 2 + ov)) / 2]} rotation={[sd * ang, 0, 0]} castShadow receiveShadow>
+              <boxGeometry args={[w + ov * 2, 0.2, slopeLen]} />{roofMat}
+            </mesh>
+          ))}
+          <mesh position={[0, Hw + 0.2 + Hr + 0.12, 0]}><boxGeometry args={[w + ov * 2, 0.14, 0.34]} /><meshStandardMaterial color="#25282b" roughness={0.6} /></mesh>
+          {[1, -1].map((sd) => <mesh key={"g" + sd} position={[0, Hw + 0.2 - ov * Math.tan(ang) - 0.02, sd * (d / 2 + ov)]}><boxGeometry args={[w + ov * 2, 0.12, 0.1]} /><meshStandardMaterial color="#2a2e31" roughness={0.5} metalness={0.3} /></mesh>)}
+          <mesh position={[w * 0.28, Hw + Hr + 0.55, -d * 0.1]} castShadow><boxGeometry args={[0.7, 1.9, 0.7]} /><meshStandardMaterial color="#8a4b38" roughness={0.9} /></mesh>
+          <mesh position={[w * 0.28, Hw + Hr + 1.55, -d * 0.1]}><boxGeometry args={[0.9, 0.12, 0.9]} /><meshStandardMaterial color="#2a2d2f" /></mesh>
+          {/* attic window in each gable */}
+          {[1, -1].map((sd) => <Win key={"a" + sd} x={sd * (w / 2)} y={Hw + 0.2 + Hr * 0.3} z={0} w={0.8} h={0.8} ry={sd * Math.PI / 2} lit={lit} cross={false} />)}
+        </>
+      ) : (
+        <>
+          <mesh position={[0, Hw + 0.3, 0]} castShadow><boxGeometry args={[w + 0.45, 0.28, d + 0.45]} /><meshStandardMaterial color="#2b2f32" roughness={0.7} /></mesh>
+          <mesh position={[-w * 0.18, Hw + 0.3 + 1.4, 0]} castShadow><boxGeometry args={[w * 0.5, 2.6, d * 0.66]} /><meshStandardMaterial color={o.facade === "wood" ? FACADE.white : FACADE.wood} map={buildingTex(o.facade === "wood" ? "plaster" : "wood", 3, 1)} roughness={0.85} /></mesh>
+          <mesh position={[-w * 0.18, Hw + 0.3 + 2.8, 0]}><boxGeometry args={[w * 0.5 + 0.4, 0.2, d * 0.66 + 0.4]} /><meshStandardMaterial color="#2b2f32" /></mesh>
+        </>
+      )}
+
+      {/* front (+z): door + windows */}
+      {Array.from({ length: floors }, (_, f) => xs.map((x, i) => {
+        if (f === 0 && Math.abs(x - doorX) < 1.5) return null;
+        const h = f === 0 ? 1.9 : 1.5, ww = f === 0 ? 1.5 : 1.3;
+        return <Win key={`f${f}${i}`} x={x} y={f * fh + 0.2 + 0.95 + h / 2} z={d / 2} w={ww} h={h} lit={lit} />;
+      }))}
+      <group position={[doorX, 0, d / 2]}>
+        <mesh position={[0, 1.2, 0.02]}><boxGeometry args={[1.3, 2.5, 0.1]} /><meshStandardMaterial color={Frame} /></mesh>
+        <mesh position={[0, 1.15, 0.08]}><boxGeometry args={[1.1, 2.3, 0.05]} /><meshStandardMaterial color="#6b4a30" map={buildingTex("wood", 1, 1)} roughness={0.7} /></mesh>
+        <mesh position={[0.4, 1.1, 0.13]}><boxGeometry args={[0.04, 0.5, 0.04]} /><meshStandardMaterial color="#c9c9c4" metalness={0.8} roughness={0.3} /></mesh>
+        <mesh position={[0, 2.75, 0.55]} castShadow><boxGeometry args={[2.4, 0.14, 1.1]} /><meshStandardMaterial color="#2b2f32" roughness={0.6} /></mesh>
+        {[0, 1].map((k) => <mesh key={k} position={[0, 0.07 + k * 0.14, 0.75 - k * 0.22]} receiveShadow castShadow><boxGeometry args={[1.8, 0.14, 0.5]} /><meshStandardMaterial color="#9b9892" roughness={0.9} /></mesh>)}
+        <pointLight position={[0, 2.6, 0.6]} intensity={lit * 3} distance={5} color="#ffcf8a" />
+      </group>
+
+      {/* back (-z): patio doors + windows */}
+      <Win x={0} y={0.2 + 1.2} z={-d / 2} w={Math.min(4, w * 0.4)} h={2.3} ry={Math.PI} lit={lit} door />
+      {Array.from({ length: floors - 1 }, (_, f) => xs.map((x, i) => <Win key={`b${f}${i}`} x={x} y={(f + 1) * fh + 0.2 + 0.95 + 0.75} z={-d / 2} w={1.3} h={1.5} ry={Math.PI} lit={lit} />))}
+      {/* sides (±x) */}
+      {[1, -1].flatMap((sd) => Array.from({ length: floors }, (_, f) => <Win key={`s${sd}${f}`} x={sd * (w / 2)} y={f * fh + 0.2 + 0.95 + 0.75} z={0} w={1.2} h={1.5} ry={sd * Math.PI / 2} lit={lit} />))}
+    </group>
+  );
+}
+
+function Garage({ o, lit }: { o: PlanObject; lit: number }) {
+  const H = o.height ?? 3, big = o.w > 4.2;
+  const plaster = buildingTex("plaster", Math.max(2, o.w / 3), 1.5);
+  return (
+    <group position={[o.x, 0, o.y]} rotation={ROT_Y(o)}>
+      <mesh position={[0, 0.15, 0]}><boxGeometry args={[o.w + 0.1, 0.3, o.h + 0.1]} /><meshStandardMaterial color="#3b3f43" roughness={0.9} /></mesh>
+      <mesh position={[0, H / 2 + 0.15, 0]} castShadow receiveShadow><boxGeometry args={[o.w, H, o.h]} /><meshStandardMaterial color={FACADE[o.facade ?? "white"]} map={plaster} roughness={0.95} /></mesh>
+      <mesh position={[0, H + 0.25, 0]} castShadow><boxGeometry args={[o.w + 0.3, 0.2, o.h + 0.3]} /><meshStandardMaterial color="#2b2f32" roughness={0.7} /></mesh>
+      {big ? (
+        <>
+          <mesh position={[0, 1.2, o.h / 2 + 0.04]}><boxGeometry args={[o.w * 0.82, 2.4, 0.08]} /><meshStandardMaterial color="#464b4f" roughness={0.55} metalness={0.2} /></mesh>
+          {[0.6, 1.2, 1.8].map((y) => <mesh key={y} position={[0, y, o.h / 2 + 0.09]}><boxGeometry args={[o.w * 0.82, 0.025, 0.02]} /><meshStandardMaterial color="#1f2224" /></mesh>)}
+          <mesh position={[0, 2.5, o.h / 2 + 0.1]}><boxGeometry args={[o.w * 0.72, 0.06, 0.04]} /><meshStandardMaterial color="#fff0c8" emissive="#ffd9a0" emissiveIntensity={lit * 1.5} /></mesh>
+        </>
+      ) : <Win x={0} y={1.6} z={o.h / 2} w={1.1} h={1.1} lit={lit} />}
+      {big && <Win x={o.w / 2} y={1.6} z={0} w={0.9} h={0.9} ry={Math.PI / 2} lit={lit} cross={false} />}
     </group>
   );
 }

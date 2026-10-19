@@ -1,7 +1,7 @@
 "use client";
 import { useMemo, useState } from "react";
 import { useStore } from "@/lib/store";
-import { summarize } from "@/lib/summary";
+import { fmtM, fmtM3, summarize } from "@/lib/summary";
 import { fmtArea } from "@/lib/geometry";
 import { PlanLayer } from "./PlanLayer";
 
@@ -52,7 +52,21 @@ export function Summary() {
                 {sum.byMaterial.map((m) => <tr key={m.id} className="border-t border-[var(--color-rule)]"><td className="py-1.5">{m.name}</td><td className="py-1.5 text-right tabular-nums text-[var(--color-muted)]">{fmtArea(m.area)}</td><td className="py-1.5 text-right tabular-nums text-[var(--color-ink)]">{fmtArea(m.withWaste)}</td></tr>)}
               </tbody></table> : <p className="text-[12px] text-[var(--color-muted)]">Brak nawierzchni w projekcie.</p>}
               <p className="mt-4 text-[11px] leading-relaxed text-[var(--color-muted)]">Wartości są szacunkowe i wynikają wyłącznie z narysowanego planu (nakładające się obszary nie są odejmowane).</p>
-              <p className="mt-2 text-[11px] text-[var(--color-muted)]">Drzewa: {sum.counts.trees} · krzewy i trawy: {sum.counts.shrubs} · lampy: {sum.counts.lights}</p>
+              <div className="pl-label mb-2 mt-5">Pozostałe ilości</div>
+              <table className="w-full text-[13px]"><tbody>
+                {([
+                  ["Kostka i nawierzchnie razem", fmtArea(sum.paved) + " (z zapasem " + fmtArea(sum.paved * (1 + settings.waste / 100)) + ")"],
+                  ["Obrzeża (obwód nawierzchni z wybranym obrzeżem)", sum.edging ? fmtM(sum.edging) : "—"],
+                  ["Ogrodzenie", sum.fence ? fmtM(sum.fence) : "—"],
+                  ["Żywopłot", sum.hedge ? fmtM(sum.hedge) : "—"],
+                  ["Kora na rabatach (warstwa 5 cm)", sum.mulchM3 ? fmtM3(sum.mulchM3) : "—"],
+                  ["Drzewa", String(sum.counts.trees) + " szt."],
+                  ["Krzewy", String(sum.counts.shrubs) + " szt."],
+                  ["Trawy ozdobne", String(sum.counts.grasses) + " szt."],
+                  ["Lampy ogrodowe", String(sum.counts.lights) + " szt."],
+                  ["Donice, ławki, pergole, oczka wodne", `${sum.counts.planters}, ${sum.counts.benches}, ${sum.counts.pergolas}, ${sum.counts.water}`],
+                ] as [string, string][]).map(([k, v]) => <tr key={k} className="border-t border-[var(--color-rule)]"><td className="py-1.5">{k}</td><td className="py-1.5 text-right tabular-nums text-[var(--color-ink)]">{v}</td></tr>)}
+              </tbody></table>
             </div>
             <label className="block"><span className="pl-label mb-1 block">Uwagi do projektu (opcjonalnie)</span><textarea className="pl-input min-h-[80px]" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Np. preferowany kolor kostki, istniejące drzewa do zachowania…" /></label>
             <div className="flex flex-wrap gap-2">

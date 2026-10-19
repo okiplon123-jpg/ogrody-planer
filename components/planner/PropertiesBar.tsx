@@ -41,6 +41,11 @@ export function PropertiesBar() {
       {plants.length > 0 && (
         <select className="pl-input !w-auto" aria-label="Gatunek" value={o.species ?? plants[0][0]} onChange={(e) => set({ species: e.target.value })}>{plants.map(([k, v]) => <option key={k} value={k}>{v.name}</option>)}</select>
       )}
+      {o.kind === "house" && (
+        <div className="flex gap-1" role="radiogroup" aria-label="Dach">
+          {([["gable", "Dwuspadowy"], ["flat", "Płaski"]] as const).map(([id, n]) => <button key={id} role="radio" aria-checked={(o.roof ?? "gable") === id} onClick={() => set({ roof: id })} className={`pl-btn ${(o.roof ?? "gable") === id ? "!bg-[var(--color-accent)] !text-[var(--color-accent-ink)]" : ""}`}>{n}</button>)}
+        </div>
+      )}
       {(o.kind === "house" || o.kind === "garage") && (
         <div className="flex gap-1" role="radiogroup" aria-label="Elewacja">
           {([["white", "Biała"], ["graphite", "Grafit"], ["wood", "Drewno"]] as [Facade, string][]).map(([id, n]) => <button key={id} role="radio" aria-checked={(o.facade ?? "white") === id} onClick={() => set({ facade: id })} className={`pl-btn ${(o.facade ?? "white") === id ? "!border-[var(--color-ink)] !text-[var(--color-ink)]" : ""}`}>{n}</button>)}

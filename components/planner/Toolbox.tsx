@@ -2,6 +2,7 @@
 import { SIMPLE_ITEMS } from "@/lib/catalog";
 import { DRAW_TARGETS, useStore, type DrawMode, type DrawTarget } from "@/lib/store";
 import { ItemThumb, NumField, Seg } from "./ui";
+import { Quantities } from "./Quantities";
 
 const MODE_HELP: Record<DrawMode, string> = {
   band: "Pas: klikasz punkty wzdłuż ścieżki, a planer robi z nich krzywą o wybranej szerokości. Koniec: dwuklik lub Enter.",
@@ -53,6 +54,7 @@ export function Toolbox() {
       <label className="flex items-center gap-2 text-[12px] text-[var(--color-ink-2)]">
         <input type="checkbox" checked={s.project.fence.enabled} onChange={(e) => s.patchProject({ fence: { ...s.project.fence, enabled: e.target.checked } })} /> Ogrodzenie wokół działki
       </label>
+      <Quantities />
       <button className="pl-btn text-left" onClick={() => s.loadSample()}>Wczytaj przykładowy projekt</button>
     </div>
   );

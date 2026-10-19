@@ -31,6 +31,7 @@ export interface PlanObject {
   species?: string;
   height?: number; // buildings
   facade?: Facade;
+  roof?: "gable" | "flat"; // houses: pitched (default) or flat roof
 }
 
 export interface Project {
