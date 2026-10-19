@@ -49,7 +49,7 @@ export default function Home() {
       <section>
         <div className="grid grid-cols-6 md:grid-cols-12">
           <div className="col-span-6 pad pb-[clamp(4rem,8vw,7rem)] pt-[clamp(2.5rem,4.5vw,4rem)] md:col-span-7">
-            <h1 className="display-m">układamy kostkę i zakładamy ogrody<span className="period" aria-hidden /></h1>
+            <h1 className="display-m">kostka brukowa i ogrody<span className="period" aria-hidden /></h1>
             <p className="prose-m mt-8 text-[var(--text-lg)] leading-snug">
               Podjazdy, tarasy i ścieżki z każdej kostki. Trawniki, rabaty i całe ogrody, od projektu po nasadzenia. [miasto i okolice]
             </p>
