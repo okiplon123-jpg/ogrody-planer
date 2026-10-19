@@ -1,57 +1,91 @@
 import Link from "next/link";
-export const metadata = { title: "Jak układamy kostkę: podjazdy, tarasy, ścieżki, place — NAZWA MARKI [miasto]", description: "Etapy układania kostki brukowej od oglądania terenu po odbiór oraz to, na co zwracamy uwagę przy podjazdach, tarasach, ścieżkach i placach." };
+export const metadata = { title: "Kostka brukowa i ogrody: jak pracujemy — NAZWA MARKI [miasto]", description: "Etapy układania kostki brukowej i zakładania ogrodu: od oglądania terenu po odbiór. Podjazdy, tarasy, ścieżki, trawniki, rabaty i nasadzenia." };
 
-const STAGES: [string, string, string][] = [
-  ["1.0", "oglądamy teren", "Przyjeżdżamy, mierzymy powierzchnię i sprawdzamy grunt, spadki oraz dojazd dla sprzętu. Ustalamy, co ma być położone i którędy spłynie woda."],
-  ["2.0", "wykop i podbudowa", "Zdejmujemy warstwę gruntu i układamy kruszywo warstwami, zagęszczając każdą z nich. Grubość zależy od gruntu i obciążenia: inna pod ścieżką, inna pod samochodem."],
+const PAVING_STAGES: [string, string, string][] = [
+  ["1.0", "oglądamy teren", "Mierzymy powierzchnię i sprawdzamy grunt, spadki oraz dojazd dla sprzętu. Ustalamy, co ma być położone i którędy spłynie woda."],
+  ["2.0", "wykop i podbudowa", "Zdejmujemy warstwę gruntu i układamy kruszywo warstwami, zagęszczając każdą z nich. Grubość zależy od gruntu i obciążenia."],
   ["3.0", "obrzeża i podsypka", "Ustawiamy obrzeża, które trzymają krawędź, i rozkładamy podsypkę wyrównaną do spadku."],
-  ["4.0", "układanie", "Kładziemy kostkę we wzorze i tniemy ją przy krawędziach. Wzór i kolor wybierasz wcześniej, możesz je przymierzyć w wizualizatorze."],
-  ["5.0", "fugowanie i zagęszczanie", "Wsypujemy materiał w spoiny i zagęszczamy całość. Dopiero wtedy nawierzchnia pracuje jak jedna płyta."],
-  ["6.0", "odbiór", "Sprawdzamy spadki i krawędzie, sprzątamy teren. [do uzupełnienia: co klient dostaje po odbiorze]"],
+  ["4.0", "układanie i fugowanie", "Kładziemy kostkę we wzorze, tniemy ją przy krawędziach, wsypujemy materiał w spoiny i zagęszczamy całość."],
+  ["5.0", "odbiór", "Sprawdzamy spadki i krawędzie, sprzątamy teren. [do uzupełnienia: co klient dostaje po odbiorze]"],
 ];
-const SURFACES: [string, string, string][] = [
-  ["podjazdy", "podjazdy i wjazdy", "Najczęstsza praca. Dobieramy szerokość pod samochody, spadek od domu i wzór, który nie męczy oka."],
+const GARDEN_STAGES: [string, string, string][] = [
+  ["1.0", "oglądamy działkę", "Sprawdzamy nasłonecznienie, grunt, spadki i to, jak korzystasz z ogrodu. [do uzupełnienia przez firmę]"],
+  ["2.0", "projekt", "Układamy strefy: trawnik, rabaty, ścieżki, miejsce na taras. Możesz zacząć od własnego szkicu w planerze ogrodu."],
+  ["3.0", "prace ziemne i odwodnienie", "Niwelacja, poprawa gruntu i odprowadzenie wody tam, gdzie to potrzebne. [do uzupełnienia przez firmę]"],
+  ["4.0", "trawnik, rabaty, nasadzenia", "Zakładamy trawnik z rolki albo z siewu, sadzimy drzewa, krzewy i byliny zgodnie z projektem."],
+  ["5.0", "odbiór i pielęgnacja", "Przekazujemy ogród i mówimy, jak go pielęgnować. [do uzupełnienia: czy firma oferuje opiekę po realizacji]"],
+];
+
+const PAVING: [string, string, string][] = [
+  ["podjazdy", "podjazdy i wjazdy", "Dobieramy szerokość pod samochody, spadek od domu i wzór, który nie męczy oka."],
   ["tarasy", "tarasy", "Płyty lub kostka przy domu. Najpierw spadek od ściany i odpływ wody, dopiero potem wzór."],
   ["sciezki", "ścieżki i chodniki", "Od furtki do drzwi i dookoła domu. Równe, antypoślizgowe, z obrzeżem, które trzyma kształt."],
-  ["place", "place i parkingi", "Większe obciążenia wymagają grubszej podbudowy i innej kostki. Liczymy to dla Twojego gruntu."],
+  ["place", "place i parkingi", "Większe obciążenia wymagają grubszej podbudowy i innej kostki. Układamy każdy rodzaj kostki."],
   ["obrzeza", "obrzeża, schody, opaski", "Elementy, których nie widać z daleka, a które decydują, jak nawierzchnia zachowa się po latach."],
 ];
+const GARDEN: [string, string, string][] = [
+  ["trawniki", "trawniki", "Z rolki albo z siewu, na przygotowanym podłożu."],
+  ["nasadzenia", "rabaty i nasadzenia", "Drzewa, krzewy, żywopłoty i byliny. Rośliny dobieramy do miejsca, nie do katalogowego zdjęcia."],
+  ["projekt", "projekt ogrodu", "Układ stref i zieleni dopasowany do działki i do tego, jak z niej korzystasz."],
+  ["ogrodzenia", "ogrodzenia i murki", "Ogrodzenie, opornik, murek oporowy tam, gdzie teren tego wymaga."],
+  ["oswietlenie", "oświetlenie ogrodowe", "Światło przy ścieżkach, wejściu i tarasie."],
+];
+
+function Stages({ title, stages }: { title: string; stages: [string, string, string][] }) {
+  return (
+    <>
+      <h2 className="h2 pad pb-8 pt-16">{title}</h2>
+      {stages.map(([n, t, d]) => (
+        <section key={title + n} className="stage py-[clamp(2.5rem,6vw,5rem)]">
+          <div className="grid grid-cols-6 items-start gap-y-4 pad md:grid-cols-12">
+            <p className="stage-num col-span-6 md:col-span-4" aria-hidden>{n}</p>
+            <h3 className="h2 col-span-6 md:col-span-4">{t}</h3>
+            <p className="prose-m col-span-6 md:col-span-4">{d}</p>
+          </div>
+        </section>
+      ))}
+    </>
+  );
+}
+function Rows({ title, rows }: { title: string; rows: [string, string, string][] }) {
+  return (
+    <>
+      <h3 className="h3 pad pb-4 pt-12">{title}</h3>
+      {rows.map(([id, t, d]) => (
+        <div key={id} id={id} className="grid scroll-mt-20 grid-cols-6 gap-y-2 border-t border-[var(--color-rule)] pad py-6 md:grid-cols-12">
+          <h4 className="h2 col-span-6 md:col-span-6">{t}</h4>
+          <p className="prose-m col-span-6 md:col-span-5 md:col-start-8">{d}</p>
+        </div>
+      ))}
+    </>
+  );
+}
 
 export default function Page() {
   return (
     <>
       <section className="pad pb-[clamp(4rem,8vw,7rem)] pt-[clamp(2.5rem,4.5vw,4rem)]">
-        <h1 className="display max-w-[16ch]">jak układamy kostkę<span className="period" aria-hidden /></h1>
-        <p className="prose-m mt-8 text-[var(--text-lg)] leading-snug">Sześć etapów, w tej kolejności. [opis etapów do potwierdzenia przez firmę]</p>
+        <h1 className="display-m max-w-[18ch]">jak pracujemy<span className="period" aria-hidden /></h1>
+        <p className="prose-m mt-8 text-[var(--text-lg)] leading-snug">Kostka brukowa i ogrody: dwa rodzaje prac, każdy w swojej kolejności. [opis etapów do potwierdzenia przez firmę]</p>
       </section>
 
-      {STAGES.map(([n, t, d]) => (
-        <section key={n} className="stage py-[clamp(2.5rem,6vw,5rem)]">
-          <div className="grid grid-cols-6 items-start gap-y-4 pad md:grid-cols-12">
-            <p className="stage-num col-span-6 md:col-span-4" aria-hidden>{n}</p>
-            <h2 className="h2 col-span-6 md:col-span-4">{t}</h2>
-            <p className="prose-m col-span-6 md:col-span-4">{d}</p>
-          </div>
-        </section>
-      ))}
+      <Stages title="kostka brukowa" stages={PAVING_STAGES} />
+      <Stages title="ogrody" stages={GARDEN_STAGES} />
 
       <section className="band">
         <h2 className="h2 pad">na co patrzymy przy…</h2>
-        <div className="mt-10 border-b border-[var(--color-ink)]">
-          {SURFACES.map(([id, t, d]) => (
-            <div key={id} id={id} className="grid scroll-mt-20 grid-cols-6 gap-y-2 border-t border-[var(--color-rule)] pad py-6 md:grid-cols-12">
-              <h3 className="h2 col-span-6 md:col-span-6">{t}</h3>
-              <p className="prose-m col-span-6 md:col-span-5 md:col-start-8">{d}</p>
-            </div>
-          ))}
+        <div className="border-b border-[var(--color-ink)]">
+          <Rows title="kostce" rows={PAVING} />
+          <Rows title="ogrodzie" rows={GARDEN} />
         </div>
       </section>
 
       <section className="band">
         <div className="grid grid-cols-6 items-end gap-y-6 pad md:grid-cols-12">
-          <h2 className="h2 col-span-6 md:col-span-7">nie wiesz, jaką kostkę wybrać?</h2>
-          <div className="col-span-6 flex flex-wrap gap-3 md:col-span-5 md:justify-end">
-            <Link href="/wizualizator" className="btn btn-signal">przymierz kostkę na zdjęciu</Link>
+          <h2 className="h2 col-span-6 md:col-span-6">zobacz to u siebie.</h2>
+          <div className="col-span-6 flex flex-wrap gap-3 md:col-span-6 md:justify-end">
+            <Link href="/wizualizator" className="btn btn-signal">przymierz kostkę</Link>
+            <Link href="/planer" className="btn btn-line">planer ogrodu</Link>
             <a href="tel:+48000000000" className="btn btn-line">zadzwoń&nbsp;[telefon]</a>
           </div>
         </div>

@@ -1,4 +1,4 @@
-# Design — NAZWA MARKI (kostka brukowa)
+# Design — NAZWA MARKI (kostka brukowa i ogrody)
 
 A locked design system for this site. Every page redesign reads this file before emitting code. Extend or amend this file when the system needs to grow; do not override it per page.
 
@@ -11,8 +11,8 @@ A locked design system for this site. Every page redesign reads this file before
 - `/planer` was first left in its old dark UI, then restyled into this same system (paper sheet, ink hairlines, square controls, signal yellow for the primary action and selection handles). The 3D scene itself keeps its own lighting palette; its UI chrome follows the system.
 
 ## Brief
-- Audience: homeowners and small businesses in [miasto i okolice] who want a driveway, terrace, path or yard laid in paving stone. They know what they want to see, not how it is built.
-- Use case: one action — call (or try a paver on their own photo first, then call).
+- Audience: homeowners and small businesses in [miasto i okolice] who want paving (driveway, terrace, path) AND/OR a garden (lawn, beds, planting, fencing, lighting). Both are equal services; neither is "the main one". They know what they want to see, not how it is built.
+- Use case: one action — call (or try a paver or lawn on their own photo first, or sketch a garden in the planner, then call).
 - Tone: utilitarian, plainspoken, institutional-adjacent. A trade, not a lifestyle brand.
 - Honest-copy rule: no invented numbers, awards, testimonials, years in business, guarantees. Anything the firm has to confirm is written as `[do uzupełnienia]`.
 

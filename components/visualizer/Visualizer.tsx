@@ -105,7 +105,7 @@ export function Visualizer() {
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const raf = useRef(0);
   const selArea = areas.find((a) => a.id === sel) ?? null;
-  const brickMats = useMemo(() => MATERIALS.filter((m) => m.kind === "surface"), []);
+  const brickMats = useMemo(() => MATERIALS.filter((m) => m.kind === "surface" || m.kind === "lawn"), []);
 
   const render = useCallback((preview: boolean, list: Area[]) => {
     const src = photo.current, o = out.current; if (!src || !o) return;
@@ -259,8 +259,8 @@ export function Visualizer() {
           <div className="grid min-h-[420px] place-items-center border border-dashed border-[var(--color-ink)] bg-[var(--color-paper)] p-8 text-center"
             onDragOver={(e) => e.preventDefault()} onDrop={(e) => { e.preventDefault(); onFile(e.dataTransfer.files[0]); }}>
             <div className="max-w-md">
-              <p className="h2">wgraj zdjęcie swojego podjazdu.</p>
-              <p className="prose-m mx-auto mt-3 text-[var(--color-ink-2)]">Najlepiej zdjęcie zrobione z chodnika lub z okna, tak żeby było widać całą nawierzchnię. Zdjęcie zostaje w Twojej przeglądarce — nigdzie go nie wysyłamy.</p>
+              <p className="h2">wgraj zdjęcie swojego podjazdu lub ogrodu.</p>
+              <p className="prose-m mx-auto mt-3 text-[var(--color-ink-2)]">Najlepiej zdjęcie zrobione z chodnika lub z okna, tak żeby było widać całą powierzchnię. Zdjęcie zostaje w Twojej przeglądarce — nigdzie go nie wysyłamy.</p>
               <label className="btn btn-dark mt-6 cursor-pointer">Wybierz zdjęcie<input type="file" accept="image/*" className="hidden" onChange={(e) => onFile(e.target.files?.[0])} /></label>
               <button className="mt-4 block w-full text-sm underline" onClick={() => load(sampleScene())}>Wypróbuj na ilustracji przykładowej</button>
               {busy && <p className="mt-3 text-sm">Wczytuję…</p>}
@@ -303,7 +303,7 @@ export function Visualizer() {
       <aside className="space-y-6">
         <section>
           <h2 className="h3">1. zaznacz nawierzchnię.</h2>
-          <p className="mt-1 text-sm text-[var(--color-ink-2)]">Kliknij cztery rogi miejsca, które ma być wyłożone kostką. Rogi możesz potem przeciągać.</p>
+          <p className="mt-1 text-sm text-[var(--color-ink-2)]">Kliknij cztery rogi miejsca, które ma być wyłożone kostką albo zazielenione. Rogi możesz potem przeciągać.</p>
           <div className="mt-3 flex flex-wrap gap-2">
             <button disabled={!dims} className="btn btn-line !px-3 !py-2" onClick={() => { setMode("mark"); setDraft([]); }}>+ Nowy obszar</button>
             <button disabled={!dims} className={`btn !px-3 !py-2 ${mode === "erase" ? "btn-dark" : "btn-line"}`} onClick={() => setMode(mode === "erase" ? "edit" : "erase")}>Gumka</button>
@@ -321,7 +321,7 @@ export function Visualizer() {
         </section>
 
         <section className={selArea ? "" : "pointer-events-none opacity-40"}>
-          <h2 className="h3">2. wybierz kostkę.</h2>
+          <h2 className="h3">2. wybierz kostkę lub trawnik.</h2>
           <div className="mt-3 grid grid-cols-3 gap-2">
             {brickMats.map((m) => (
               <button key={m.id} onClick={() => patch({ mat: m.id, pattern: m.pattern ?? "classic" })} aria-pressed={selArea?.mat === m.id} className={`border-2 text-left ${selArea?.mat === m.id ? "border-[var(--color-ink)]" : "border-transparent hover:border-[var(--color-ink)]"}`}>

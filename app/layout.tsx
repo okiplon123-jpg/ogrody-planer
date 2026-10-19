@@ -5,8 +5,8 @@ import "./globals.css";
 const archivo = Archivo({ variable: "--font-archivo", subsets: ["latin", "latin-ext"], weight: ["400", "500", "600", "700", "800"], display: "swap" });
 
 export const metadata: Metadata = {
-  title: "Kostka brukowa — podjazdy, tarasy, ścieżki | NAZWA MARKI [miasto]",
-  description: "Układamy kostkę brukową: podjazdy, tarasy, ścieżki i place. Przymierz kostkę na zdjęciu swojego domu w wizualizatorze.",
+  title: "Kostka brukowa i ogrody | NAZWA MARKI [miasto]",
+  description: "Układamy kostkę brukową i zakładamy ogrody: podjazdy, tarasy, ścieżki, trawniki, rabaty. Przymierz kostkę lub trawnik na zdjęciu swojego domu.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

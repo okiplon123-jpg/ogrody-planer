@@ -1,72 +1,95 @@
 import Link from "next/link";
 import { Specimens } from "@/components/marketing/Specimens";
+import { Kinds } from "@/components/marketing/Kinds";
 import { Faq } from "@/components/marketing/Faq";
 import { ContactForm } from "@/components/marketing/ContactForm";
 import { VisualizerLoader } from "@/components/visualizer/VisualizerLoader";
 
-const WORK: [string, string, string][] = [
+const PAVING: [string, string, string][] = [
   ["podjazdy i wjazdy", "Szerokość pod samochody, spadek odprowadzający wodę od domu, krawędź, która się nie rozjeżdża.", "podjazdy"],
   ["tarasy", "Płyty lub kostka przy domu, na stabilnej podbudowie i z odpływem wody.", "tarasy"],
   ["ścieżki i chodniki", "Od furtki do drzwi i dookoła domu: równo i antypoślizgowo.", "sciezki"],
   ["place i parkingi", "Większe powierzchnie pod obciążenie, z grubszą podbudową.", "place"],
   ["obrzeża, schody, opaski", "Wykończenia, od których zależy, jak nawierzchnia trzyma się latami.", "obrzeza"],
 ];
+const GARDEN: [string, string, string][] = [
+  ["trawniki", "Przygotowanie gruntu i założenie trawnika z rolki albo z siewu.", "trawniki"],
+  ["rabaty i nasadzenia", "Drzewa, krzewy, żywopłoty i byliny dobrane do miejsca i do tego, ile czasu masz na pielęgnację.", "nasadzenia"],
+  ["projekt ogrodu", "Układ stref, ścieżek i zieleni, od szkicu do realizacji.", "projekt"],
+  ["ogrodzenia i murki", "Ogrodzenie, opornik, murek oporowy tam, gdzie teren tego wymaga.", "ogrodzenia"],
+  ["oświetlenie ogrodowe", "Światło przy ścieżkach, wejściu i tarasie.", "oswietlenie"],
+];
 
 const LAYERS: [string, string, string, string][] = [
   ["widać", "kostka lub płyta", "Wzór i kolor wybierasz do domu. Możesz go przymierzyć na własnym zdjęciu, zanim cokolwiek zamówimy.", "var(--color-ink-2)"],
-  ["osadzenie", "podsypka", "Cienka warstwa, w której leży kostka. Wyrównujemy ją do spadku, bo to ona decyduje, czy woda spłynie.", "var(--color-accent)"],
+  ["osadzenie", "podsypka", "Cienka warstwa, w której leży kostka. Wyrównujemy ją do spadku, żeby woda spływała w dobrą stronę.", "var(--color-accent)"],
   ["nośność", "podbudowa", "Kruszywo zagęszczane warstwami. Grubość zależy od gruntu i obciążenia: inna pod ścieżką, inna pod samochodem.", "var(--color-rule)"],
   ["grunt", "grunt rodzimy", "Oceniamy, co jest pod spodem, zanim zdecydujemy o odwodnieniu i spadkach.", "var(--color-muted)"],
 ];
 
+function IndexRows({ rows, last = true }: { rows: [string, string, string][]; last?: boolean }) {
+  return (
+    <div>
+      {rows.map(([t, d, id], i) => (
+        <Link key={id} href={`/uslugi#${id}`} className={`irow ${last && i === rows.length - 1 ? "irow-last" : ""}`}>
+          <span className="grid grid-cols-6 items-baseline gap-y-2 pad py-6 md:grid-cols-12">
+            <span className="h2 slide col-span-6 md:col-span-6">{t}</span>
+            <span className="prose-m col-span-5 md:col-span-5">{d}</span>
+            <span className="col-span-1 text-right text-[var(--text-xl)]" aria-hidden>→</span>
+          </span>
+        </Link>
+      ))}
+    </div>
+  );
+}
+
 export default function Home() {
   return (
     <>
-      {/* HERO: Workbench lite header — one statement, one action, specimens as the object */}
       <section>
         <div className="grid grid-cols-6 md:grid-cols-12">
-          <div className="col-span-6 pad pb-[clamp(4rem,8vw,7rem)] pt-[clamp(2.5rem,4.5vw,4rem)] md:col-span-8">
-            <h1 className="display">układamy kostkę brukową<span className="period" aria-hidden /></h1>
+          <div className="col-span-6 pad pb-[clamp(4rem,8vw,7rem)] pt-[clamp(2.5rem,4.5vw,4rem)] md:col-span-7">
+            <h1 className="display-m">układamy kostkę i zakładamy ogrody<span className="period" aria-hidden /></h1>
             <p className="prose-m mt-8 text-[var(--text-lg)] leading-snug">
-              Podjazdy, tarasy, ścieżki i place wokół domu. Przyjeżdżamy, oglądamy teren i ustalamy zakres prac. [miasto i okolice · do potwierdzenia przez firmę]
+              Podjazdy, tarasy i ścieżki z każdej kostki. Trawniki, rabaty i całe ogrody, od projektu po nasadzenia. [miasto i okolice]
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a href="tel:+48000000000" className="btn btn-signal">zadzwoń&nbsp;[telefon]</a>
-              <a href="#wizualizator" className="btn btn-line">przymierz kostkę&nbsp;↓</a>
+              <a href="#wizualizator" className="btn btn-line">przymierz&nbsp;↓</a>
             </div>
           </div>
-          <div className="col-span-6 border-[var(--color-ink)] md:col-span-4 md:border-l">
+          <div className="col-span-6 border-[var(--color-ink)] md:col-span-5 md:border-l">
             <Specimens />
           </div>
         </div>
       </section>
 
-      {/* WORKBENCH: the live visualizer is the product frame */}
+      <section className="band">
+        <div className="grid grid-cols-6 gap-y-6 pad md:grid-cols-12">
+          <h2 className="h2 col-span-6 md:col-span-7">układamy każdy rodzaj kostki.</h2>
+          <p className="prose-m col-span-6 md:col-span-4 md:col-start-9">Betonową, granitową, klinkierową, kamienną, w każdym kolorze i wzorze. Jaką kostkę wybierzesz, taką położymy. Poniżej tylko część.</p>
+        </div>
+        <div className="mt-10"><Kinds /></div>
+      </section>
+
       <section id="wizualizator" className="band">
         <div className="grid grid-cols-6 gap-y-6 pad md:grid-cols-12">
-          <h2 className="h2 col-span-6 md:col-span-7">przymierz kostkę na swoim podjeździe.</h2>
-          <p className="prose-m col-span-6 md:col-span-4 md:col-start-9">Wgraj zdjęcie, zaznacz cztery rogi nawierzchni i wybierz kostkę. Zdjęcie zostaje w Twojej przeglądarce. Nigdzie go nie wysyłamy.</p>
+          <h2 className="h2 col-span-6 md:col-span-7">przymierz kostkę lub trawnik na swoim zdjęciu.</h2>
+          <p className="prose-m col-span-6 md:col-span-4 md:col-start-9">Wgraj zdjęcie podjazdu, tarasu albo ogrodu, zaznacz cztery rogi i wybierz materiał. Zdjęcie zostaje w Twojej przeglądarce. Nigdzie go nie wysyłamy.</p>
         </div>
         <div className="mt-10 border-y border-[var(--color-ink)] pad py-6"><VisualizerLoader /></div>
       </section>
 
-      {/* INDEX: numbered full-width rows */}
       <section id="uslugi" className="band">
-        <h2 className="h2 pad">co układamy.</h2>
+        <h2 className="h2 pad">co robimy.</h2>
         <div className="mt-10">
-          {WORK.map(([t, d, id], i) => (
-            <Link key={id} href={`/uslugi#${id}`} className={`irow ${i === WORK.length - 1 ? "irow-last" : ""}`}>
-              <span className="grid grid-cols-6 items-baseline gap-y-2 pad py-6 md:grid-cols-12">
-                <span className="h2 slide col-span-6 md:col-span-6">{t}</span>
-                <span className="prose-m col-span-5 md:col-span-5">{d}</span>
-                <span className="col-span-1 text-right text-[var(--text-xl)]" aria-hidden>→</span>
-              </span>
-            </Link>
-          ))}
+          <h3 className="h3 pad pb-4">kostka brukowa</h3>
+          <IndexRows rows={PAVING} last={false} />
+          <h3 className="h3 pad pb-4 pt-12">ogrody</h3>
+          <IndexRows rows={GARDEN} />
         </div>
       </section>
 
-      {/* THE PLATE: the page's one loud move */}
       <section className="plate" aria-label="Zadzwoń">
         <div className="plate-in">
           <div className="rails" aria-hidden />
@@ -77,11 +100,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CROSS-SECTION: a ruled matrix, four layers */}
       <section className="band">
         <div className="grid grid-cols-6 gap-y-6 pad md:grid-cols-12">
-          <h2 className="h2 col-span-6 md:col-span-7">dobra kostka zaczyna się pod kostką.</h2>
-          <p className="prose-m col-span-6 md:col-span-4 md:col-start-9">Podbudowa to warstwa, której po ułożeniu nie widać, a od której zależy równość nawierzchni i odpływ wody. Dlatego zaczynamy od niej, nie od wzoru.</p>
+          <h2 className="h2 col-span-6 md:col-span-7">z czego składa się nawierzchnia z kostki.</h2>
+          <p className="prose-m col-span-6 md:col-span-4 md:col-start-9">Od dołu: grunt, podbudowa, podsypka, kostka. Warstw pod spodem po ułożeniu nie widać, a od nich zależy równość i odpływ wody.</p>
         </div>
         <div className="mt-10 border-y border-[var(--color-ink)]">
           {LAYERS.map(([tag, name, d, color], i) => (
@@ -93,6 +115,16 @@ export default function Home() {
               <p className="prose-m col-span-6 pad pb-5 md:col-span-6 md:py-5">{d}</p>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section id="planer" className="band">
+        <div className="grid grid-cols-6 items-end gap-y-6 pad md:grid-cols-12">
+          <div className="col-span-6 md:col-span-7">
+            <h2 className="h2">zaplanuj ogród na działce.</h2>
+            <p className="prose-m mt-4">Ustaw dom, trawnik, rabaty i drzewa na planie działki i obejrzyj to w 3D. Działa w przeglądarce, projekt zapisuje się u Ciebie.</p>
+          </div>
+          <div className="col-span-6 md:col-span-5 md:flex md:justify-end"><Link href="/planer" className="btn btn-dark">otwórz planer ogrodu</Link></div>
         </div>
       </section>
 

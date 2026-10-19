@@ -1,4 +1,4 @@
-export const metadata = { title: "O nas: ekipa od kostki brukowej — NAZWA MARKI [miasto]", description: "Kim jesteśmy, gdzie pracujemy i czym układamy kostkę. [do uzupełnienia przez firmę]" };
+export const metadata = { title: "O nas: kostka brukowa i ogrody — NAZWA MARKI [miasto]", description: "Kim jesteśmy, gdzie pracujemy i czym zajmujemy się przy kostce i ogrodach. [do uzupełnienia przez firmę]" };
 
 export default function Page() {
   return (
@@ -7,7 +7,7 @@ export default function Page() {
       <div className="mt-10 grid grid-cols-6 gap-y-10 md:grid-cols-12">
         <article className="col-span-6 space-y-6 text-[var(--text-lg)] leading-relaxed md:col-span-7">
           <p>[Tu kilka prawdziwych zdań o firmie: od kiedy układacie kostkę, skąd jesteście, ile prac macie za sobą. Własnymi słowami, tak jak mówicie klientowi przez telefon.]</p>
-          <p>[Kto przyjeżdża na pomiar, kto układa, czym pracujecie.]</p>
+          <p>[Kto przyjeżdża na pomiar, kto układa kostkę, kto zakłada ogrody, czym pracujecie.]</p>
           <p>[Jedna konkretna praca: jaki był teren, co sprawiło trudność, jak to rozwiązaliście.]</p>
         </article>
         <dl className="col-span-6 md:col-span-4 md:col-start-9">
