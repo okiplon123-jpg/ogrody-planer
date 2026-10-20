@@ -363,7 +363,6 @@ export function PlanEditor() {
         </div>
         <span className="max-w-[300px] leading-snug">Plan poglądowy — wymiary orientacyjne, nie są mapą geodezyjną.</span>
       </div>
-      {sel && <div className="pointer-events-none absolute right-3 top-3 border border-[var(--color-rule)] bg-[var(--color-paper)] px-2 py-1 text-[11px] text-[var(--color-ink)]">{KIND_LABEL[sel.kind]}</div>}
     </div>
   );
 }

@@ -59,7 +59,6 @@ export default function Planner() {
             <div className="w-[84px]"><NumField value={plot.l} min={5} max={120} onCommit={(v) => s.setPlot(plot.w, v)} /></div>
           </div>
           <div className="ml-auto flex items-center gap-1.5">
-            <span className="hidden lg:inline-flex"><a href="tel:+48885879108" className="pl-btn !px-3" aria-label="Zadzwoń">☎ 885 879 108</a></span>
             <span className="inline-flex sm:hidden"><a href="tel:+48885879108" className="pl-btn !px-3" aria-label="Zadzwoń: 885 879 108">☎</a></span>
             <button className="pl-btn !px-3" aria-label="Cofnij" disabled={!s.past.length} onClick={s.undo}>↶</button>
             <button className="pl-btn !px-3" aria-label="Ponów" disabled={!s.future.length} onClick={s.redo}>↷</button>

@@ -29,33 +29,42 @@ export function Toolbox() {
       </div>
 
       <div className="border-t border-[var(--color-ink)] pt-4">
-        <h2 className="text-[11px] uppercase tracking-wider text-[var(--color-ink)]">Narysuj własny kształt</h2>
-        <p className="mt-1 hidden text-[12px] leading-snug text-[var(--color-muted)] lg:block">Kliknij rodzaj kształtu, potem rysuj na planie: kręta ścieżka, oczko trawnika, zaokrąglona rabata. Po narysowaniu przeciągaj kółka na krawędzi; dwuklik na krawędzi dodaje punkt.</p>
-        <div className="mt-3 space-y-3">
-          <div className="grid grid-cols-4 gap-2 lg:grid-cols-2" role="group" aria-label="Rysuj kształt">
-            {(Object.keys(DRAW_TARGETS) as DrawTarget[]).map((t) => {
-              const on = s.tool === "draw" && s.drawTarget === t;
-              return (
-                <button key={t} aria-pressed={on} onClick={() => { if (on) { s.cancelDraw(); } else { s.setDrawTarget(t); s.startDraw(); } }} className={`pl-btn ${on ? "pl-btn-primary" : ""}`}>
-                  {on ? "Anuluj" : DRAW_TARGETS[t].name}
-                </button>
-              );
-            })}
-          </div>
-          <Seg<DrawMode> value={s.drawMode} onChange={(v) => s.setDraw({ drawMode: v })} options={[{ id: "points", name: "Punkty" }, { id: "free", name: "Odręcznie" }, { id: "band", name: "Pas" }]} />
-          <p className="text-[11px] leading-snug text-[var(--color-muted)]">{MODE_HELP[s.drawMode]}</p>
-          <label className="flex items-center gap-2 text-[12px] text-[var(--color-ink-2)]">
-            <input type="checkbox" checked={s.drawSmooth} onChange={(e) => s.setDraw({ drawSmooth: e.target.checked })} /> Gładkie, zaokrąglone krawędzie
-          </label>
-          {s.drawMode === "band" && <NumField label="Szerokość pasa" value={s.drawWidth} min={0.4} max={12} onCommit={(v) => s.setDraw({ drawWidth: v })} />}
+        <h2 className="text-[11px] uppercase tracking-wider text-[var(--color-ink)]">Rysuj kształt</h2>
+        <p className="mt-1 hidden text-[12px] leading-snug text-[var(--color-muted)] lg:block">Wybierz rodzaj i rysuj na planie: kręta ścieżka, oczko trawnika, okrągła rabata.</p>
+        <div className="mt-3 grid grid-cols-4 gap-2 lg:grid-cols-2" role="group" aria-label="Rysuj kształt">
+          {(Object.keys(DRAW_TARGETS) as DrawTarget[]).map((t) => {
+            const on = s.tool === "draw" && s.drawTarget === t;
+            return (
+              <button key={t} aria-pressed={on} onClick={() => { if (on) { s.cancelDraw(); } else { s.setDrawTarget(t); s.startDraw(); } }} className={`pl-btn ${on ? "pl-btn-primary" : ""}`}>
+                {on ? "Anuluj" : DRAW_TARGETS[t].name}
+              </button>
+            );
+          })}
         </div>
+        <details className="group mt-3">
+          <summary className="flex cursor-pointer list-none items-center justify-between py-1 text-[11px] uppercase tracking-wider text-[var(--color-ink-2)]">Opcje rysowania<span aria-hidden className="text-base transition group-open:rotate-45">+</span></summary>
+          <div className="mt-2 space-y-3">
+            <Seg<DrawMode> value={s.drawMode} onChange={(v) => s.setDraw({ drawMode: v })} options={[{ id: "points", name: "Punkty" }, { id: "free", name: "Odręcznie" }, { id: "band", name: "Pas" }]} />
+            <p className="text-[11px] leading-snug text-[var(--color-muted)]">{MODE_HELP[s.drawMode]}</p>
+            <label className="flex items-center gap-2 text-[12px] text-[var(--color-ink-2)]">
+              <input type="checkbox" checked={s.drawSmooth} onChange={(e) => s.setDraw({ drawSmooth: e.target.checked })} /> Gładkie, zaokrąglone krawędzie
+            </label>
+            {s.drawMode === "band" && <NumField label="Szerokość pasa" value={s.drawWidth} min={0.4} max={12} onCommit={(v) => s.setDraw({ drawWidth: v })} />}
+          </div>
+        </details>
       </div>
 
-      <label className="flex items-center gap-2 text-[12px] text-[var(--color-ink-2)]">
-        <input type="checkbox" checked={s.project.fence.enabled} onChange={(e) => s.patchProject({ fence: { ...s.project.fence, enabled: e.target.checked } })} /> Ogrodzenie wokół działki
-      </label>
       <Quantities />
-      <button className="pl-btn w-full" onClick={() => s.loadSample()}>Wczytaj przykład</button>
+
+      <details className="group border-t border-[var(--color-ink)] pt-3">
+        <summary className="flex cursor-pointer list-none items-center justify-between py-1 text-[11px] uppercase tracking-wider text-[var(--color-ink-2)]">Więcej<span aria-hidden className="text-base transition group-open:rotate-45">+</span></summary>
+        <div className="mt-2 space-y-3">
+          <label className="flex items-center gap-2 text-[12px] text-[var(--color-ink-2)]">
+            <input type="checkbox" checked={s.project.fence.enabled} onChange={(e) => s.patchProject({ fence: { ...s.project.fence, enabled: e.target.checked } })} /> Ogrodzenie wokół działki
+          </label>
+          <button className="pl-btn w-full" onClick={() => s.loadSample()}>Wczytaj przykład</button>
+        </div>
+      </details>
     </div>
   );
 }
