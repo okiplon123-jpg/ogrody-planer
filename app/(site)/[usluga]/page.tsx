@@ -49,11 +49,10 @@ export default async function ServicePage({ params }: { params: Promise<{ usluga
             </div>
             <p className="label mt-5">pn–pt 7:00–18:00 · Białystok i okolice</p>
           </div>
-          <div className="col-span-6 border-[var(--color-ink)] md:col-span-4 md:border-l">
-            <span className="cell-photo block aspect-[16/9] md:aspect-auto md:h-full md:min-h-[14rem]">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={s.image} alt="" className="h-full w-full object-cover" />
-            </span>
+          <div className="col-span-6 border-t border-[var(--color-ink)] bg-[var(--color-paper-2)] px-6 py-6 md:col-span-4 md:border-l md:border-t-0">
+            <p className="label">umów oględziny</p>
+            <p className="h3 mt-2">zostaw numer, oddzwonimy.</p>
+            <div className="mt-3"><ContactForm service={s.short} compact withArea idp="hero" /></div>
           </div>
         </div>
       </section>
@@ -127,7 +126,7 @@ export default async function ServicePage({ params }: { params: Promise<{ usluga
           <div className="col-span-6 md:col-span-6">
             <h2 className="h2">umów oględziny.</h2>
             <p className="prose-m mt-4">Zostaw numer, a oddzwonimy w godzinach pracy. Wycena po obejrzeniu terenu, bez zobowiązań.</p>
-            <div className="mt-8 max-w-[32rem]"><ContactForm service={s.short} /></div>
+            <div className="mt-8 max-w-[32rem]"><ContactForm service={s.short} withArea idp="bot" /></div>
           </div>
           <div className="col-span-6 md:col-span-4 md:col-start-9">
             <p className="label">wolisz zadzwonić?</p>

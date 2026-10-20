@@ -3,8 +3,11 @@ import { useState } from "react";
 import { sendLead } from "@/lib/contact";
 import { track } from "@/lib/track";
 
-export function ContactForm({ service }: { service?: string }) {
+const AREAS = ["do 30 m²", "30–80 m²", "ponad 80 m²", "nie wiem"];
+
+export function ContactForm({ service, compact = false, withArea = false, idp = "cf" }: { service?: string; compact?: boolean; withArea?: boolean; idp?: string }) {
   const [v, setV] = useState({ name: "", phone: "", msg: "", consent: false });
+  const [area, setArea] = useState("");
   const [err, setErr] = useState<Record<string, string>>({});
   const [done, setDone] = useState(false);
   const [sending, setSending] = useState(false);
@@ -20,7 +23,7 @@ export function ContactForm({ service }: { service?: string }) {
     setErr(x);
     if (Object.keys(x).length || sending) return;
     setSending(true); setFail(false);
-    const ok = await sendLead({ imię: v.name.trim(), telefon: v.phone.trim(), ...(service ? { usługa: service } : {}), wiadomość: v.msg.trim() || "(brak opisu)" }, service ? `Nowe zapytanie: ${service}` : "Nowe zapytanie ze strony", hp);
+    const ok = await sendLead({ imię: v.name.trim(), telefon: v.phone.trim(), ...(service ? { usługa: service } : {}), ...(area ? { "powierzchnia (orientacyjnie)": area } : {}), wiadomość: v.msg.trim() || "(brak opisu)" }, service ? `Nowe zapytanie: ${service}` : "Nowe zapytanie ze strony", hp);
     if (ok) { setDone(true); track("generate_lead", { method: "formularz", ...(service ? { service } : {}) }); } else setFail(true);
     setSending(false);
   };
@@ -34,21 +37,34 @@ export function ContactForm({ service }: { service?: string }) {
     );
   }
   return (
-    <form onSubmit={submit} noValidate className="space-y-5">
+    <form onSubmit={submit} noValidate className={compact ? "space-y-3" : "space-y-5"}>
       <div className="field">
-        <label htmlFor="cf-name" className="label">imię</label>
-        <input id="cf-name" className="input" autoComplete="given-name" value={v.name} onChange={(e) => setV({ ...v, name: e.target.value })} aria-invalid={!!err.name} aria-describedby={err.name ? "cf-name-e" : undefined} />
-        <div className="err-slot" aria-live="polite">{err.name && <p id="cf-name-e" className="err">{err.name}</p>}</div>
+        <label htmlFor={`${idp}-name`} className="label">imię</label>
+        <input id={`${idp}-name`} className="input" autoComplete="given-name" value={v.name} onChange={(e) => setV({ ...v, name: e.target.value })} aria-invalid={!!err.name} aria-describedby={err.name ? `${idp}-name-e` : undefined} />
+        <div className="err-slot" aria-live="polite">{err.name && <p id={`${idp}-name-e`} className="err">{err.name}</p>}</div>
       </div>
       <div className="field">
-        <label htmlFor="cf-phone" className="label">telefon</label>
-        <input id="cf-phone" className="input tnum" type="tel" autoComplete="tel" value={v.phone} onChange={(e) => setV({ ...v, phone: e.target.value })} aria-invalid={!!err.phone} aria-describedby={err.phone ? "cf-phone-e" : undefined} />
-        <div className="err-slot" aria-live="polite">{err.phone && <p id="cf-phone-e" className="err">{err.phone}</p>}</div>
+        <label htmlFor={`${idp}-phone`} className="label">telefon</label>
+        <input id={`${idp}-phone`} className="input tnum" type="tel" autoComplete="tel" value={v.phone} onChange={(e) => setV({ ...v, phone: e.target.value })} aria-invalid={!!err.phone} aria-describedby={err.phone ? `${idp}-phone-e` : undefined} />
+        <div className="err-slot" aria-live="polite">{err.phone && <p id={`${idp}-phone-e`} className="err">{err.phone}</p>}</div>
       </div>
-      <div className="field">
-        <label htmlFor="cf-msg" className="label">co chcesz położyć (opcjonalnie)</label>
-        <textarea id="cf-msg" className="input min-h-[7rem]" value={v.msg} onChange={(e) => setV({ ...v, msg: e.target.value })} />
-      </div>
+      {withArea && (
+        <div role="radiogroup" aria-label="Orientacyjna powierzchnia" className="field">
+          <p className="label">powierzchnia (orientacyjnie)</p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            {AREAS.map((a) => (
+              <button key={a} type="button" role="radio" aria-checked={area === a} onClick={() => setArea(area === a ? "" : a)}
+                className={`min-h-11 border border-[var(--color-ink)] px-3 text-[var(--text-sm)] font-semibold ${area === a ? "bg-[var(--color-accent)] text-[var(--color-accent-ink)]" : "bg-transparent"}`}>{a}</button>
+            ))}
+          </div>
+        </div>
+      )}
+      {!compact && (
+        <div className="field">
+          <label htmlFor={`${idp}-msg`} className="label">co chcesz położyć (opcjonalnie)</label>
+          <textarea id={`${idp}-msg`} className="input min-h-[7rem]" value={v.msg} onChange={(e) => setV({ ...v, msg: e.target.value })} />
+        </div>
+      )}
       <div>
         <label className="flex items-start gap-3 text-[var(--text-sm)]">
           <input type="checkbox" className="mt-1 h-4 w-4 accent-[var(--color-ink)]" checked={v.consent} onChange={(e) => setV({ ...v, consent: e.target.checked })} aria-invalid={!!err.consent} />

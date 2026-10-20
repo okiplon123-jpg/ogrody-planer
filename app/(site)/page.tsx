@@ -113,7 +113,7 @@ export default function Home() {
           <div className="col-span-6 md:col-span-6">
             <h2 className="h2">umów oględziny.</h2>
             <p className="prose-m mt-4">Zostaw numer, a oddzwonimy w godzinach pracy i umówimy oględziny terenu. Wycena po obejrzeniu, bez zobowiązań.</p>
-            <div className="mt-8 max-w-[32rem]"><ContactForm /></div>
+            <div className="mt-8 max-w-[32rem]"><ContactForm withArea /></div>
           </div>
         </div>
       </section>
