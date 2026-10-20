@@ -78,7 +78,7 @@ export default function Planner() {
       </header>
 
       <div className="relative flex min-h-0 flex-1 flex-col-reverse lg:flex-row">
-        <aside className={`scroll-thin z-20 max-h-[30vh] shrink-0 ${s.tool === "draw" ? "max-lg:hidden" : ""} overflow-y-auto border-t border-[var(--color-ink)] bg-[var(--color-paper)] p-3 lg:max-h-none lg:w-[264px] lg:border-r lg:border-t-0 lg:p-4`}><Toolbox /></aside>
+        <aside className={`scroll-thin z-20 max-h-[30vh] shrink-0 ${s.tool === "draw" || s.selectedId ? "max-lg:hidden" : ""} overflow-y-auto border-t border-[var(--color-ink)] bg-[var(--color-paper)] p-3 lg:max-h-none lg:w-[264px] lg:border-r lg:border-t-0 lg:p-4`}><Toolbox /></aside>
 
         <main className="relative min-h-[300px] min-w-0 flex-1 overflow-hidden">
           <div className={`absolute inset-0 transition-opacity duration-500 ${s.mode === "2d" ? "opacity-100" : "pointer-events-none opacity-0"}`}><PlanEditor /></div>

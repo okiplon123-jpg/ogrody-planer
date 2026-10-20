@@ -27,9 +27,10 @@ export function PlanEditor() {
   const [freePts, setFreePts] = useState<V2[]>([]);
   const [guides, setGuides] = useState<{ v: number[]; h: number[] }>({ v: [], h: [] });
   const drag = useRef<Drag>(null);
-  const lastType = useRef<string>("mouse");
   const [coarse, setCoarse] = useState(false);
   useEffect(() => { setCoarse(window.matchMedia("(pointer: coarse)").matches); }, []);
+  const lastType = useRef<string>("mouse");
+  const tapRef = useRef<{ x: number; y: number; moved: boolean } | null>(null);
   const pointers = useRef(new Map<number, V2>());
   const pinch = useRef<{ d: number; z: number } | null>(null);
   const sel = project.objects.find((o) => o.id === selectedId);
@@ -37,9 +38,10 @@ export function PlanEditor() {
   const fit = useCallback(() => {
     if (!size.w) return;
     const { w, l } = project.plot;
-    const z = Math.max(3, Math.min(60, Math.min((size.w - 90) / (w + 4), (size.h - 110) / (l + 4))));
-    setCam({ z, x: (size.w - w * z) / 2, y: (size.h - l * z) / 2 - 10 });
-  }, [size, project.plot]);
+    const reserve = coarse && tool === "draw" ? 130 : 0; // bottom toolbar on phones
+    const z = Math.max(3, Math.min(60, Math.min((size.w - 90) / (w + 4), (size.h - reserve - 110) / (l + 4))));
+    setCam({ z, x: (size.w - w * z) / 2, y: (size.h - reserve - l * z) / 2 - 10 });
+  }, [size, project.plot, coarse, tool]);
 
   useEffect(() => {
     const el = wrap.current!;
@@ -48,6 +50,7 @@ export function PlanEditor() {
     return () => ro.disconnect();
   }, []);
   useEffect(fit, [s.fitNonce, size.w > 0, s.mode]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (coarse) fit(); }, [size.h, tool === "draw"]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     // keep "view centre" fresh for objects added from the library
@@ -84,6 +87,20 @@ export function PlanEditor() {
     const stop = (e: TouchEvent) => { if (!(e.target as Element).closest("[data-allow-touch]")) e.preventDefault(); };
     el.addEventListener("touchmove", stop, { passive: false });
     return () => el.removeEventListener("touchmove", stop);
+  }, []);
+
+  // native touch: the most reliable input path on iOS Safari; feeds the same handlers as the pointer events
+  const handlersRef = useRef<{ down: (e: never) => void; move: (e: never) => void; up: (e: never) => void } | null>(null);
+  useEffect(() => {
+    const el = svgRef.current; if (!el) return;
+    const mk = (t: Touch) => ({ native: true, pointerId: 1000 + t.identifier, clientX: t.clientX, clientY: t.clientY, target: t.target, currentTarget: el, pointerType: "touch", buttons: 1 });
+    const run = (kind: "down" | "move" | "up") => (e: TouchEvent) => { e.preventDefault(); for (const t of Array.from(e.changedTouches)) handlersRef.current?.[kind](mk(t) as never); };
+    const a = run("down"), b = run("move"), c = run("up");
+    el.addEventListener("touchstart", a, { passive: false });
+    el.addEventListener("touchmove", b, { passive: false });
+    el.addEventListener("touchend", c, { passive: false });
+    el.addEventListener("touchcancel", c, { passive: false });
+    return () => { el.removeEventListener("touchstart", a); el.removeEventListener("touchmove", b); el.removeEventListener("touchend", c); el.removeEventListener("touchcancel", c); };
   }, []);
 
   // keyboard
@@ -131,25 +148,36 @@ export function PlanEditor() {
     return [nx + dx, ny + dy] as V2;
   };
 
+  const isNative = (e: unknown) => !!(e as { native?: boolean }).native;
+  const addOrFinish = (p: V2) => {
+    const last = drawPts[drawPts.length - 1];
+    if (drawMode === "points" && drawPts.length >= 3 && Math.hypot(p[0] - drawPts[0][0], p[1] - drawPts[0][1]) < 14 / cam.z) s.finishDraw();
+    else if (drawMode === "band" && drawPts.length >= 2 && last && Math.hypot(p[0] - last[0], p[1] - last[1]) < 14 / cam.z) s.finishDraw();
+    else s.addDrawPt(p);
+  };
   const onDown = (e: React.PointerEvent) => {
+    if (e.pointerType === "touch" && !isNative(e)) return; // touch is handled by the native touch listeners below
     lastType.current = e.pointerType;
-    (e.currentTarget as Element).setPointerCapture(e.pointerId);
+    if (!isNative(e)) { try { (e.currentTarget as Element).setPointerCapture(e.pointerId); } catch { /* capture is optional */ } }
     pointers.current.set(e.pointerId, [e.clientX, e.clientY]);
     if (pointers.current.size === 2) {
       const [a, b] = [...pointers.current.values()];
       pinch.current = { d: Math.hypot(a[0] - b[0], a[1] - b[1]), z: cam.z };
       drag.current = null;
+      tapRef.current = null;
       return;
     }
     const w = toWorld(e);
     const target = e.target as Element;
     if (tool === "draw") {
       if (drawMode === "free") { drag.current = { t: "free" }; setFreePts([w]); return; }
-      const p: V2 = [sn(w[0]), sn(w[1])];
-      const last = drawPts[drawPts.length - 1];
-      if (drawMode === "points" && drawPts.length >= 3 && Math.hypot(p[0] - drawPts[0][0], p[1] - drawPts[0][1]) < 14 / cam.z) s.finishDraw();
-      else if (drawMode === "band" && drawPts.length >= 2 && last && Math.hypot(p[0] - last[0], p[1] - last[1]) < 14 / cam.z) s.finishDraw();
-      else s.addDrawPt(p);
+      if (isNative(e)) {
+        // finger: a tap places a point, a drag pans the plan, two fingers zoom
+        tapRef.current = { x: e.clientX, y: e.clientY, moved: false };
+        drag.current = { t: "pan", px: e.clientX, py: e.clientY, cx: cam.x, cy: cam.y };
+        return;
+      }
+      addOrFinish([sn(w[0]), sn(w[1])]);
       return;
     }
     if (armed) {
@@ -176,6 +204,8 @@ export function PlanEditor() {
   };
 
   const onMove = (e: React.PointerEvent) => {
+    if (e.pointerType === "touch" && !isNative(e)) return;
+    if (tapRef.current && Math.hypot(e.clientX - tapRef.current.x, e.clientY - tapRef.current.y) > 10) tapRef.current.moved = true;
     // a lost pointer-up (released outside the window, tab switch) must never leave a stroke or drag following the mouse
     if (drag.current && e.pointerType === "mouse" && e.buttons === 0) { onUp(e); return; }
     if (pointers.current.has(e.pointerId)) pointers.current.set(e.pointerId, [e.clientX, e.clientY]);
@@ -225,6 +255,12 @@ export function PlanEditor() {
     }
   };
   const onUp = (e: React.PointerEvent) => {
+    if (e.pointerType === "touch" && !isNative(e)) return;
+    const tap = tapRef.current; tapRef.current = null;
+    if (tap && !tap.moved && tool === "draw" && drawMode !== "free" && pointers.current.size <= 1) {
+      const w = toWorld({ clientX: tap.x, clientY: tap.y });
+      addOrFinish([sn(w[0]), sn(w[1])]);
+    }
     pointers.current.delete(e.pointerId);
     if (pointers.current.size < 2) pinch.current = null;
     if (drag.current?.t === "free") {
@@ -236,6 +272,8 @@ export function PlanEditor() {
     drag.current = null;
     setGuides({ v: [], h: [] });
   };
+
+  handlersRef.current = { down: onDown as never, move: onMove as never, up: onUp as never };
 
   const fs = 11 / cam.z;
   const u = settings.units;
@@ -349,13 +387,6 @@ export function PlanEditor() {
       )}
       <div className="pointer-events-none absolute left-3 right-3 top-14 flex max-w-[calc(100%-1.5rem)] flex-col gap-2 text-[11px] md:right-auto">
         {tool === "draw" && (
-          <div className="pointer-events-none flex justify-center md:hidden">
-            <p className="border border-[var(--color-ink)] bg-[var(--color-paper)] px-3 py-2 text-[13px] text-[var(--color-ink)]">
-              {drawMode === "free" ? "Przeciągnij palcem po planie" : `Dotykaj kolejnych punktów (${drawPts.length})`}
-            </p>
-          </div>
-        )}
-        {tool === "draw" && (
           <div className="pointer-events-auto hidden items-center gap-2 border border-[var(--color-ink)] bg-[var(--color-paper)] px-3 py-2 text-[var(--color-ink)] md:flex">
             {drawMode === "free" ? "Przytrzymaj i narysuj kształt ręką. Puść, żeby go zamknąć." : drawMode === "band" ? `Kliknij punkty wzdłuż ścieżki (${drawPts.length}). Koniec: kliknij ostatni punkt jeszcze raz, dwuklik, Enter albo prawy przycisk. Esc anuluje.` : `Kliknij kolejne punkty obrysu (${drawPts.length}). Koniec: kliknij pierwszy punkt, dwuklik, Enter albo prawy przycisk. Esc anuluje.`}
             {drawMode !== "free" && <button className="pl-btn pl-btn-primary" onClick={() => s.finishDraw()} disabled={drawPts.length < (drawMode === "band" ? 2 : 3)}>Zakończ</button>}
@@ -369,7 +400,10 @@ export function PlanEditor() {
         )}
       </div>
       {tool === "draw" && (
-        <div data-allow-touch className="absolute inset-x-3 bottom-3 z-20 flex gap-2 md:hidden">
+        <div data-allow-touch className="absolute inset-x-3 bottom-3 z-20 flex flex-wrap gap-2 md:hidden">
+          <p className="w-full border border-[var(--color-ink)] bg-[var(--color-paper)] px-3 py-2 text-center text-[13px] text-[var(--color-ink)]">
+            {drawMode === "free" ? "Przeciągnij palcem po planie" : `Stuknij w plan, żeby dodać punkt (${drawPts.length})`}
+          </p>
           {drawMode !== "free" && (
             <>
               <button className="pl-btn flex-1 !min-h-[52px]" onClick={s.undoDrawPt} disabled={!drawPts.length}>↶ Cofnij</button>
@@ -391,7 +425,7 @@ export function PlanEditor() {
           <div className="h-1.5 border-x border-b border-[var(--color-ink)]" style={{ width: cam.z * (cam.z > 12 ? 1 : 5) }} />
           {cam.z > 12 ? "1 m" : "5 m"}
         </div>
-        <span className="max-w-[300px] leading-snug">Plan poglądowy — wymiary orientacyjne, nie są mapą geodezyjną.</span>
+        <span className="max-w-[300px] leading-snug max-md:hidden">Plan poglądowy — wymiary orientacyjne, nie są mapą geodezyjną.</span>
       </div>
     </div>
   );

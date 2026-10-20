@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import { useStore } from "@/lib/store";
 import { KIND_LABEL, MATERIALS, PATTERNS, SHAPE_KINDS, SPECIES, matById } from "@/lib/catalog";
 import { fmtArea, objectArea } from "@/lib/geometry";
@@ -11,6 +12,8 @@ const SURFACE_PICKS = ["ph-behaton", "ph-granit", "ph-bruzowa", "ph-klinkier", "
 export function PropertiesBar() {
   const s = useStore();
   const o = s.project.objects.find((x) => x.id === s.selectedId);
+  const [more, setMore] = useState(false); // phones: options stay folded until asked for
+  useEffect(() => setMore(false), [s.selectedId]);
   if (!o) return null;
   const set = (p: Parameters<typeof s.update>[1]) => s.update(o.id, p);
   const m = matById(o.material);
@@ -22,6 +25,8 @@ export function PropertiesBar() {
         <div className="text-[11px] uppercase tracking-wider text-[var(--color-ink)]">{KIND_LABEL[o.kind]}</div>
         {["surface", "lawn", "bed", "house", "garage", "water"].includes(o.kind) && <div className="text-[11px] text-[var(--color-muted)]">{fmtArea(objectArea(o))}</div>}
       </div>
+      <button type="button" className="pl-btn md:hidden" aria-expanded={more} onClick={() => setMore(!more)}>{more ? "Mniej" : "Opcje"}</button>
+      <div className={`${more ? "flex" : "hidden"} order-last w-full flex-wrap items-center gap-x-4 gap-y-2 md:contents`}>
       {SHAPE_KINDS.includes(o.kind) && (
         <label className="flex items-center gap-2 text-[12px] text-[var(--color-ink-2)]">
           <input type="checkbox" checked={!!o.smooth} onChange={(e) => s.reshape(o.id, { smooth: e.target.checked })} /> Gładkie krawędzie
@@ -51,9 +56,10 @@ export function PropertiesBar() {
           {([["white", "Biała"], ["graphite", "Grafit"], ["wood", "Drewno"]] as [Facade, string][]).map(([id, n]) => <button key={id} role="radio" aria-checked={(o.facade ?? "white") === id} onClick={() => set({ facade: id })} className={`pl-btn ${(o.facade ?? "white") === id ? "!border-[var(--color-ink)] !text-[var(--color-ink)]" : ""}`}>{n}</button>)}
         </div>
       )}
+      </div>
       <div className="ml-auto flex gap-1.5">
         <button className="pl-btn" onClick={() => set({ rot: (o.rot + 90) % 360 })}>Obróć</button>
-        <button className="pl-btn" onClick={() => s.duplicate(o.id)}>Duplikuj</button>
+        <button className="pl-btn" onClick={() => s.duplicate(o.id)}>Kopiuj</button>
         <button className="pl-btn !border-[var(--color-error)] !text-[var(--color-error)] hover:!border-[var(--color-error)]" onClick={() => s.remove(o.id)}>Usuń</button>
       </div>
     </div>
