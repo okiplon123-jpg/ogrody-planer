@@ -22,13 +22,6 @@ const GARDEN: [string, string, string][] = [
   ["oświetlenie ogrodowe", "Światło przy ścieżkach, wejściu i tarasie.", "oswietlenie"],
 ];
 
-const LAYERS: [string, string, string, string][] = [
-  ["widać", "kostka lub płyta", "Wzór i kolor wybierasz do domu. Możesz go przymierzyć na własnym zdjęciu, zanim cokolwiek zamówimy.", "var(--color-ink-2)"],
-  ["osadzenie", "podsypka", "Cienka warstwa, w której leży kostka. Wyrównujemy ją do spadku, żeby woda spływała w dobrą stronę.", "var(--color-accent)"],
-  ["nośność", "podbudowa", "Kruszywo zagęszczane warstwami. Grubość zależy od gruntu i obciążenia: inna pod ścieżką, inna pod samochodem.", "var(--color-rule)"],
-  ["grunt", "grunt rodzimy", "Oceniamy, co jest pod spodem, zanim zdecydujemy o odwodnieniu i spadkach.", "var(--color-muted)"],
-];
-
 function IndexRows({ rows, last = true }: { rows: [string, string, string][]; last?: boolean }) {
   return (
     <div>
@@ -110,25 +103,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      <section className="band">
-        <div className="grid grid-cols-6 gap-y-6 pad md:grid-cols-12">
-          <h2 className="h2 col-span-6 md:col-span-7">z czego składa się nawierzchnia z kostki.</h2>
-          <p className="prose-m col-span-6 md:col-span-4 md:col-start-9">Od dołu: grunt, podbudowa, podsypka, kostka. Warstw pod spodem po ułożeniu nie widać, a od nich zależy równość i odpływ wody.</p>
-        </div>
-        <div className="mt-10 border-y border-[var(--color-ink)]">
-          {LAYERS.map(([tag, name, d, color], i) => (
-            <div key={name} className={`grid grid-cols-6 md:grid-cols-12 ${i ? "border-t border-[var(--color-rule)]" : ""}`}>
-              <div className="col-span-6 flex items-center px-6 py-5 md:col-span-3" style={{ background: color, color: i === 3 || i === 0 ? "var(--color-paper)" : "var(--color-ink)" }}>
-                <span className="label" style={{ color: "inherit" }}>{tag}</span>
-              </div>
-              <h3 className="h3 col-span-6 pad py-5 md:col-span-3">{name}</h3>
-              <p className="prose-m col-span-6 pad pb-5 md:col-span-6 md:py-5">{d}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
       <section className="band">
         <div className="grid grid-cols-6 gap-y-8 pad md:grid-cols-12">
           <h2 className="h2 col-span-6 md:col-span-5">pytania, które słyszymy.</h2>
