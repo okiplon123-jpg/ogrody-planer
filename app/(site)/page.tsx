@@ -104,9 +104,9 @@ export default function Home() {
       <section className="plate" aria-label="Zadzwoń">
         <div className="plate-in">
           <div className="rails" aria-hidden />
-          <div className="grid grid-cols-6 pad py-[clamp(4rem,9vw,8rem)] md:grid-cols-12">
-            <p className="display col-span-6 md:col-span-12">zadzwoń. <span className="tnum">+48 885 879 108</span></p>
-            <p className="col-span-6 mt-8 text-[var(--text-lg)] leading-snug md:col-span-6">pn–pt 7:00–18:00 · Białystok i okolice. Oglądamy teren i ustalamy zakres. [do potwierdzenia przez firmę]</p>
+          <div className="grid grid-cols-6 items-end gap-y-4 pad py-[clamp(2.5rem,5vw,4rem)] md:grid-cols-12">
+            <p className="h2 col-span-6 md:col-span-7" style={{ fontSize: "clamp(2rem, 5vw, 3.75rem)" }}>zadzwoń. <a href="tel:+48885879108" className="tnum whitespace-nowrap">+48&nbsp;885&nbsp;879&nbsp;108</a></p>
+            <p className="col-span-6 leading-snug md:col-span-4 md:col-start-9">pn–pt 7:00–18:00 · Białystok i okolice. Oglądamy teren i ustalamy zakres.</p>
           </div>
         </div>
       </section>
