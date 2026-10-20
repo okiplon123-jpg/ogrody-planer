@@ -6,7 +6,7 @@ const QA: [string, string][] = [
   ["Od czego zależy cena?", "Zależy od powierzchni, gruntu, grubości podbudowy, wybranej kostki, odwodnienia i dojazdu dla sprzętu."],
   ["Jaką kostkę układacie?", "Każdą: betonową, granitową, klinkierową, kamienną, w każdym kolorze i wzorze. Możesz też przymierzyć ją najpierw na własnym zdjęciu w wizualizatorze."],
   ["Czy zakładacie ogród od zera?", "Tak, ogród zakładamy od zera: od projektu i prac ziemnych po trawnik, rabaty i nasadzenia."],
-  ["Czy jest gwarancja?", "Tak. Jeśli po wykonaniu prac coś się wydarzy, wracamy i to naprawiamy. [do uzupełnienia: okres gwarancji]"],
+  ["Czy jest gwarancja?", "Tak. Jeśli po wykonaniu prac coś się wydarzy, wracamy i to naprawiamy."],
 ];
 
 export function Faq() {
