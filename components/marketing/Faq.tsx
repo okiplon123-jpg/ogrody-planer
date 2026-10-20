@@ -1,12 +1,12 @@
 const QA: [string, string][] = [
-  ["Ile trwa położenie podjazdu?", "[do uzupełnienia przez firmę: typowy czas dla podjazdu, tarasu i ścieżki oraz od czego zależy]"],
-  ["Czy można układać kostkę zimą?", "[do uzupełnienia przez firmę: kiedy pracujecie w sezonie i od jakich warunków pogodowych to zależy]"],
-  ["Czy potrzebuję pozwolenia?", "[do uzupełnienia przez firmę: czy sprawdzacie wymogi formalne dla klienta i jak to robicie. Przepisy zależą od rodzaju prac i miejsca, np. zjazdu z drogi publicznej]"],
-  ["Jak przygotować teren?", "[do uzupełnienia przez firmę: co klient musi przygotować, a co jest po Waszej stronie]"],
-  ["Od czego zależy cena?", "Zależy od powierzchni, gruntu, grubości podbudowy, wybranej kostki, odwodnienia i dojazdu dla sprzętu. [do uzupełnienia: jak firma ustala kwotę]"],
+  ["Ile trwa położenie podjazdu?", "Zależy od rodzaju robót i wielkości zlecenia. Zazwyczaj jest to około 2 tygodnie."],
+  ["Czy można układać kostkę zimą?", "Zimą staramy się kostki nie układać. Wszystko zależy jednak od pogody, więc termin ustalamy, gdy widzimy, jakie są warunki."],
+  ["Czy potrzebuję pozwolenia?", "Nie, na samo położenie kostki pozwolenie nie jest potrzebne."],
+  ["Jak przygotować teren?", "Nie musisz nic przygotowywać. Teren przygotowujemy my."],
+  ["Od czego zależy cena?", "Zależy od powierzchni, gruntu, grubości podbudowy, wybranej kostki, odwodnienia i dojazdu dla sprzętu."],
   ["Jaką kostkę układacie?", "Każdą: betonową, granitową, klinkierową, kamienną, w każdym kolorze i wzorze. Możesz też przymierzyć ją najpierw na własnym zdjęciu w wizualizatorze."],
-  ["Czy zakładacie ogród od zera?", "[do uzupełnienia przez firmę: czy robicie projekt, prace ziemne, trawnik, rabaty i nasadzenia w jednym zleceniu, i od czego zależy zakres]"],
-  ["Czy jest gwarancja?", "[do uzupełnienia przez firmę — nic nie wpisujemy, dopóki nie jest potwierdzone]"],
+  ["Czy zakładacie ogród od zera?", "Tak, ogród zakładamy od zera: od projektu i prac ziemnych po trawnik, rabaty i nasadzenia."],
+  ["Czy jest gwarancja?", "Tak. Jeśli po wykonaniu prac coś się wydarzy, wracamy i to naprawiamy. [do uzupełnienia: okres gwarancji]"],
 ];
 
 export function Faq() {
