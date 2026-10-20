@@ -105,6 +105,13 @@ export function Visualizer() {
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const raf = useRef(0);
   const selArea = areas.find((a) => a.id === sel) ?? null;
+  const [svgW, setSvgW] = useState(800);
+  useEffect(() => {
+    const el = svg.current; if (!el) return;
+    const ro = new ResizeObserver(() => setSvgW(el.getBoundingClientRect().width));
+    ro.observe(el); setSvgW(el.getBoundingClientRect().width);
+    return () => ro.disconnect();
+  }, [dims]);
   const brickMats = useMemo(() => MATERIALS.filter((m) => m.kind === "surface" || m.kind === "lawn"), []);
 
   const render = useCallback((preview: boolean, list: Area[]) => {
@@ -250,7 +257,7 @@ export function Visualizer() {
     out.current!.toBlob((b) => { if (!b) return; const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = "wizualizacja-kostki.png"; a.click(); }, "image/png");
   };
   const clearMask = () => { const m = mask.current; if (m) { m.getContext("2d")!.clearRect(0, 0, m.width, m.height); render(false, areas); } };
-  const r = dims ? dims.w / 90 : 10;
+  const r = dims ? Math.max(dims.w / 90, (16 * dims.w) / Math.max(svgW, 200)) : 10;
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
@@ -262,14 +269,14 @@ export function Visualizer() {
               <p className="h2">wgraj zdjęcie swojego podjazdu lub ogrodu.</p>
               <p className="prose-m mx-auto mt-3 text-[var(--color-ink-2)]">Najlepiej zdjęcie zrobione z chodnika lub z okna, tak żeby było widać całą powierzchnię. Zdjęcie zostaje w Twojej przeglądarce — nigdzie go nie wysyłamy.</p>
               <label className="btn btn-dark mt-6 cursor-pointer">Wybierz zdjęcie<input type="file" accept="image/*" className="hidden" onChange={(e) => onFile(e.target.files?.[0])} /></label>
-              <button className="mt-4 block w-full text-sm underline" onClick={() => load(sampleScene())}>Wypróbuj na ilustracji przykładowej</button>
+              <button className="mt-4 block min-h-[44px] w-full text-sm underline" onClick={() => load(sampleScene())}>Wypróbuj na ilustracji przykładowej</button>
               {busy && <p className="mt-3 text-sm">Wczytuję…</p>}
               {err && <p role="alert" className="mt-3 text-sm text-[var(--color-error)]">{err}</p>}
             </div>
           </div>
         ) : (
           <div>
-            <div className="relative w-full select-none overflow-hidden bg-[var(--color-ink)]" style={{ aspectRatio: `${dims.w}/${dims.h}`, touchAction: "none" }}>
+            <div className="relative w-full select-none overflow-hidden bg-[var(--color-ink)]" style={{ aspectRatio: `${dims.w}/${dims.h}`, touchAction: mode === "mark" ? "pan-y" : "none" }}>
               <canvas ref={orig} className="absolute inset-0 h-full w-full" role="img" aria-label="Twoje zdjęcie przed zmianą" />
               <canvas ref={out} className="absolute inset-0 h-full w-full" role="img" aria-label="Twoje zdjęcie z wybraną kostką" style={{ clipPath: `inset(0 0 0 ${cmp}%)` }} />
               {cmp > 0 && <div className="pointer-events-none absolute inset-y-0 w-0.5 bg-[var(--color-accent)]" style={{ left: `${cmp}%` }} />}
@@ -277,7 +284,7 @@ export function Visualizer() {
                 {mode === "edit" && selArea && (
                   <g>
                     <polygon points={selArea.pts.map((p) => p.join(",")).join(" ")} fill="none" className="vz-dash" strokeWidth={r / 4} strokeDasharray={`${r} ${r / 2}`} pointerEvents="none" />
-                    {selArea.pts.map((p, i) => <circle key={i} data-h={i} cx={p[0]} cy={p[1]} r={r * 0.9} className="vz-handle" strokeWidth={r / 5} style={{ cursor: "grab" }} />)}
+                    {selArea.pts.map((p, i) => <circle key={i} data-h={i} cx={p[0]} cy={p[1]} r={r * 0.9} className="vz-handle" strokeWidth={r / 5} style={{ cursor: "grab", touchAction: "none" }} />)}
                   </g>
                 )}
                 {mode === "mark" && (
@@ -294,7 +301,7 @@ export function Visualizer() {
               <label className="label flex items-center gap-2">przed
                 <input type="range" min={0} max={95} value={cmp} onChange={(e) => setCmp(Number(e.target.value))} aria-label="Porównanie przed i po" />po</label>
               <button className="btn btn-dark !py-2.5" onClick={download}>Pobierz obraz</button>
-              <button className="text-sm underline" onClick={() => { setDims(null); photo.current = null; }}>Inne zdjęcie</button>
+              <button className="min-h-[44px] text-sm underline" onClick={() => { setDims(null); photo.current = null; }}>Inne zdjęcie</button>
             </div>
           </div>
         )}
@@ -316,7 +323,7 @@ export function Visualizer() {
             </div>
           )}
           {areas.length > 1 && (
-            <div className="mt-3 flex gap-1.5">{areas.map((a, i) => <button key={a.id} onClick={() => { setSel(a.id); setMode("edit"); }} className={`border px-2.5 py-1 text-sm ${sel === a.id ? "border-[var(--color-ink)] bg-[var(--color-ink)] text-[var(--color-paper)]" : "border-[var(--color-rule)]"}`}>Obszar {i + 1}</button>)}</div>
+            <div className="mt-3 flex gap-1.5">{areas.map((a, i) => <button key={a.id} onClick={() => { setSel(a.id); setMode("edit"); }} className={`min-h-[44px] border px-3 text-sm ${sel === a.id ? "border-[var(--color-ink)] bg-[var(--color-ink)] text-[var(--color-paper)]" : "border-[var(--color-rule)]"}`}>Obszar {i + 1}</button>)}</div>
           )}
         </section>
 
@@ -332,11 +339,11 @@ export function Visualizer() {
           </div>
           {matById(selArea?.mat).tex === "bricks" && !matById(selArea?.mat).photo && (
             <div className="mt-4"><div className="mb-1 text-sm font-medium">Układ</div>
-              <div className="flex flex-wrap gap-1.5">{PATTERNS.map((p) => <button key={p.id} onClick={() => patch({ pattern: p.id })} className={`border px-2.5 py-1 text-sm ${selArea?.pattern === p.id ? "border-[var(--color-ink)] bg-[var(--color-ink)] text-[var(--color-paper)]" : "border-[var(--color-rule)]"}`}>{p.name}</button>)}</div></div>
+              <div className="flex flex-wrap gap-1.5">{PATTERNS.map((p) => <button key={p.id} onClick={() => patch({ pattern: p.id })} className={`min-h-[44px] border px-3 text-sm ${selArea?.pattern === p.id ? "border-[var(--color-ink)] bg-[var(--color-ink)] text-[var(--color-paper)]" : "border-[var(--color-rule)]"}`}>{p.name}</button>)}</div></div>
           )}
           <label className="mt-4 block text-sm"><span className="font-medium">Wielkość kostki</span>
             <input type="range" min={0.5} max={2} step={0.05} value={selArea?.size ?? 1} onChange={(e) => patch({ size: Number(e.target.value) })} className="w-full" /></label>
-          <button className="mt-2 text-sm underline" onClick={() => patch({ rot: ((selArea?.rot ?? 0) + 1) % 4 })}>Obróć wzór</button>
+          <button className="mt-2 inline-flex min-h-[44px] items-center text-sm underline" onClick={() => patch({ rot: ((selArea?.rot ?? 0) + 1) % 4 })}>Obróć wzór</button>
         </section>
         <p className="label">Wizualizacja jest poglądowa — rzeczywisty kolor kostki zależy od partii i oświetlenia.</p>
       </aside>

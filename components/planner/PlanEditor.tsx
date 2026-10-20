@@ -331,7 +331,7 @@ export function PlanEditor() {
           </div>
         </div>
       )}
-      <div className="pointer-events-none absolute left-3 top-14 flex flex-col gap-2 text-[11px]">
+      <div className="pointer-events-none absolute left-3 right-3 top-14 flex max-w-[calc(100%-1.5rem)] flex-col gap-2 text-[11px] md:right-auto">
         {tool === "draw" && (
           <div className="pointer-events-auto flex items-center gap-2 border border-[var(--color-ink)] bg-[var(--color-paper)] px-3 py-2 text-[var(--color-ink)]">
             {drawMode === "free" ? "Przytrzymaj i narysuj kształt ręką. Puść, żeby go zamknąć." : drawMode === "band" ? `Kliknij punkty wzdłuż ścieżki (${drawPts.length}). Koniec: dwuklik lub Enter. Backspace cofa punkt.` : `Kliknij kolejne punkty obrysu (${drawPts.length}). Koniec: pierwszy punkt, dwuklik lub Enter. Backspace cofa punkt.`}

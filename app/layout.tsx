@@ -4,6 +4,8 @@ import "./globals.css";
 
 const archivo = Archivo({ variable: "--font-archivo", subsets: ["latin", "latin-ext"], weight: ["400", "500", "600", "700", "800"], display: "swap" });
 
+export const viewport = { width: "device-width", initialScale: 1, viewportFit: "cover" as const };
+
 export const metadata: Metadata = {
   title: "Kostka brukowa i ogrody | NAZWA MARKI [miasto]",
   description: "Układamy kostkę brukową i zakładamy ogrody: podjazdy, tarasy, ścieżki, trawniki, rabaty. Przymierz kostkę lub trawnik na zdjęciu swojego domu.",

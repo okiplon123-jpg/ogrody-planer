@@ -17,7 +17,7 @@ export function PropertiesBar() {
   const picks = o.kind === "surface" ? SURFACE_PICKS.map((id) => matById(id)) : MATERIALS.filter((x) => x.kind === o.kind);
   const plants = Object.entries(SPECIES).filter(([, v]) => (o.kind === "tree" ? ["round", "birch", "cone"].includes(v.style) : o.kind === "shrub" ? ["bush", "column"].includes(v.style) : false));
   return (
-    <div className="absolute inset-x-3 bottom-3 z-20 mx-auto flex max-w-[860px] flex-wrap items-center gap-x-4 gap-y-2 border border-[var(--color-rule)] bg-[var(--color-paper)] px-3 py-2 shadow-2xl">
+    <div className="absolute inset-x-3 bottom-3 z-20 mx-auto flex max-h-[46%] max-w-[860px] flex-wrap overflow-y-auto items-center gap-x-4 gap-y-2 border border-[var(--color-rule)] bg-[var(--color-paper)] px-3 py-2 shadow-2xl">
       <div className="min-w-[90px]">
         <div className="text-[11px] uppercase tracking-wider text-[var(--color-ink)]">{KIND_LABEL[o.kind]}</div>
         {["surface", "lawn", "bed", "house", "garage", "water"].includes(o.kind) && <div className="text-[11px] text-[var(--color-muted)]">{fmtArea(objectArea(o))}</div>}

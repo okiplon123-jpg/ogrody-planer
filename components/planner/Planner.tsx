@@ -38,24 +38,32 @@ export default function Planner() {
 
   return (
     <div className="fixed inset-0 flex flex-col bg-[var(--color-paper)] text-[var(--color-ink)]">
-      <header className="flex h-14 shrink-0 items-center gap-3 border-b border-[var(--color-ink)] bg-[var(--color-paper)] px-3">
-        <Link href="/" className="wordmark" aria-label="Strona główna">nazwa marki<span className="period" aria-hidden /></Link>
-        <div className="mx-1 hidden h-6 w-px bg-[var(--color-ink)] sm:block" />
-        <div className="flex items-center gap-2 text-[11px] text-[var(--color-muted)]">
-          <span className="hidden sm:inline">Działka</span>
+      <header className="shrink-0 border-b border-[var(--color-ink)] bg-[var(--color-paper)]">
+        <div className="flex h-14 items-center gap-2 px-3 sm:gap-3">
+          <Link href="/" className="wordmark !text-base sm:!text-[length:var(--text-lg)]" aria-label="Strona główna">nazwa marki<span className="period" aria-hidden /></Link>
+          <div className="mx-1 hidden h-6 w-px bg-[var(--color-ink)] md:block" />
+          <div className="hidden items-center gap-2 text-[11px] text-[var(--color-muted)] md:flex">
+            <span>Działka</span>
+            <div className="w-[84px]"><NumField value={plot.w} min={5} max={120} onCommit={(v) => s.setPlot(v, plot.l)} /></div>×
+            <div className="w-[84px]"><NumField value={plot.l} min={5} max={120} onCommit={(v) => s.setPlot(plot.w, v)} /></div>
+          </div>
+          <div className="ml-auto flex items-center gap-1.5">
+            <button className="pl-btn !px-3" aria-label="Cofnij" disabled={!s.past.length} onClick={s.undo}>↶</button>
+            <button className="pl-btn !px-3" aria-label="Ponów" disabled={!s.future.length} onClick={s.redo}>↷</button>
+            <span className="hidden sm:inline-flex"><button className="pl-btn" onClick={s.save}>Zapisz</button></span>
+            <button className="pl-btn pl-btn-primary" onClick={() => s.set({ summaryOpen: true })}>Gotowe</button>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 border-t border-[var(--color-rule)] px-3 py-2 text-[11px] text-[var(--color-muted)] md:hidden">
+          <span>Działka</span>
           <div className="w-[84px]"><NumField value={plot.w} min={5} max={120} onCommit={(v) => s.setPlot(v, plot.l)} /></div>×
           <div className="w-[84px]"><NumField value={plot.l} min={5} max={120} onCommit={(v) => s.setPlot(plot.w, v)} /></div>
-        </div>
-        <div className="ml-auto flex items-center gap-1.5">
-          <button className="pl-btn" aria-label="Cofnij" disabled={!s.past.length} onClick={s.undo}>↶</button>
-          <button className="pl-btn" aria-label="Ponów" disabled={!s.future.length} onClick={s.redo}>↷</button>
-          <button className="pl-btn hidden sm:block" onClick={s.save}>Zapisz</button>
-          <button className="pl-btn pl-btn-primary" onClick={() => s.set({ summaryOpen: true })}>Gotowe</button>
+          <span className="ml-auto sm:hidden"><button className="pl-btn" onClick={s.save}>Zapisz</button></span>
         </div>
       </header>
 
       <div className="relative flex min-h-0 flex-1 flex-col-reverse lg:flex-row">
-        <aside className="scroll-thin z-20 max-h-[40vh] shrink-0 overflow-y-auto border-t border-[var(--color-ink)] bg-[var(--color-paper)] p-3 lg:max-h-none lg:w-[264px] lg:border-r lg:border-t-0 lg:p-4"><Toolbox /></aside>
+        <aside className="scroll-thin z-20 max-h-[38vh] shrink-0 overflow-y-auto border-t border-[var(--color-ink)] bg-[var(--color-paper)] p-3 lg:max-h-none lg:w-[264px] lg:border-r lg:border-t-0 lg:p-4"><Toolbox /></aside>
 
         <main className="relative min-h-[300px] min-w-0 flex-1 overflow-hidden">
           <div className={`absolute inset-0 transition-opacity duration-500 ${s.mode === "2d" ? "opacity-100" : "pointer-events-none opacity-0"}`}><PlanEditor /></div>
