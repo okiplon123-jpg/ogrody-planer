@@ -112,6 +112,7 @@ export function Visualizer() {
     ro.observe(el); setSvgW(el.getBoundingClientRect().width);
     return () => ro.disconnect();
   }, [dims]);
+  const [matGroup, setMatGroup] = useState<string | null>(null);
   const brickMats = useMemo(() => MATERIALS.filter((m) => m.kind === "surface" || m.kind === "lawn"), []);
 
   const render = useCallback((preview: boolean, list: Area[]) => {
@@ -182,6 +183,9 @@ export function Visualizer() {
     timer.current = setTimeout(() => render(false, list), 280);
   }, [render]);
 
+  const groupOf = (cat: string) => (cat.startsWith("Kostka") ? "Kostka" : cat === "Trawnik" ? "Trawnik" : cat === "Żwir" ? "Żwir" : "Płyty i kamień");
+  const matGroups = useMemo(() => ["Kostka", "Płyty i kamień", "Żwir", "Trawnik"].filter((g) => brickMats.some((m) => groupOf(m.cat) === g)), [brickMats]); // eslint-disable-line react-hooks/exhaustive-deps
+  const activeGroup = matGroup ?? groupOf(matById(selArea?.mat).cat);
   const [texVer, setTexVer] = useState(0);
   useEffect(() => { loadPhotoTextures().then(() => setTexVer((v) => v + 1)); }, []);
   useEffect(() => { schedule(areas); }, [areas, dims, schedule, texVer]);
@@ -327,24 +331,34 @@ export function Visualizer() {
           )}
         </section>
 
-        <section className={selArea ? "" : "pointer-events-none opacity-40"}>
-          <h2 className="h3">2. wybierz kostkę lub trawnik.</h2>
-          <div className="mt-3 grid grid-cols-3 gap-2">
-            {brickMats.map((m) => (
-              <button key={m.id} onClick={() => patch({ mat: m.id, pattern: m.pattern ?? "classic" })} aria-pressed={selArea?.mat === m.id} className={`border-2 text-left ${selArea?.mat === m.id ? "border-[var(--color-ink)]" : "border-transparent hover:border-[var(--color-ink)]"}`}>
-                <span className="block aspect-square w-full" style={{ backgroundImage: m.photo ? `url(/textures/${m.photo.dir}/${m.photo.dir}_diff_1k.jpg)` : `url(${makeCanvas(m.id, m.pattern).toDataURL()})`, backgroundSize: m.photo ? "160%" : "200%" }} />
-                <span className="block px-1 py-1 text-[11px] leading-tight">{m.name}</span>
-              </button>
-            ))}
-          </div>
-          {matById(selArea?.mat).tex === "bricks" && !matById(selArea?.mat).photo && (
-            <div className="mt-4"><div className="mb-1 text-sm font-medium">Układ</div>
-              <div className="flex flex-wrap gap-1.5">{PATTERNS.map((p) => <button key={p.id} onClick={() => patch({ pattern: p.id })} className={`min-h-[44px] border px-3 text-sm ${selArea?.pattern === p.id ? "border-[var(--color-ink)] bg-[var(--color-ink)] text-[var(--color-paper)]" : "border-[var(--color-rule)]"}`}>{p.name}</button>)}</div></div>
-          )}
-          <label className="mt-4 block text-sm"><span className="font-medium">Wielkość kostki</span>
-            <input type="range" min={0.5} max={2} step={0.05} value={selArea?.size ?? 1} onChange={(e) => patch({ size: Number(e.target.value) })} className="w-full" /></label>
-          <button className="mt-2 inline-flex min-h-[44px] items-center text-sm underline" onClick={() => patch({ rot: ((selArea?.rot ?? 0) + 1) % 4 })}>Obróć wzór</button>
-        </section>
+        {selArea ? (
+          <section>
+            <h2 className="h3">2. wybierz kostkę lub trawnik.</h2>
+            <div className="mt-3 flex flex-wrap gap-1.5" role="tablist" aria-label="Rodzaj materiału">
+              {matGroups.map((g) => (
+                <button key={g} role="tab" aria-selected={activeGroup === g} onClick={() => setMatGroup(g)} className={`min-h-[44px] border px-3 text-sm ${activeGroup === g ? "border-[var(--color-ink)] bg-[var(--color-ink)] text-[var(--color-paper)]" : "border-[var(--color-rule)]"}`}>{g}</button>
+              ))}
+            </div>
+            <div className="mt-3 grid grid-cols-5 gap-1.5">
+              {brickMats.filter((m) => groupOf(m.cat) === activeGroup).map((m) => (
+                <button key={m.id} title={m.name} onClick={() => patch({ mat: m.id, pattern: m.pattern ?? "classic" })} aria-pressed={selArea.mat === m.id} aria-label={m.name} className={`border-2 text-left ${selArea.mat === m.id ? "border-[var(--color-ink)]" : "border-transparent hover:border-[var(--color-ink)]"}`}>
+                  <span className="block aspect-square w-full" style={{ backgroundImage: m.photo ? `url(/textures/${m.photo.dir}/${m.photo.dir}_diff_1k.jpg)` : `url(${makeCanvas(m.id, m.pattern).toDataURL()})`, backgroundSize: m.photo ? "170%" : "220%" }} />
+                </button>
+              ))}
+            </div>
+            <p className="mt-2 text-sm">{matById(selArea.mat).name}</p>
+            <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1">
+              {matById(selArea.mat).tex === "bricks" && !matById(selArea.mat).photo && (
+                <div className="flex flex-wrap gap-1.5" role="radiogroup" aria-label="Układ">{PATTERNS.map((p) => <button key={p.id} role="radio" aria-checked={selArea.pattern === p.id} onClick={() => patch({ pattern: p.id })} className={`min-h-[44px] border px-3 text-sm ${selArea.pattern === p.id ? "border-[var(--color-ink)] bg-[var(--color-ink)] text-[var(--color-paper)]" : "border-[var(--color-rule)]"}`}>{p.name}</button>)}</div>
+              )}
+              <label className="flex min-w-[10rem] flex-1 items-center gap-2 text-sm"><span>Wielkość</span>
+                <input type="range" min={0.5} max={2} step={0.05} value={selArea.size} onChange={(e) => patch({ size: Number(e.target.value) })} className="w-full" aria-label="Wielkość kostki" /></label>
+              <button className="inline-flex min-h-[44px] items-center text-sm underline" onClick={() => patch({ rot: (selArea.rot + 1) % 4 })}>Obróć wzór</button>
+            </div>
+          </section>
+        ) : (
+          <p className="text-sm text-[var(--color-ink-2)]">2. wybór kostki lub trawnika pojawi się tutaj po zaznaczeniu obszaru.</p>
+        )}
         <p className="label">Wizualizacja jest poglądowa — rzeczywisty kolor kostki zależy od partii i oświetlenia.</p>
       </aside>
     </div>
