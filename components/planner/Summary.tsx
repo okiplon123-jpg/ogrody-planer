@@ -45,13 +45,20 @@ export function Summary() {
   return (
     <div className="absolute inset-0 z-40 overflow-y-auto bg-[var(--color-paper)]" role="dialog" aria-label="Podsumowanie projektu">
       <div className="mx-auto max-w-[1180px] px-5 py-8">
-        <div className="mb-6 flex items-center justify-between">
-          <div><h2 className="h2">{project.name}</h2></div>
-          <button className="pl-btn" onClick={() => s.set({ summaryOpen: false })}>← Wróć do planera</button>
+        <div className="mb-6 flex items-center justify-between gap-3 max-md:flex-col-reverse max-md:items-stretch">
+          <div className="min-w-0"><h2 className="h2 max-md:!text-[1.7rem]">{project.name}</h2></div>
+          <button className="pl-btn max-md:!min-h-12" onClick={() => s.set({ summaryOpen: false })}>← Wróć do planera</button>
         </div>
         <div className="grid gap-6">
-          <div className="space-y-5">
-            <div className="grid gap-3 sm:grid-cols-2">
+          <div className="flex flex-col gap-5">
+            {/* phones: the total and the send form come first, the pictures and the full table after */}
+            <div className="border border-[var(--color-ink)] bg-[var(--color-accent)] p-4 text-[var(--color-accent-ink)] max-md:order-0 md:hidden">
+              <div className="pl-label mb-1">Twój projekt</div>
+              <p className="text-[15px] font-semibold leading-snug">
+                Kostka i nawierzchnie {fmtArea(sum.paved)} · trawnik {fmtArea(sum.lawn)} · rabaty {fmtArea(sum.beds)}
+              </p>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2 max-md:order-3">
               <div className="border border-[var(--color-rule)] bg-[var(--color-paper)]">
                 <div className="pl-label px-3 py-2">Plan 2D</div>
                 <svg role="img" aria-label="Plan 2D projektu" viewBox={`-2 -2 ${project.plot.w + 4} ${project.plot.l + 12}`} className="block w-full bg-[var(--color-paper-3)]"><PlanLayer project={project} /></svg>
@@ -61,7 +68,7 @@ export function Summary() {
                 {s.preview3d ? <img src={s.preview3d} alt="Wizualizacja 3D projektu" className="block w-full" /> : <div className="flex aspect-[3/4] items-center justify-center p-4 text-center text-[12px] text-[var(--color-muted)]">Przygotowuję podgląd 3D… Jeśli się nie pojawi, przełącz na „Widok 3D” i wróć tutaj.</div>}
               </div>
             </div>
-            <div className="border border-[var(--color-rule)] bg-[var(--color-paper)] p-4">
+            <div className="border border-[var(--color-rule)] bg-[var(--color-paper)] p-4 max-md:order-4">
               <div className="pl-label mb-3">Zestawienie powierzchni (liczone z geometrii projektu)</div>
               <div className="mb-3 flex h-3 w-full overflow-hidden">{rows.map(([n, a, c]) => a > 0 && <div key={n} title={n} style={{ width: `${(a / total) * 100}%`, background: c }} />)}</div>
               <table className="w-full text-[13px]"><tbody>
@@ -91,8 +98,8 @@ export function Summary() {
                 ] as [string, string][]).map(([k, v]) => <tr key={k} className="border-t border-[var(--color-rule)]"><td className="py-1.5">{k}</td><td className="py-1.5 text-right tabular-nums text-[var(--color-ink)]">{v}</td></tr>)}
               </tbody></table>
             </div>
-            <label className="block"><span className="pl-label mb-1 block">Uwagi do projektu (opcjonalnie)</span><textarea className="pl-input min-h-[80px]" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Np. preferowany kolor kostki, istniejące drzewa do zachowania…" /></label>
-            <div className="border border-[var(--color-ink)] bg-[var(--color-paper)] p-4">
+            <label className="block max-md:order-1"><span className="pl-label mb-1 block">Uwagi do projektu (opcjonalnie)</span><textarea className="pl-input min-h-[80px]" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Np. preferowany kolor kostki, istniejące drzewa do zachowania…" /></label>
+            <div className="border border-[var(--color-ink)] bg-[var(--color-paper)] p-4 max-md:order-2">
               <div className="pl-label mb-1">Wyślij projekt do firmy</div>
               <p className="mb-3 text-[12px] leading-relaxed text-[var(--color-muted)]">Firma dostanie Twój projekt razem z zestawieniem ilości i odezwie się, żeby umówić oględziny. Zostaw imię i numer telefonu.</p>
               {leadState === "sent" ? (
@@ -109,7 +116,7 @@ export function Summary() {
                 </div>
               )}
             </div>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 max-md:order-5">
               <button className="pl-btn pl-btn-primary" onClick={s.save}>Zapisz projekt</button>
               <button className="pl-btn" onClick={download}>Pobierz wizualizację</button>
             </div>
