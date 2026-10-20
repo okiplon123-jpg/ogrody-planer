@@ -1,6 +1,5 @@
 "use client";
 import dynamic from "next/dynamic";
-import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PlanLayer } from "@/components/planner/PlanLayer";
 import { sampleProject } from "@/lib/sample";
@@ -37,10 +36,6 @@ export function PlannerShowcase() {
         </figure>
       </div>
 
-      <div className="pad mt-8 flex flex-wrap items-center gap-3">
-        <Link href="/planer" className="btn btn-dark">otwórz planer ogrodu</Link>
-        <span className="text-[var(--color-ink-2)]">Rysujesz działkę, a planer liczy, ile kostki i trawnika potrzeba. Gotowy projekt możesz wysłać do nas.</span>
-      </div>
     </div>
   );
 }
