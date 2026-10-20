@@ -9,24 +9,25 @@ import { MatSwatch, NumField } from "./ui";
 const SURFACE_PICKS = ["ph-behaton", "ph-granit", "ph-bruzowa", "ph-klinkier", "ph-bruk", "ph-zwir", "kb-grafit", "kb-szara", "kb-melanz", "kb-piasek", "ks-czarna", "ks-jasna", "pt-wielko", "pt-kamien", "zw-dekor", "in-deska"];
 
 /** Floating contextual bar: only the few things a person actually wants to change. */
-export function PropertiesBar() {
+export function PropertiesBar({ inline = false }: { inline?: boolean }) {
   const s = useStore();
   const o = s.project.objects.find((x) => x.id === s.selectedId);
   const [more, setMore] = useState(false); // phones: options stay folded until asked for
   useEffect(() => setMore(false), [s.selectedId]);
   if (!o) return null;
+  const open = inline || more;
   const set = (p: Parameters<typeof s.update>[1]) => s.update(o.id, p);
   const m = matById(o.material);
   const picks = o.kind === "surface" ? SURFACE_PICKS.map((id) => matById(id)) : MATERIALS.filter((x) => x.kind === o.kind);
   const plants = Object.entries(SPECIES).filter(([, v]) => (o.kind === "tree" ? ["round", "birch", "cone"].includes(v.style) : o.kind === "shrub" ? ["bush", "column"].includes(v.style) : false));
   return (
-    <div className="absolute inset-x-3 bottom-3 z-20 mx-auto flex max-h-[46%] max-w-[860px] flex-wrap overflow-y-auto items-center gap-x-4 gap-y-2 border border-[var(--color-rule)] bg-[var(--color-paper)] px-3 py-2 shadow-2xl">
+    <div className={inline ? "flex flex-wrap items-center gap-x-4 gap-y-3" : "absolute inset-x-3 bottom-3 z-20 mx-auto flex max-h-[46%] max-w-[860px] flex-wrap overflow-y-auto items-center gap-x-4 gap-y-2 border border-[var(--color-rule)] bg-[var(--color-paper)] px-3 py-2 shadow-2xl"}>
       <div className="min-w-[90px]">
         <div className="text-[11px] uppercase tracking-wider text-[var(--color-ink)]">{KIND_LABEL[o.kind]}</div>
         {["surface", "lawn", "bed", "house", "garage", "water"].includes(o.kind) && <div className="text-[11px] text-[var(--color-muted)]">{fmtArea(objectArea(o))}</div>}
       </div>
-      <button type="button" className="pl-btn md:hidden" aria-expanded={more} onClick={() => setMore(!more)}>{more ? "Mniej" : "Opcje"}</button>
-      <div className={`${more ? "flex" : "hidden"} order-last w-full flex-wrap items-center gap-x-4 gap-y-2 md:contents`}>
+      {!inline && <button type="button" className="pl-btn md:hidden" aria-expanded={more} onClick={() => setMore(!more)}>{more ? "Mniej" : "Opcje"}</button>}
+      <div className={`${open ? "flex" : "hidden"} order-last w-full flex-wrap items-center gap-x-4 gap-y-2 md:contents`}>
       {SHAPE_KINDS.includes(o.kind) && (
         <label className="flex items-center gap-2 text-[12px] text-[var(--color-ink-2)]">
           <input type="checkbox" checked={!!o.smooth} onChange={(e) => s.reshape(o.id, { smooth: e.target.checked })} /> Gładkie krawędzie
@@ -57,11 +58,11 @@ export function PropertiesBar() {
         </div>
       )}
       </div>
-      <div className="ml-auto flex gap-1.5">
+      {!inline && <div className="ml-auto flex gap-1.5">
         <button className="pl-btn" onClick={() => set({ rot: (o.rot + 90) % 360 })}>Obróć</button>
         <button className="pl-btn" onClick={() => s.duplicate(o.id)}>Kopiuj</button>
         <button className="pl-btn !border-[var(--color-error)] !text-[var(--color-error)] hover:!border-[var(--color-error)]" onClick={() => s.remove(o.id)}>Usuń</button>
-      </div>
+      </div>}
     </div>
   );
 }

@@ -16,7 +16,7 @@ type Drag =
   | { t: "pan"; px: number; py: number; cx: number; cy: number }
   | null;
 
-export function PlanEditor() {
+export function PlanEditor({ phone = false }: { phone?: boolean }) {
   const s = useStore();
   const { project, selectedId, settings, tool, armed, drawPts, drawMode, drawSmooth, drawWidth } = s;
   const wrap = useRef<HTMLDivElement>(null);
@@ -29,6 +29,7 @@ export function PlanEditor() {
   const drag = useRef<Drag>(null);
   const [coarse, setCoarse] = useState(false);
   useEffect(() => { setCoarse(window.matchMedia("(pointer: coarse)").matches); }, []);
+  const big = phone || coarse;
   const lastType = useRef<string>("mouse");
   const tapRef = useRef<{ x: number; y: number; moved: boolean } | null>(null);
   const pointers = useRef(new Map<number, V2>());
@@ -38,10 +39,10 @@ export function PlanEditor() {
   const fit = useCallback(() => {
     if (!size.w) return;
     const { w, l } = project.plot;
-    const reserve = coarse && tool === "draw" ? 130 : 0; // bottom toolbar on phones
+    const reserve = !phone && coarse && tool === "draw" ? 130 : 0; // bottom toolbar on tablets without the phone shell
     const z = Math.max(3, Math.min(60, Math.min((size.w - 90) / (w + 4), (size.h - reserve - 110) / (l + 4))));
     setCam({ z, x: (size.w - w * z) / 2, y: (size.h - reserve - l * z) / 2 - 10 });
-  }, [size, project.plot, coarse, tool]);
+  }, [size, project.plot, coarse, tool, phone]);
 
   useEffect(() => {
     const el = wrap.current!;
@@ -340,12 +341,12 @@ export function PlanEditor() {
                 <g transform={`translate(${sel.x} ${sel.y}) rotate(${sel.rot})`}>
                   <rect x={-sel.w / 2} y={-sel.h / 2} width={sel.w} height={sel.h} fill="none" stroke="var(--color-ink)" strokeWidth={2 / cam.z} strokeDasharray={`${6 / cam.z} ${4 / cam.z}`} pointerEvents="none" />
                   <line x1={0} y1={-sel.h / 2} x2={0} y2={-sel.h / 2 - 22 / cam.z} stroke="var(--color-ink)" strokeWidth={1.5 / cam.z} />
-                  <circle data-handle="rot" cx={0} cy={-sel.h / 2 - 22 / cam.z} r={7 / cam.z} fill="var(--color-accent)" stroke="var(--color-ink)" strokeWidth={2 / cam.z} style={{ cursor: "grab" }} />
+                  <circle data-handle="rot" cx={0} cy={-sel.h / 2 - (big ? 34 : 22) / cam.z} r={(big ? 14 : 7) / cam.z} fill="var(--color-accent)" stroke="var(--color-ink)" strokeWidth={2 / cam.z} style={{ cursor: "grab" }} />
                   {handles.map(([sx, sy]) => (
-                    <rect key={`${sx},${sy}`} data-handle={`${sx},${sy}`} x={(sx * sel.w) / 2 - 6 / cam.z} y={(sy * sel.h) / 2 - 6 / cam.z} width={12 / cam.z} height={12 / cam.z} fill="var(--color-accent)" stroke="var(--color-ink)" strokeWidth={1.5 / cam.z} style={{ cursor: "nwse-resize" }} />
+                    <rect key={`${sx},${sy}`} data-handle={`${sx},${sy}`} x={(sx * sel.w) / 2 - (big ? 13 : 6) / cam.z} y={(sy * sel.h) / 2 - (big ? 13 : 6) / cam.z} width={(big ? 26 : 12) / cam.z} height={(big ? 26 : 12) / cam.z} fill="var(--color-accent)" stroke="var(--color-ink)" strokeWidth={1.5 / cam.z} style={{ cursor: "nwse-resize" }} />
                   ))}
                 </g>
-                {SHAPE_KINDS.includes(sel.kind) && tool !== "draw" && getNodes(sel).map((n, i) => { const wp = localToWorld(sel, n); return <circle key={"n" + i} data-node={i} cx={wp[0]} cy={wp[1]} r={6 / cam.z} fill="var(--color-paper)" stroke="var(--color-ink)" strokeWidth={2 / cam.z} style={{ cursor: "move" }} />; })}
+                {SHAPE_KINDS.includes(sel.kind) && tool !== "draw" && getNodes(sel).map((n, i) => { const wp = localToWorld(sel, n); return <circle key={"n" + i} data-node={i} cx={wp[0]} cy={wp[1]} r={(big ? 12 : 6) / cam.z} fill="var(--color-paper)" stroke="var(--color-ink)" strokeWidth={2 / cam.z} style={{ cursor: "move" }} />; })}
                 {settings.dims && (() => {
                   const top = localToWorld(sel, [0, -sel.h / 2 - 0.6 - 30 / cam.z]);
                   const side = localToWorld(sel, [sel.w / 2 + 0.7 + 8 / cam.z, 0]);
@@ -380,7 +381,7 @@ export function PlanEditor() {
         <div className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center">
           <div className="pointer-events-auto max-w-xs border border-dashed border-[var(--color-ink)] bg-[var(--color-paper)] p-5 text-center text-[13px] leading-relaxed text-[var(--color-ink-2)]">
             <div className="h3">Zacznij od domu</div>
-            Kliknij „Dom” po lewej albo przeciągnij go na plan.
+            {phone ? "Dotknij „Dodaj” na dole i wybierz dom." : "Kliknij „Dom” po lewej albo przeciągnij go na plan."}
             <button className="pl-btn mt-3 block w-full" onClick={() => s.loadSample()}>Wczytaj przykład</button>
           </div>
         </div>
@@ -399,7 +400,7 @@ export function PlanEditor() {
           </div>
         )}
       </div>
-      {tool === "draw" && (
+      {tool === "draw" && !phone && (
         <div data-allow-touch className="absolute inset-x-3 bottom-3 z-20 flex flex-wrap gap-2 md:hidden">
           <p className="w-full border border-[var(--color-ink)] bg-[var(--color-paper)] px-3 py-2 text-center text-[13px] text-[var(--color-ink)]">
             {drawMode === "free" ? "Przeciągnij palcem po planie" : `Stuknij w plan, żeby dodać punkt (${drawPts.length})`}
