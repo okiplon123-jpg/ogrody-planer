@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { sendLead } from "@/lib/contact";
 
 export function ContactForm() {
   const [v, setV] = useState({ name: "", phone: "", msg: "", consent: false });
@@ -18,15 +19,8 @@ export function ContactForm() {
     setErr(x);
     if (Object.keys(x).length || sending) return;
     setSending(true); setFail(false);
-    try {
-      const r = await fetch("https://formsubmit.co/ajax/gryczewski.bud@gmail.com", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ _subject: "Nowe zapytanie ze strony", _captcha: "false", _template: "table", _honey: hp, imię: v.name.trim(), telefon: v.phone.trim(), wiadomość: v.msg.trim() || "(brak opisu)" }),
-      });
-      const j = await r.json().catch(() => ({}));
-      if (r.ok && j.success !== "false" && j.success !== false) setDone(true); else setFail(true);
-    } catch { setFail(true); }
+    const ok = await sendLead({ imię: v.name.trim(), telefon: v.phone.trim(), wiadomość: v.msg.trim() || "(brak opisu)" }, "Nowe zapytanie ze strony", hp);
+    if (ok) setDone(true); else setFail(true);
     setSending(false);
   };
 

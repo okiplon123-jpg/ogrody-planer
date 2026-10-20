@@ -28,6 +28,7 @@ export default function Page() {
         <S n="03" t="wizualizator i planer">
           <p>Zdjęcia wgrywane do wizualizatora i projekty rysowane w planerze ogrodu są przetwarzane wyłącznie w Twojej przeglądarce. Nie wysyłamy ich na serwer, nie widzimy ich i nie przechowujemy.</p>
           <p>Jeśli klikniesz „zapisz projekt”, projekt trafia do pamięci Twojej przeglądarki (localStorage) na tym urządzeniu. Możesz go usunąć, czyszcząc dane strony w ustawieniach przeglądarki.</p>
+          <p>Dopiero gdy sam klikniesz „Wyślij projekt” w podsumowaniu planera i zaznaczysz zgodę, wysyłamy do firmy Twoje imię, numer telefonu, uwagi, zestawienie ilości oraz link zawierający zapis projektu (kształt działki i rozmieszczone elementy). Nie wysyłamy zdjęć z wizualizatora.</p>
         </S>
         <S n="04" t="logi serwera i hosting">
           <p>Strona jest udostępniana przez dostawcę hostingu [nazwa dostawcy hostingu, do uzupełnienia po publikacji]. Serwer może zapisywać standardowe dane techniczne wizyty, np. adres IP, czas i adres żądanej strony, w celu zapewnienia bezpieczeństwa i działania serwisu. Nie łączymy ich z Twoją tożsamością.</p>

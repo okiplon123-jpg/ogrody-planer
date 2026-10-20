@@ -1,4 +1,5 @@
 "use client";
+import { decodeProject } from "@/lib/share";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -21,6 +22,12 @@ export default function Planner() {
     if ((navigator.hardwareConcurrency ?? 8) <= 4 || window.innerWidth < 768) s.setSettings({ quality: "low" });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { if (s.mode === "3d") setMount3d(true); }, [s.mode]);
+  useEffect(() => {
+    // a shared link (#p=...) opens that exact project, e.g. one a client sent to the company
+    const m = location.hash.match(/^#p=(.+)$/);
+    if (!m) return;
+    decodeProject(m[1]).then((p) => { if (p) { useStore.getState().setProject(p); useStore.getState().set({ welcome: false, mode: "2d" }); } else useStore.getState().notify("Nie udało się otworzyć projektu z linku."); });
+  }, []);
   useEffect(() => {
     if (!s.summaryOpen) return;
     setMount3d(true);

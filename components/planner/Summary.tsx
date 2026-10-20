@@ -4,12 +4,33 @@ import { useStore } from "@/lib/store";
 import { fmtM, fmtM3, summarize } from "@/lib/summary";
 import { fmtArea } from "@/lib/geometry";
 import { PlanLayer } from "./PlanLayer";
+import { sendLead } from "@/lib/contact";
+import { encodeProject } from "@/lib/share";
 
 export function Summary() {
   const s = useStore();
   const { project, settings } = s;
   const sum = useMemo(() => summarize(project, settings.waste), [project, settings.waste]);
   const [notes, setNotes] = useState("");
+  const [lead, setLead] = useState({ name: "", phone: "", consent: false });
+  const [leadErr, setLeadErr] = useState("");
+  const [leadState, setLeadState] = useState<"idle" | "sending" | "sent" | "fail">("idle");
+  const submitLead = async () => {
+    if (lead.name.trim().length < 3) return setLeadErr("Wpisz imię.");
+    if (lead.phone.replace(/\D/g, "").length < 9) return setLeadErr("Numer telefonu ma za mało cyfr.");
+    if (!lead.consent) return setLeadErr("Zaznacz zgodę na kontakt.");
+    setLeadErr(""); setLeadState("sending");
+    const link = `${location.origin}/planer#p=${await encodeProject(project)}`;
+    const lines = [
+      `Projekt: ${project.name}, działka ${project.plot.w} × ${project.plot.l} m`,
+      `Kostka i nawierzchnie: ${fmtArea(sum.paved)} (podjazd ${fmtArea(sum.driveway)}, taras ${fmtArea(sum.terrace)}, ścieżki ${fmtArea(sum.path)}, inne ${fmtArea(sum.other)})`,
+      `Trawnik: ${fmtArea(sum.lawn)}, rabaty: ${fmtArea(sum.beds)}`,
+      `Obrzeża: ${sum.edging ? fmtM(sum.edging) : "—"}, ogrodzenie: ${sum.fence ? fmtM(sum.fence) : "—"}, żywopłot: ${sum.hedge ? fmtM(sum.hedge) : "—"}`,
+      `Drzewa: ${sum.counts.trees}, krzewy: ${sum.counts.shrubs}, lampy: ${sum.counts.lights}`,
+    ];
+    const ok = await sendLead({ imię: lead.name.trim(), telefon: lead.phone.trim(), uwagi: notes.trim() || "(brak)", zestawienie: lines.join(" | "), "link do projektu": link }, "Zgłoszenie z planera ogrodu");
+    setLeadState(ok ? "sent" : "fail");
+  };
   const rows: [string, number, string][] = [
     ["Podjazd", sum.driveway, "var(--data-driveway)"], ["Taras", sum.terrace, "var(--data-terrace)"], ["Ścieżki", sum.path, "var(--data-path)"],
     ["Inne nawierzchnie", sum.other, "var(--data-other)"], ["Trawnik", sum.lawn, "var(--data-lawn)"], ["Rabaty", sum.beds, "var(--data-bed)"],
@@ -69,6 +90,23 @@ export function Summary() {
               </tbody></table>
             </div>
             <label className="block"><span className="pl-label mb-1 block">Uwagi do projektu (opcjonalnie)</span><textarea className="pl-input min-h-[80px]" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Np. preferowany kolor kostki, istniejące drzewa do zachowania…" /></label>
+            <div className="border border-[var(--color-ink)] bg-[var(--color-paper)] p-4">
+              <div className="pl-label mb-1">Wyślij projekt do firmy</div>
+              <p className="mb-3 text-[12px] leading-relaxed text-[var(--color-muted)]">Firma dostanie Twój projekt razem z zestawieniem ilości i odezwie się, żeby umówić oględziny. Zostaw imię i numer telefonu.</p>
+              {leadState === "sent" ? (
+                <p role="status" className="bg-[var(--color-accent)] p-3 text-[13px] font-semibold text-[var(--color-accent-ink)]">Projekt wysłany. Odezwiemy się w godzinach pracy (pn–pt 7:00–18:00).</p>
+              ) : (
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <input className="pl-input" placeholder="Imię" autoComplete="given-name" aria-label="Imię" value={lead.name} onChange={(e) => setLead({ ...lead, name: e.target.value })} />
+                  <input className="pl-input" placeholder="Telefon" type="tel" autoComplete="tel" aria-label="Telefon" value={lead.phone} onChange={(e) => setLead({ ...lead, phone: e.target.value })} />
+                  <label className="flex items-start gap-2 text-[12px] sm:col-span-2"><input type="checkbox" className="mt-0.5" checked={lead.consent} onChange={(e) => setLead({ ...lead, consent: e.target.checked })} /><span>Zgadzam się, żeby firma skontaktowała się ze mną w tej sprawie i otrzymała mój projekt. <a href="/polityka-prywatnosci" target="_blank" className="underline">Polityka prywatności</a></span></label>
+                  <div className="flex flex-wrap items-center gap-3 sm:col-span-2">
+                    <button className="pl-btn pl-btn-primary" onClick={submitLead} disabled={leadState === "sending"}>{leadState === "sending" ? "Wysyłam…" : "Wyślij projekt"}</button>
+                    <span role="alert" className="text-[12px] text-[var(--color-error)]">{leadErr || (leadState === "fail" ? "Nie udało się wysłać. Zadzwoń: +48 885 879 108." : "")}</span>
+                  </div>
+                </div>
+              )}
+            </div>
             <div className="flex flex-wrap gap-2">
               <button className="pl-btn pl-btn-primary" onClick={s.save}>Zapisz projekt</button>
               <button className="pl-btn" onClick={download}>Pobierz wizualizację</button>
