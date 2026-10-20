@@ -7,8 +7,9 @@ export function Footer() {
       <div className="shell">
         <div className="grid grid-cols-6 gap-y-8 pad py-12 md:grid-cols-12">
           <div className="col-span-6 md:col-span-5">
-            <p className="wordmark">nazwa marki<span className="period" aria-hidden /></p>
+            <p className="wordmark">gryczewski<span className="period" aria-hidden /></p>
             <p className="label mt-3">kostka brukowa i ogrody · Białystok i okolice</p>
+            <p className="mt-2 text-sm">Roboty budowlano-drogowe Patryk Gryczewski</p>
           </div>
           <address className="col-span-6 not-italic md:col-span-4">
             <p className="label">kontakt</p>
@@ -32,7 +33,7 @@ export function Footer() {
             </ul>
           </nav>
         </div>
-        <p className="label pad border-t border-[var(--color-rule)] py-4">© nazwa marki · wersja robocza: dane w nawiasach [ ] do uzupełnienia</p>
+        <p className="label pad border-t border-[var(--color-rule)] py-4">© ROBOTY BUDOWLANO-DROGOWE PATRYK GRYCZEWSKI · NIP 5423470508</p>
       </div>
     </footer>
   );

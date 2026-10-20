@@ -9,7 +9,7 @@ export function Nav() {
   return (
     <header className="nav">
       <div className="nav-in">
-        <Link href="/" className="wordmark" aria-label="nazwa marki — strona główna">nazwa marki<span className="period" aria-hidden /></Link>
+        <Link href="/" className="wordmark" aria-label="gryczewski — strona główna">gryczewski<span className="period" aria-hidden /></Link>
         <div className="nav-row2">
           <Link href="/uslugi" className="nav-link" aria-current={cur("/uslugi")}>usługi</Link>
           <Link href="/wizualizator" className="nav-link" aria-current={cur("/wizualizator")}>wizualizator</Link>

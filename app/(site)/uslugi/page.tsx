@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { GroupHead, GRASS_IMGS, PAVER_IMGS } from "@/components/marketing/GroupHead";
-export const metadata = { title: "Kostka brukowa i ogrody: jak pracujemy — NAZWA MARKI Białystok", description: "Etapy układania kostki brukowej i zakładania ogrodu: od oglądania terenu po odbiór. Podjazdy, tarasy, ścieżki, trawniki, rabaty i nasadzenia." };
+export const metadata = { title: "Kostka brukowa i ogrody: jak pracujemy — Gryczewski Białystok", description: "Etapy układania kostki brukowej i zakładania ogrodu: od oglądania terenu po odbiór. Podjazdy, tarasy, ścieżki, trawniki, rabaty i nasadzenia." };
 
 const PAVING_STAGES: [string, string, string][] = [
   ["1.0", "oglądamy teren", "Mierzymy powierzchnię i sprawdzamy grunt, spadki oraz dojazd dla sprzętu. Ustalamy, co ma być położone i którędy spłynie woda."],

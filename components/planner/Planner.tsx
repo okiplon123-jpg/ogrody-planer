@@ -40,7 +40,7 @@ export default function Planner() {
     <div className="fixed inset-0 flex flex-col bg-[var(--color-paper)] text-[var(--color-ink)]">
       <header className="shrink-0 border-b border-[var(--color-ink)] bg-[var(--color-paper)]">
         <div className="flex h-14 items-center gap-2 px-3 sm:gap-3">
-          <Link href="/" className="wordmark !text-base sm:!text-[length:var(--text-lg)]" aria-label="Strona główna">nazwa marki<span className="period" aria-hidden /></Link>
+          <Link href="/" className="wordmark !text-base sm:!text-[length:var(--text-lg)]" aria-label="Strona główna">gryczewski<span className="period" aria-hidden /></Link>
           <div className="mx-1 hidden h-6 w-px bg-[var(--color-ink)] md:block" />
           <div className="hidden items-center gap-2 text-[11px] text-[var(--color-muted)] md:flex">
             <span>Działka</span>

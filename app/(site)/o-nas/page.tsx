@@ -1,4 +1,4 @@
-export const metadata = { title: "O nas: kostka brukowa i ogrody — NAZWA MARKI Białystok", description: "Kim jesteśmy, gdzie pracujemy i czym zajmujemy się przy kostce i ogrodach. [do uzupełnienia przez firmę]" };
+export const metadata = { title: "O nas: kostka brukowa i ogrody — Gryczewski Białystok", description: "Kim jesteśmy, gdzie pracujemy i czym zajmujemy się przy kostce i ogrodach. [do uzupełnienia przez firmę]" };
 
 export default function Page() {
   return (

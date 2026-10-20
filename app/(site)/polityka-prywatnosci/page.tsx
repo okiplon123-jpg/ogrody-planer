@@ -1,5 +1,5 @@
 import { CookieSettings } from "@/components/marketing/Cookies";
-export const metadata = { title: "Polityka prywatności i cookies — NAZWA MARKI Białystok", description: "Kto przetwarza Twoje dane, po co, jak długo i jakie masz prawa. Informacja o cookies i pamięci przeglądarki." };
+export const metadata = { title: "Polityka prywatności i cookies — Gryczewski Białystok", description: "Kto przetwarza Twoje dane, po co, jak długo i jakie masz prawa. Informacja o cookies i pamięci przeglądarki." };
 
 const S = ({ n, t, children }: { n: string; t: string; children: React.ReactNode }) => (
   <section className="grid grid-cols-6 gap-y-3 border-t border-[var(--color-rule)] py-8 md:grid-cols-12">
@@ -17,7 +17,7 @@ export default function Page() {
 
       <div className="mt-12">
         <S n="01" t="kto jest administratorem">
-          <p>Administratorem Twoich danych osobowych jest Patryk Gryczewski, prowadzący działalność pod nazwą [nazwa firmy], ul. Tysiąclecia P.P, 15-111 Białystok, NIP 5423470508.</p>
+          <p>Administratorem Twoich danych osobowych jest Patryk Gryczewski, prowadzący działalność pod firmą ROBOTY BUDOWLANO-DROGOWE PATRYK GRYCZEWSKI, ul. Tysiąclecia P.P, 15-111 Białystok, NIP 5423470508.</p>
           <p>Kontakt w sprawach danych: telefon <a href="tel:+48885879108" className="font-bold">+48 885 879 108</a>, e-mail [adres e-mail].</p>
         </S>
         <S n="02" t="kiedy zbieramy dane">
