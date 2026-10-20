@@ -31,7 +31,7 @@ export default function Page() {
           <p>Dopiero gdy sam klikniesz „Wyślij projekt” w podsumowaniu planera i zaznaczysz zgodę, wysyłamy do firmy Twoje imię, numer telefonu, uwagi, zestawienie ilości oraz link zawierający zapis projektu (kształt działki i rozmieszczone elementy). Nie wysyłamy zdjęć z wizualizatora.</p>
         </S>
         <S n="04" t="logi serwera i hosting">
-          <p>Strona jest udostępniana przez dostawcę hostingu [nazwa dostawcy hostingu, do uzupełnienia po publikacji]. Serwer może zapisywać standardowe dane techniczne wizyty, np. adres IP, czas i adres żądanej strony, w celu zapewnienia bezpieczeństwa i działania serwisu. Nie łączymy ich z Twoją tożsamością.</p>
+          <p>Strona jest udostępniana przez dostawcę hostingu Vercel Inc. (USA). Serwer może zapisywać standardowe dane techniczne wizyty, np. adres IP, czas i adres żądanej strony, w celu zapewnienia bezpieczeństwa i działania serwisu. Nie łączymy ich z Twoją tożsamością.</p>
           <p>Czcionki są serwowane z naszej strony, więc nie łączą się z zewnętrznymi usługami czcionek.</p>
         </S>
         <S n="05" t="komu przekazujemy dane">

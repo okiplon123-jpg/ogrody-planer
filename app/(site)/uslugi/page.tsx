@@ -7,14 +7,14 @@ const PAVING_STAGES: [string, string, string][] = [
   ["2.0", "wykop i podbudowa", "Zdejmujemy warstwę gruntu i układamy kruszywo warstwami, zagęszczając każdą z nich. Grubość zależy od gruntu i obciążenia."],
   ["3.0", "obrzeża i podsypka", "Ustawiamy obrzeża, które trzymają krawędź, i rozkładamy podsypkę wyrównaną do spadku."],
   ["4.0", "układanie i fugowanie", "Kładziemy kostkę we wzorze, tniemy ją przy krawędziach, wsypujemy materiał w spoiny i zagęszczamy całość."],
-  ["5.0", "odbiór", "Sprawdzamy spadki i krawędzie, sprzątamy teren. [do uzupełnienia: co klient dostaje po odbiorze]"],
+  ["5.0", "odbiór", "Sprawdzamy spadki i krawędzie, sprzątamy teren i razem z Tobą przechodzimy po wykonanej pracy."],
 ];
 const GARDEN_STAGES: [string, string, string][] = [
-  ["1.0", "oglądamy działkę", "Sprawdzamy nasłonecznienie, grunt, spadki i to, jak korzystasz z ogrodu. [do uzupełnienia przez firmę]"],
+  ["1.0", "oglądamy działkę", "Sprawdzamy nasłonecznienie, grunt, spadki i to, jak korzystasz z ogrodu."],
   ["2.0", "projekt", "Układamy strefy: trawnik, rabaty, ścieżki, miejsce na taras. Możesz zacząć od własnego szkicu w planerze ogrodu."],
-  ["3.0", "prace ziemne i odwodnienie", "Niwelacja, poprawa gruntu i odprowadzenie wody tam, gdzie to potrzebne. [do uzupełnienia przez firmę]"],
+  ["3.0", "prace ziemne i odwodnienie", "Niwelacja, poprawa gruntu i odprowadzenie wody tam, gdzie to potrzebne."],
   ["4.0", "trawnik, rabaty, nasadzenia", "Zakładamy trawnik z rolki albo z siewu, sadzimy drzewa, krzewy i byliny zgodnie z projektem."],
-  ["5.0", "odbiór i pielęgnacja", "Przekazujemy ogród i mówimy, jak go pielęgnować. [do uzupełnienia: czy firma oferuje opiekę po realizacji]"],
+  ["5.0", "odbiór", "Przekazujemy ogród i mówimy, jak go pielęgnować, żeby rośliny i trawnik dobrze się przyjęły."],
 ];
 
 const PAVING: [string, string, string][] = [
@@ -68,7 +68,7 @@ export default function Page() {
     <>
       <section className="pad pb-[clamp(4rem,8vw,7rem)] pt-[clamp(2.5rem,4.5vw,4rem)]">
         <h1 className="display-m max-w-[18ch]">jak pracujemy<span className="period" aria-hidden /></h1>
-        <p className="prose-m mt-8 text-[var(--text-lg)] leading-snug">Kostka brukowa i ogrody: dwa rodzaje prac, każdy w swojej kolejności. [opis etapów do potwierdzenia przez firmę]</p>
+        <p className="prose-m mt-8 text-[var(--text-lg)] leading-snug">Kostka brukowa i ogrody: dwa rodzaje prac, każdy w swojej kolejności.</p>
       </section>
 
       <Stages title="kostka brukowa" stages={PAVING_STAGES} imgs={PAVER_IMGS} />
