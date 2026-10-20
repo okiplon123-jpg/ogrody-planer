@@ -182,9 +182,12 @@ function House({ o, lit }: { o: PlanObject; lit: number }) {
         </>
       ) : (
         <>
-          <mesh position={[0, Hw + 0.3, 0]} castShadow><boxGeometry args={[w + 0.45, 0.28, d + 0.45]} /><meshStandardMaterial color="#2b2f32" roughness={0.7} /></mesh>
-          <mesh position={[-w * 0.18, Hw + 0.3 + 1.4, 0]} castShadow><boxGeometry args={[w * 0.5, 2.6, d * 0.66]} /><meshStandardMaterial color={o.facade === "wood" ? FACADE.white : FACADE.wood} map={buildingTex(o.facade === "wood" ? "plaster" : "wood", 3, 1)} roughness={0.85} /></mesh>
-          <mesh position={[-w * 0.18, Hw + 0.3 + 2.8, 0]}><boxGeometry args={[w * 0.5 + 0.4, 0.2, d * 0.66 + 0.4]} /><meshStandardMaterial color="#2b2f32" /></mesh>
+          {/* modern flat roof: slim overhanging slab with a low parapet, no rooftop box */}
+          <mesh position={[0, Hw + 0.3, 0]} castShadow receiveShadow><boxGeometry args={[w + 0.5, 0.26, d + 0.5]} /><meshStandardMaterial color="#2b2f32" roughness={0.7} /></mesh>
+          {[[0, d / 2 + 0.2, w + 0.5, 0.14], [0, -d / 2 - 0.2, w + 0.5, 0.14], [w / 2 + 0.2, 0, 0.14, d + 0.5], [-w / 2 - 0.2, 0, 0.14, d + 0.5]].map(([px, pz, sx, sz], i) => (
+            <mesh key={"p" + i} position={[px, Hw + 0.56, pz]} castShadow><boxGeometry args={[sx, 0.3, sz]} /><meshStandardMaterial color="#25282b" roughness={0.6} /></mesh>
+          ))}
+          <mesh position={[0, Hw + 0.46, 0]} receiveShadow><boxGeometry args={[w - 0.2, 0.06, d - 0.2]} /><meshStandardMaterial color="#8d908f" roughness={0.95} /></mesh>
         </>
       )}
 
