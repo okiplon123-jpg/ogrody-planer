@@ -82,6 +82,15 @@ export default function Home() {
         <div className="mt-10 border-y border-[var(--color-ink)] pad py-6"><VisualizerLoader /></div>
       </section>
 
+      <section id="planer" className="band">
+        <div className="grid grid-cols-6 gap-y-6 pad md:grid-cols-12">
+          <h2 className="h2 col-span-6 md:col-span-7">planer ogrodu.</h2>
+          <p className="prose-m col-span-6 md:col-span-4 md:col-start-9">Plan 2D i model 3D tej samej działki. Ustaw dom, narysuj ścieżkę, trawnik i rabaty, dodaj drzewa. Planer sam liczy, ile kostki i trawnika potrzeba.</p>
+        </div>
+        <div className="mt-10"><PlannerShowcase /></div>
+      </section>
+
+
       <section id="uslugi" className="band">
         <h2 className="h2 pad">co robimy.</h2>
         <div className="mt-10">
@@ -118,14 +127,6 @@ export default function Home() {
             </div>
           ))}
         </div>
-      </section>
-
-      <section id="planer" className="band">
-        <div className="grid grid-cols-6 gap-y-6 pad md:grid-cols-12">
-          <h2 className="h2 col-span-6 md:col-span-7">planer ogrodu.</h2>
-          <p className="prose-m col-span-6 md:col-span-4 md:col-start-9">Plan 2D i model 3D tej samej działki. Ustaw dom, narysuj ścieżkę, trawnik i rabaty, dodaj drzewa. Planer sam liczy, ile kostki i trawnika potrzeba.</p>
-        </div>
-        <div className="mt-10"><PlannerShowcase /></div>
       </section>
 
       <section className="band">
