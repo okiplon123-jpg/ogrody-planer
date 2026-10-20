@@ -48,17 +48,18 @@ function Stages({ title, stages, imgs }: { title: string; stages: [string, strin
     </>
   );
 }
-function Rows({ title, rows }: { title: string; rows: [string, string, string][] }) {
+function Rows({ title, rows, imgs }: { title: string; rows: [string, string, string][]; imgs: string[] }) {
   return (
-    <>
-      <h3 className="h3 pad pb-4 pt-12">{title}</h3>
-      {rows.map(([id, t, d]) => (
-        <div key={id} id={id} className="grid scroll-mt-20 grid-cols-6 gap-y-2 border-t border-[var(--color-rule)] pad py-6 md:grid-cols-12">
-          <h4 className="h2 col-span-6 md:col-span-6">{t}</h4>
+    <div className="mt-12 first:mt-10">
+      <GroupHead title={title} imgs={imgs} />
+      {rows.map(([id, t, d], i) => (
+        <div key={id} id={id} className="grid scroll-mt-20 grid-cols-6 items-baseline gap-y-2 border-b border-[var(--color-rule)] pad py-5 md:grid-cols-12 md:py-6">
+          <p className="label col-span-1 md:col-span-1" aria-hidden>{String(i + 1).padStart(2, "0")}</p>
+          <h4 className="h3 col-span-5 md:col-span-5" style={{ fontSize: "clamp(1.4rem, 2.6vw, 2rem)" }}>{t}</h4>
           <p className="prose-m col-span-6 md:col-span-5 md:col-start-8">{d}</p>
         </div>
       ))}
-    </>
+    </div>
   );
 }
 
@@ -74,11 +75,9 @@ export default function Page() {
       <Stages title="ogrody" stages={GARDEN_STAGES} imgs={GRASS_IMGS} />
 
       <section className="band">
-        <h2 className="h2 pad">na co patrzymy przy…</h2>
-        <div className="border-b border-[var(--color-ink)]">
-          <Rows title="kostce" rows={PAVING} />
-          <Rows title="ogrodzie" rows={GARDEN} />
-        </div>
+        <h2 className="h2 pad">na co patrzymy.</h2>
+        <Rows title="przy kostce" rows={PAVING} imgs={PAVER_IMGS} />
+        <Rows title="przy ogrodzie" rows={GARDEN} imgs={GRASS_IMGS} />
       </section>
 
       <section className="band">
