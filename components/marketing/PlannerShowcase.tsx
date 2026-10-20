@@ -21,12 +21,11 @@ export function PlannerShowcase() {
   const sum = useMemo(() => summarize(project, 8), [project]);
   const ref = useRef<HTMLDivElement>(null);
   const [show3d, setShow3d] = useState(false);
+  const [ready, setReady] = useState(false);
   const [phone, setPhone] = useState(false);
   useEffect(() => {
-    // phones get the pre-rendered picture and load the live 3D scene only on tap; desktops load it when the section nears the viewport
-    const isPhone = window.innerWidth < 768;
-    setPhone(isPhone);
-    if (isPhone) return;
+    // the pre-rendered picture shows instantly; the live scene loads automatically when the section nears the viewport (phones get a lighter "mid" scene)
+    setPhone(window.innerWidth < 768);
     const io = new IntersectionObserver(([e]) => e.isIntersecting && (setShow3d(true), io.disconnect()), { rootMargin: "300px" });
     io.observe(ref.current!);
     return () => io.disconnect();
@@ -49,8 +48,7 @@ export function PlannerShowcase() {
           {/* pre-rendered frame of the same scene: instant, sharp, and the fallback while the live model loads */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/zdjecia/model-3d.jpg" srcSet="/zdjecia/model-3d-sm.jpg 900w, /zdjecia/model-3d.jpg 1748w" sizes="(min-width: 768px) 58vw, 100vw" alt="Model 3D przykładowego ogrodu: dom z garażem, trawnik, rabaty i ścieżka" className="absolute inset-0 h-full w-full object-cover" />
-          {show3d && <div className="absolute inset-0"><Scene3D project={project} view="perspective" nonce={0} quality={phone ? "low" : "high"} autoRotate lockZoom /></div>}
-          {phone && !show3d && <button type="button" className="btn btn-dark absolute bottom-4 left-1/2 -translate-x-1/2" onClick={() => setShow3d(true)}>obróć model w 3D</button>}
+          {show3d && <div className={`absolute inset-0 transition-opacity duration-700 ${ready ? "opacity-100" : "opacity-0"}`}><Scene3D project={project} view="perspective" nonce={0} quality={phone ? "mid" : "high"} autoRotate lockZoom onReady={() => setReady(true)} /></div>}
           <figcaption className="label absolute left-3 top-3 bg-[var(--color-paper)] px-2 py-1">{show3d ? "model 3D — przeciągnij, aby obrócić" : "model 3D"}</figcaption>
         </figure>
       </div>

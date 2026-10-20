@@ -542,7 +542,7 @@ function Neighbours({ project, col }: { project: Project; col: string }) {
   );
 }
 
-function Atmosphere({ lighting, quality }: { lighting: Lighting; quality: "high" | "low" }) {
+function Atmosphere({ lighting, quality }: { lighting: Lighting; quality: "high" | "mid" | "low" }) {
   const P = PRESETS[lighting];
   const sun = useRef<THREE.DirectionalLight>(null);
   const hemi = useRef<THREE.HemisphereLight>(null);
@@ -567,7 +567,7 @@ function Atmosphere({ lighting, quality }: { lighting: Lighting; quality: "high"
       <color attach="background" args={[P.bg]} />
       <fog attach="fog" args={[P.bg, 70, 230]} />
       <hemisphereLight ref={hemi} args={[P.sky, P.ground, P.hemiI]} />
-      <directionalLight ref={sun} position={P.sun} intensity={P.sunI} color={P.sunColor} castShadow={quality === "high"} shadow-mapSize={[2048, 2048]} shadow-camera-left={-34} shadow-camera-right={34} shadow-camera-top={34} shadow-camera-bottom={-34} shadow-camera-near={1} shadow-camera-far={140} shadow-bias={-0.0004} shadow-normalBias={0.04} />
+      <directionalLight ref={sun} position={P.sun} intensity={P.sunI} color={P.sunColor} castShadow={quality !== "low"} shadow-mapSize={quality === "mid" ? [1024, 1024] : [2048, 2048]} shadow-camera-left={-34} shadow-camera-right={34} shadow-camera-top={34} shadow-camera-bottom={-34} shadow-camera-near={1} shadow-camera-far={140} shadow-bias={-0.0004} shadow-normalBias={0.04} />
     </>
   );
 }
@@ -601,7 +601,8 @@ function Capture({ fn }: { fn: React.MutableRefObject<(() => string) | null> }) 
   return null;
 }
 
-function World({ project, quality }: { project: Project; quality: "high" | "low" }) {
+function World({ project, quality, onReady }: { project: Project; quality: "high" | "mid" | "low"; onReady?: () => void }) {
+  useEffect(() => { if (!onReady) return; const t = setTimeout(onReady, 350); return () => clearTimeout(t); }, [onReady]); // models are in; wait a beat for the first frame
   const { w: W, l: L } = project.plot;
   const P = PRESETS[project.lighting];
   const lampK = P.lamp;
@@ -640,18 +641,18 @@ function World({ project, quality }: { project: Project; quality: "high" | "low"
 }
 
 export interface Scene3DProps {
-  project: Project; view: ViewPreset; nonce: number; quality: "high" | "low"; visible?: boolean;
+  project: Project; view: ViewPreset; nonce: number; quality: "high" | "mid" | "low"; visible?: boolean;
   captureRef?: React.MutableRefObject<(() => string) | null>;
-  autoRotate?: boolean; lockZoom?: boolean;
+  autoRotate?: boolean; lockZoom?: boolean; onReady?: () => void;
 }
-export default function Scene3D({ project, view, nonce, quality, visible = true, captureRef, autoRotate, lockZoom }: Scene3DProps) {
+export default function Scene3D({ project, view, nonce, quality, visible = true, captureRef, autoRotate, lockZoom, onReady }: Scene3DProps) {
   const fallback = useRef<(() => string) | null>(null);
   const reduced = typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
   const m = Math.max(project.plot.w, project.plot.l);
   return (
-    <Canvas shadows={quality === "high"} dpr={quality === "high" ? [1, 2] : 1} frameloop={visible ? "always" : "never"} camera={{ fov: 38, near: 0.1, far: 700, position: [m * 0.7, m * 0.8, m * 0.95] }} gl={{ antialias: quality === "high" }}>
+    <Canvas shadows={quality !== "low"} dpr={quality === "low" ? 1 : [1, 2]} frameloop={visible ? "always" : "never"} camera={{ fov: 38, near: 0.1, far: 700, position: [m * 0.7, m * 0.8, m * 0.95] }} gl={{ antialias: quality === "high" }}>
       <Atmosphere lighting={project.lighting} quality={quality} />
-      <Suspense fallback={null}><World project={project} quality={quality} /></Suspense>
+      <Suspense fallback={null}><World project={project} quality={quality} onReady={onReady} /></Suspense>
       <OrbitControls makeDefault enableDamping dampingFactor={0.08} maxPolarAngle={Math.PI / 2 - 0.02} minDistance={2} maxDistance={160} enableZoom={!lockZoom} autoRotate={autoRotate} autoRotateSpeed={0.5} />
       {quality === "high" && (
         <EffectComposer multisampling={4}>
