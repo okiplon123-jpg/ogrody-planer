@@ -4,21 +4,12 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PlanLayer } from "@/components/planner/PlanLayer";
 import { sampleProject } from "@/lib/sample";
-import { fmtM, fmtM2, summarize } from "@/lib/summary";
 
 const Scene3D = dynamic(() => import("@/components/planner/Scene3D"), { ssr: false });
-
-const FACTS: [string, string][] = [
-  ["rysujesz", "Ścieżki, trawniki i rabaty z krzywymi krawędziami, także odręcznie."],
-  ["wybierasz", "Rodzaj kostki, trawnik, rośliny. Ten sam projekt widać w 2D i w 3D."],
-  ["oglądasz", "Model 3D przy świetle dziennym, o zachodzie i wieczorem."],
-  ["liczysz", "Planer sam podaje, ile m² kostki i trawnika oraz ile metrów obrzeży i ogrodzenia."],
-];
 
 /** The planner's own sample project, shown twice (2D and 3D) plus the live material take-off. Same data, same code as /planer. */
 export function PlannerShowcase() {
   const project = useMemo(() => ({ ...sampleProject(), lighting: "golden" as const }), []);
-  const sum = useMemo(() => summarize(project, 8), [project]);
   const ref = useRef<HTMLDivElement>(null);
   const [show3d, setShow3d] = useState(false);
   const [ready, setReady] = useState(false);
@@ -30,13 +21,6 @@ export function PlannerShowcase() {
     io.observe(ref.current!);
     return () => io.disconnect();
   }, []);
-  const rows: [string, string][] = [
-    ["kostka i nawierzchnie", fmtM2(sum.paved)],
-    ["trawnik", fmtM2(sum.lawn)],
-    ["rabaty", fmtM2(sum.beds)],
-    ["obrzeża", fmtM(sum.edging)],
-    ["ogrodzenie", fmtM(sum.fence)],
-  ];
   return (
     <div ref={ref}>
       <div className="grid border-y border-[var(--color-ink)] md:grid-cols-12">
@@ -53,30 +37,9 @@ export function PlannerShowcase() {
         </figure>
       </div>
 
-      <ul className="cells grid grid-cols-2 border-b border-[var(--color-ink)] md:grid-cols-4">
-        {FACTS.map(([k, d], i) => (
-          <li key={k} className={`px-4 py-5 md:px-6 ${i > 1 ? "border-t border-[var(--color-rule)] md:border-t-0" : ""} ${i % 2 ? "border-l border-[var(--color-ink)]" : ""}`}>
-            <p className="h3">{k}</p>
-            <p className="mt-2 text-[var(--color-ink-2)]">{d}</p>
-          </li>
-        ))}
-      </ul>
-
-      <div className="pad pt-10">
-        <p className="label">ile czego w tym projekcie</p>
-      </div>
-      <ul className="mt-4 grid grid-cols-2 border-y border-[var(--color-ink)] md:grid-cols-5">
-        {rows.map(([k, v], i) => (
-          <li key={k} className={`px-4 py-5 md:px-6 ${i % 2 ? "border-l border-[var(--color-ink)]" : ""} ${i > 1 ? "border-t border-[var(--color-rule)] md:border-t-0" : ""} ${i > 0 ? "md:border-l md:border-[var(--color-ink)]" : "md:border-l-0"}`}>
-            <p className="label">{k}</p>
-            <p className="h2 tnum mt-2 whitespace-nowrap" style={{ fontSize: "var(--text-xl)" }}>{v}</p>
-          </li>
-        ))}
-      </ul>
-      <p className="pad mt-3 text-[var(--text-xs)] text-[var(--color-muted)]">Projekt przykładowy, nie prawdziwa działka. Wartości liczone z narysowanego planu, kostka i nawierzchnie bez zapasu.</p>
       <div className="pad mt-8 flex flex-wrap items-center gap-3">
         <Link href="/planer" className="btn btn-dark">otwórz planer ogrodu</Link>
-        <span className="text-[var(--color-ink-2)]">Zaczynasz od pustej działki albo od tego przykładu. Projekt zapisuje się w Twojej przeglądarce.</span>
+        <span className="text-[var(--color-ink-2)]">Rysujesz działkę, a planer liczy, ile kostki i trawnika potrzeba. Gotowy projekt możesz wysłać do nas.</span>
       </div>
     </div>
   );

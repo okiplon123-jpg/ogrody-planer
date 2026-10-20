@@ -2,7 +2,6 @@ import Link from "next/link";
 import { Specimens } from "@/components/marketing/Specimens";
 import { GroupHead, GRASS_IMGS, PAVER_IMGS } from "@/components/marketing/GroupHead";
 import { PlannerShowcase } from "@/components/marketing/PlannerShowcase";
-import { Kinds } from "@/components/marketing/Kinds";
 import { Faq } from "@/components/marketing/Faq";
 import { ContactForm } from "@/components/marketing/ContactForm";
 import { VisualizerLoader } from "@/components/visualizer/VisualizerLoader";
@@ -22,19 +21,20 @@ const GARDEN: [string, string, string][] = [
   ["oświetlenie ogrodowe", "Światło przy ścieżkach, wejściu i tarasie.", "oswietlenie"],
 ];
 
-function IndexRows({ rows, last = true }: { rows: [string, string, string][]; last?: boolean }) {
+function Links({ rows }: { rows: [string, string, string][] }) {
   return (
-    <div>
-      {rows.map(([t, d, id], i) => (
-        <Link key={id} href={`/uslugi#${id}`} className={`irow ${last && i === rows.length - 1 ? "irow-last" : ""}`}>
-          <span className="grid grid-cols-6 items-baseline gap-y-2 pad py-6 md:grid-cols-12">
-            <span className="h2 slide col-span-6 md:col-span-6" style={{ fontSize: "var(--text-2xl)" }}>{t}</span>
-            <span className="prose-m col-span-5 md:col-span-5">{d}</span>
-            <span className="col-span-1 text-right text-[var(--text-xl)]" aria-hidden>→</span>
-          </span>
-        </Link>
+    <ul>
+      {rows.map(([t, , id]) => (
+        <li key={id}>
+          <Link href={`/uslugi#${id}`} className="irow">
+            <span className="pad flex items-center justify-between py-4">
+              <span className="h3 slide" style={{ fontSize: "clamp(1.25rem, 2vw, 1.6rem)" }}>{t}</span>
+              <span aria-hidden>→</span>
+            </span>
+          </Link>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }
 
@@ -59,14 +59,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="band">
-        <div className="grid grid-cols-6 gap-y-6 pad md:grid-cols-12">
-          <h2 className="h2 col-span-6 md:col-span-7">układamy każdy rodzaj kostki.</h2>
-          <p className="prose-m col-span-6 md:col-span-4 md:col-start-9">Betonową, granitową, klinkierową, kamienną, w każdym kolorze i wzorze. Jaką kostkę wybierzesz, taką położymy. Poniżej tylko część.</p>
-        </div>
-        <div className="mt-10"><Kinds /></div>
-      </section>
-
       <section id="wizualizator" className="band">
         <div className="grid grid-cols-6 gap-y-6 pad md:grid-cols-12">
           <h2 className="h2 col-span-6 md:col-span-7">przymierz kostkę lub trawnik na swoim zdjęciu.</h2>
@@ -86,23 +78,19 @@ export default function Home() {
 
       <section id="uslugi" className="band">
         <h2 className="h2 pad">co robimy.</h2>
-        <div className="mt-10">
-          <GroupHead title="kostka brukowa" imgs={PAVER_IMGS} />
-          <IndexRows rows={PAVING} last={false} />
-          <div className="mt-16"><GroupHead title="ogrody" imgs={GRASS_IMGS} /></div>
-          <IndexRows rows={GARDEN} />
-        </div>
-      </section>
-
-      <section className="plate" aria-label="Zadzwoń">
-        <div className="plate-in">
-          <div className="rails" aria-hidden />
-          <div className="grid grid-cols-6 items-end gap-y-4 pad py-[clamp(2.5rem,5vw,4rem)] md:grid-cols-12">
-            <p className="h2 col-span-6 md:col-span-7" style={{ fontSize: "clamp(2rem, 5vw, 3.75rem)" }}>zadzwoń. <a href="tel:+48885879108" className="tnum whitespace-nowrap">+48&nbsp;885&nbsp;879&nbsp;108</a></p>
-            <p className="col-span-6 leading-snug md:col-span-4 md:col-start-9">pn–pt 7:00–18:00 · Białystok i okolice. Oglądamy teren i ustalamy zakres.</p>
+        <div className="mt-10 grid md:grid-cols-2">
+          <div>
+            <GroupHead title="kostka brukowa" imgs={PAVER_IMGS} compact />
+            <Links rows={PAVING} />
+          </div>
+          <div className="mt-10 md:mt-0 md:border-l md:border-[var(--color-ink)]">
+            <GroupHead title="ogrody" imgs={GRASS_IMGS} compact />
+            <Links rows={GARDEN} />
           </div>
         </div>
+        <p className="pad mt-6"><Link href="/uslugi" className="btn btn-line">jak pracujemy</Link></p>
       </section>
+
       <section className="band">
         <div className="grid grid-cols-6 gap-y-8 pad md:grid-cols-12">
           <h2 className="h2 col-span-6 md:col-span-5">pytania, które słyszymy.</h2>
@@ -117,14 +105,6 @@ export default function Home() {
             <p className="prose-m mt-4">Zostaw numer. Odezwiemy się w godzinach pracy i umówimy oglądanie terenu.</p>
             <div className="mt-8 max-w-[32rem]"><ContactForm /></div>
           </div>
-          <dl className="col-span-6 md:col-span-4 md:col-start-9">
-            {[["kontakt", "Patryk Gryczewski"], ["telefon", "+48 885 879 108"], ["e-mail", "gryczewski.bud@gmail.com"], ["adres", "ul. Tysiąclecia P.P, 15-111 Białystok"], ["godziny", "pn–pt 7:00–18:00"], ["działamy", "Białystok i okolice"]].map(([k, v], i, a) => (
-              <div key={k} className={`border-t border-[var(--color-rule)] py-4 ${i === a.length - 1 ? "border-b border-[var(--color-ink)]" : ""}`}>
-                <dt className="label">{k}</dt>
-                <dd className="tnum mt-1 text-[var(--text-lg)] font-semibold">{v}</dd>
-              </div>
-            ))}
-          </dl>
         </div>
       </section>
     </>
