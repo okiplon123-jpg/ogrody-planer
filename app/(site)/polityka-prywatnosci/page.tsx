@@ -1,6 +1,6 @@
 import { CookieSettings } from "@/components/marketing/Cookies";
 import { GTM_ID } from "@/lib/site";
-export const metadata = { title: "Polityka prywatności i cookies — Gryczewski Białystok", description: "Kto przetwarza Twoje dane, po co, jak długo i jakie masz prawa. Informacja o cookies i pamięci przeglądarki." };
+export const metadata = { title: "Polityka prywatności i cookies | Gryczewski", description: "Kto przetwarza Twoje dane, po co, jak długo i jakie masz prawa. Informacja o cookies i pamięci przeglądarki.", robots: { index: false, follow: true } };
 
 const S = ({ n, t, children }: { n: string; t: string; children: React.ReactNode }) => (
   <section className="grid grid-cols-6 gap-y-3 border-t border-[var(--color-rule)] py-8 md:grid-cols-12">

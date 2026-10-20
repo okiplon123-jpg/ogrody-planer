@@ -37,7 +37,7 @@ export const SERVICES: Service[] = [
   {
     slug: "podjazdy-z-kostki-brukowej-bialystok",
     short: "podjazdy i wjazdy",
-    title: "Podjazdy z kostki brukowej Białystok | Wycena po obejrzeniu terenu",
+    title: "Podjazdy z kostki brukowej Białystok | Gryczewski",
     description: "Układanie podjazdów z kostki brukowej w Białymstoku i okolicach. Wycena po obejrzeniu terenu, bez zobowiązań. Zadzwoń: 885 879 108.",
     h1: "podjazdy z kostki brukowej w Białymstoku",
     lead: `Dobieramy szerokość pod samochody, spadek od domu i wzór, który nie męczy oka. ${FREE}`,
@@ -51,7 +51,7 @@ export const SERVICES: Service[] = [
   {
     slug: "tarasy-z-kostki-i-plyt-bialystok",
     short: "tarasy",
-    title: "Tarasy z kostki i płyt Białystok | Wycena po obejrzeniu terenu",
+    title: "Tarasy z kostki i płyt Białystok | Gryczewski",
     description: "Tarasy z płyt lub kostki brukowej w Białymstoku i okolicach. Najpierw spadek od ściany i odpływ wody. Wycena po obejrzeniu, bez zobowiązań.",
     h1: "tarasy z kostki i płyt w Białymstoku",
     lead: `Płyty lub kostka przy domu. Najpierw spadek od ściany i odpływ wody, dopiero potem wzór. ${FREE}`,
@@ -64,7 +64,7 @@ export const SERVICES: Service[] = [
   {
     slug: "sciezki-i-chodniki-z-kostki-bialystok",
     short: "ścieżki i chodniki",
-    title: "Ścieżki i chodniki z kostki Białystok | Wycena po obejrzeniu terenu",
+    title: "Ścieżki i chodniki z kostki Białystok | Gryczewski",
     description: "Ścieżki i chodniki z kostki brukowej w Białymstoku i okolicach: od furtki do drzwi i dookoła domu. Wycena po obejrzeniu, bez zobowiązań.",
     h1: "ścieżki i chodniki z kostki w Białymstoku",
     lead: `Od furtki do drzwi i dookoła domu. Równe, antypoślizgowe, z obrzeżem, które trzyma kształt. ${FREE}`,
@@ -77,7 +77,7 @@ export const SERVICES: Service[] = [
   {
     slug: "place-i-parkingi-z-kostki-bialystok",
     short: "place i parkingi",
-    title: "Place i parkingi z kostki Białystok | Wycena po obejrzeniu terenu",
+    title: "Place i parkingi z kostki Białystok | Gryczewski",
     description: "Place i parkingi z kostki brukowej w Białymstoku i okolicach. Większe obciążenia wymagają grubszej podbudowy. Wycena po obejrzeniu terenu.",
     h1: "place i parkingi z kostki w Białymstoku",
     lead: `Większe obciążenia wymagają grubszej podbudowy i innej kostki. Mamy własny sprzęt: koparkę, miniładowarkę, walec i zagęszczarki. ${FREE}`,
@@ -90,7 +90,7 @@ export const SERVICES: Service[] = [
   {
     slug: "trawniki-i-ogrody-bialystok",
     short: "trawniki i ogrody",
-    title: "Zakładanie trawników i ogrodów Białystok | Wycena po obejrzeniu terenu",
+    title: "Trawniki i ogrody Białystok | Gryczewski",
     description: "Zakładanie trawników z rolki i z siewu, rabaty, nasadzenia i całe ogrody od zera w Białymstoku i okolicach. Wycena po obejrzeniu, bez zobowiązań.",
     h1: "trawniki i ogrody w Białymstoku",
     lead: `Zakładamy ogrody od zera: od projektu i prac ziemnych po trawnik, rabaty i nasadzenia. ${FREE}`,

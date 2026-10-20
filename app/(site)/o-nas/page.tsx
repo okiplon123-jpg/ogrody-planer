@@ -1,4 +1,4 @@
-export const metadata = { title: "O nas: kostka brukowa i ogrody — Gryczewski Białystok", description: "Kim jesteśmy, gdzie pracujemy i czym zajmujemy się przy kostce i ogrodach." };
+export const metadata = { title: "O firmie: układanie kostki i ogrody w Białymstoku | Gryczewski", description: "Roboty budowlano-drogowe Patryk Gryczewski: układanie kostki brukowej i zakładanie ogrodów w Białymstoku i okolicach. Własny sprzęt, ponad 200 realizacji." };
 
 export default function Page() {
   return (

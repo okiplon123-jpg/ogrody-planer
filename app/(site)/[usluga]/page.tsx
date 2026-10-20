@@ -12,7 +12,7 @@ export function generateStaticParams() { return SERVICES.map((s) => ({ usluga: s
 export async function generateMetadata({ params }: { params: Promise<{ usluga: string }> }): Promise<Metadata> {
   const s = bySlug((await params).usluga);
   if (!s) return {};
-  return { title: s.title, description: s.description, alternates: { canonical: `/${s.slug}` }, openGraph: { title: s.title, description: s.description, url: `/${s.slug}` } };
+  return { title: s.title, description: s.description, alternates: { canonical: `/${s.slug}` }, openGraph: { title: s.title, description: s.description, url: `/${s.slug}`, images: [{ url: "/og-image.png", width: 1200, height: 630, alt: s.h1 }] }, twitter: { card: "summary_large_image", images: ["/og-image.png"] } };
 }
 
 const STEPS: [string, string, string][] = [
@@ -29,13 +29,20 @@ export default async function ServicePage({ params }: { params: Promise<{ usluga
     "@context": "https://schema.org", "@type": "FAQPage",
     mainEntity: s.faq.map(([q, a]) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })),
   };
+  const crumbLd = {
+    "@context": "https://schema.org", "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Strona główna", item: SITE_URL },
+      { "@type": "ListItem", position: 2, name: s.short, item: `${SITE_URL}/${s.slug}` },
+    ],
+  };
   const serviceLd = {
     "@context": "https://schema.org", "@type": "Service", name: s.h1, serviceType: s.short,
     provider: { "@id": `${SITE_URL}/#firma` }, areaServed: { "@type": "City", name: "Białystok" }, url: `${SITE_URL}/${s.slug}`,
   };
   return (
     <>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([faqLd, serviceLd]) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([faqLd, serviceLd, crumbLd]) }} />
 
       <section>
         <div className="grid grid-cols-6 md:grid-cols-12">

@@ -1,5 +1,5 @@
 import { ContactForm } from "@/components/marketing/ContactForm";
-export const metadata = { title: "Kontakt: zadzwoń lub zostaw numer — Gryczewski Białystok", description: "Telefon, godziny pracy i formularz kontaktowy. Oglądamy teren i ustalamy zakres prac. Wycena bez zobowiązań." };
+export const metadata = { title: "Kontakt i oględziny terenu w Białymstoku | Gryczewski", description: "Zadzwoń 885 879 108 albo zostaw numer. Oglądamy teren i ustalamy zakres prac. Wycena po obejrzeniu, bez zobowiązań. pn–pt 7:00–18:00." };
 
 export default function Page() {
   return (

@@ -1,5 +1,5 @@
 import { VisualizerLoader } from "@/components/visualizer/VisualizerLoader";
-export const metadata = { title: "Wizualizator kostki i trawnika na Twoim zdjęciu — Gryczewski Białystok", description: "Wgraj zdjęcie podjazdu lub ogrodu, zaznacz cztery rogi i przymierz kostkę albo trawnik. Zdjęcie zostaje w Twojej przeglądarce." };
+export const metadata = { title: "Wizualizator kostki brukowej na Twoim zdjęciu | Gryczewski", description: "Wgraj zdjęcie podjazdu, tarasu lub ogrodu, zaznacz cztery rogi i przymierz kostkę albo trawnik. Zdjęcie zostaje w Twojej przeglądarce i nigdzie go nie wysyłamy." };
 
 export default function Page() {
   return (
