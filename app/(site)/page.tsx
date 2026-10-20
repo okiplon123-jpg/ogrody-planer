@@ -27,13 +27,30 @@ const LAYERS: [string, string, string, string][] = [
   ["grunt", "grunt rodzimy", "Oceniamy, co jest pod spodem, zanim zdecydujemy o odwodnieniu i spadkach.", "var(--color-muted)"],
 ];
 
+/* A full-width ink band per service group: big title on the left, real material textures on the right. */
+function GroupHead({ title, imgs }: { title: string; imgs: string[] }) {
+  return (
+    <div className="grid grid-cols-6 border-y border-[var(--color-ink)] bg-[var(--color-ink)] text-[var(--color-paper)] md:grid-cols-12">
+      <h3 className="h2 col-span-6 pad py-8 md:col-span-7 md:py-12" style={{ fontSize: "var(--text-display-s)", lineHeight: 0.95 }}>{title}</h3>
+      <div className={`col-span-6 grid h-24 md:col-span-5 md:h-auto ${imgs.length === 3 ? "grid-cols-3" : "grid-cols-2"}`}>
+        {imgs.map((src, i) => (
+          <span key={src} className={`cell-photo ${i ? "border-l border-[var(--color-paper)]" : ""}`}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={src} alt="" loading="lazy" />
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function IndexRows({ rows, last = true }: { rows: [string, string, string][]; last?: boolean }) {
   return (
     <div>
       {rows.map(([t, d, id], i) => (
         <Link key={id} href={`/uslugi#${id}`} className={`irow ${last && i === rows.length - 1 ? "irow-last" : ""}`}>
           <span className="grid grid-cols-6 items-baseline gap-y-2 pad py-6 md:grid-cols-12">
-            <span className="h2 slide col-span-6 md:col-span-6">{t}</span>
+            <span className="h2 slide col-span-6 md:col-span-6" style={{ fontSize: "var(--text-2xl)" }}>{t}</span>
             <span className="prose-m col-span-5 md:col-span-5">{d}</span>
             <span className="col-span-1 text-right text-[var(--text-xl)]" aria-hidden>→</span>
           </span>
@@ -83,9 +100,9 @@ export default function Home() {
       <section id="uslugi" className="band">
         <h2 className="h2 pad">co robimy.</h2>
         <div className="mt-10">
-          <h3 className="h3 pad pb-4">kostka brukowa</h3>
+          <GroupHead title="kostka brukowa" imgs={["/zdjecia/kostka-jodelka-szara.jpg", "/zdjecia/kostka-geometryczna.jpg", "/zdjecia/kostka-jodelka-brazowa.jpg"]} />
           <IndexRows rows={PAVING} last={false} />
-          <h3 className="h3 pad pb-4 pt-12">ogrody</h3>
+          <div className="mt-16"><GroupHead title="ogrody" imgs={["/textures/grass_roll/grass_roll_diff_1k.jpg", "/textures/grass_natural/grass_natural_diff_1k.jpg"]} /></div>
           <IndexRows rows={GARDEN} />
         </div>
       </section>
