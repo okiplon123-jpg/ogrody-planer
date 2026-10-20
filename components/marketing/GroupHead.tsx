@@ -5,10 +5,7 @@ export function GroupHead({ title, imgs, compact = false }: { title: string; img
       <h3 className="h2 col-span-6 flex items-center pad md:col-span-7 md:h-20" style={{ fontSize: compact ? "clamp(1.6rem, 2.6vw, 2.2rem)" : "clamp(2rem, 4.6vw, 3.5rem)", lineHeight: 0.95 }}>{title}</h3>
       <div className={`col-span-6 grid h-16 overflow-hidden md:col-span-5 md:h-20 ${imgs.length === 3 ? "grid-cols-3" : "grid-cols-2"}`}>
         {imgs.map((src, i) => (
-          <span key={src} className={`cell-photo h-full ${i ? "border-l border-[var(--color-paper)]" : ""}`}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={src} alt="" loading="lazy" />
-          </span>
+          <span key={src} className={`cell-photo h-full bg-cover bg-center ${i ? "border-l border-[var(--color-paper)]" : ""}`} style={{ backgroundImage: `url(${src})` }} aria-hidden />
         ))}
       </div>
     </div>
