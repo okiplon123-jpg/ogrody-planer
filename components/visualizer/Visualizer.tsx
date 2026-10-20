@@ -71,18 +71,17 @@ function inv3(m: number[]) {
   return [A, -(b * i - c * h), b * f - c * e, B, a * i - c * g, -(a * f - c * d), C, -(a * h - b * g), a * e - b * d].map((v) => v / det);
 }
 
-function sampleScene(): HTMLCanvasElement {
-  const c = document.createElement("canvas"); c.width = 1200; c.height = 800; const g = c.getContext("2d")!;
-  const sky = g.createLinearGradient(0, 0, 0, 400); sky.addColorStop(0, "#9ec3e0"); sky.addColorStop(1, "#e9eeea"); g.fillStyle = sky; g.fillRect(0, 0, 1200, 800);
-  g.fillStyle = "#6f9a54"; g.fillRect(0, 380, 1200, 420);
-  g.fillStyle = "#e8e4d9"; g.fillRect(180, 190, 560, 200); g.fillStyle = "#2a2d2f"; g.fillRect(160, 172, 600, 22);
-  g.fillStyle = "#3c4a55"; g.fillRect(230, 250, 200, 90); g.fillRect(500, 250, 200, 90);
-  g.fillStyle = "#4b3a2c"; g.fillRect(450, 280, 40, 110);
-  g.fillStyle = "#3d6b3c"; g.beginPath(); g.arc(90, 300, 110, 0, 7); g.fill(); g.beginPath(); g.arc(1110, 280, 130, 0, 7); g.fill();
-  const q: Pt[] = [[520, 392], [700, 392], [1060, 790], [330, 790]];
-  g.fillStyle = "#8f8c86"; g.beginPath(); q.forEach((p, i) => (i ? g.lineTo(p[0], p[1]) : g.moveTo(p[0], p[1]))); g.fill();
-  for (let i = 0; i < 4000; i++) { g.fillStyle = `rgba(${60 + (i % 5) * 20},${60 + (i % 5) * 20},${60 + (i % 5) * 20},.12)`; g.fillRect(330 + ((i * 97) % 730), 392 + ((i * 53) % 398), 3, 3); }
-  return c;
+/** Example scene: a render of the planner's sample house, so the demo looks like a real property. */
+function loadSampleScene(): Promise<HTMLCanvasElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement("canvas"); c.width = img.naturalWidth; c.height = img.naturalHeight;
+      c.getContext("2d")!.drawImage(img, 0, 0); resolve(c);
+    };
+    img.onerror = reject;
+    img.src = "/zdjecia/podjazd-przyklad.jpg";
+  });
 }
 
 export function Visualizer() {
@@ -273,7 +272,7 @@ export function Visualizer() {
               <p className="h2">wgraj zdjęcie swojego podjazdu lub ogrodu.</p>
               <p className="prose-m mx-auto mt-3 text-[var(--color-ink-2)]">Najlepiej zdjęcie zrobione z chodnika lub z okna, tak żeby było widać całą powierzchnię. Zdjęcie zostaje w Twojej przeglądarce — nigdzie go nie wysyłamy.</p>
               <label className="btn btn-dark mt-6 cursor-pointer">Wybierz zdjęcie<input type="file" accept="image/*" className="hidden" onChange={(e) => onFile(e.target.files?.[0])} /></label>
-              <button className="mt-4 block min-h-[44px] w-full text-sm underline" onClick={() => load(sampleScene())}>Wypróbuj na ilustracji przykładowej</button>
+              <button className="mt-4 block min-h-[44px] w-full text-sm underline" onClick={() => loadSampleScene().then(load).catch(() => setErr("Nie udało się wczytać przykładu. Spróbuj z własnym zdjęciem."))}>Wypróbuj na przykładowym zdjęciu</button>
               {busy && <p className="mt-3 text-sm">Wczytuję…</p>}
               {err && <p role="alert" className="mt-3 text-sm text-[var(--color-error)]">{err}</p>}
             </div>
