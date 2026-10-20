@@ -139,8 +139,8 @@ export default function Home() {
       <section id="kontakt" className="band">
         <div className="grid grid-cols-6 gap-y-10 pad md:grid-cols-12">
           <div className="col-span-6 md:col-span-6">
-            <h2 className="h2">poproś o oddzwonienie.</h2>
-            <p className="prose-m mt-4">Zostaw numer. Oddzwonimy w godzinach pracy i umówimy oglądanie terenu.</p>
+            <h2 className="h2">poproś o kontakt.</h2>
+            <p className="prose-m mt-4">Zostaw numer. Odezwiemy się w godzinach pracy i umówimy oglądanie terenu.</p>
             <div className="mt-8 max-w-[32rem]"><ContactForm /></div>
           </div>
           <dl className="col-span-6 md:col-span-4 md:col-start-9">

@@ -1,5 +1,5 @@
 import { ContactForm } from "@/components/marketing/ContactForm";
-export const metadata = { title: "Kontakt: zadzwoń lub zostaw numer — Gryczewski Białystok", description: "Telefon, godziny pracy i formularz oddzwonienia. Oglądamy teren i mówimy, ile to potrwa." };
+export const metadata = { title: "Kontakt: zadzwoń lub zostaw numer — Gryczewski Białystok", description: "Telefon, godziny pracy i formularz kontaktowy. Oglądamy teren i mówimy, ile to potrwa." };
 
 export default function Page() {
   return (
@@ -16,7 +16,7 @@ export default function Page() {
           ))}
         </dl>
         <div className="col-span-6 md:col-span-5 md:col-start-8">
-          <h2 className="h3">wolisz, żebyśmy oddzwonili?</h2>
+          <h2 className="h3">wolisz, żebyśmy się odezwali?</h2>
           <div className="mt-6"><ContactForm /></div>
         </div>
       </div>
