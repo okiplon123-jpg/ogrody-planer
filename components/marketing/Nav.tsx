@@ -15,7 +15,7 @@ export function Nav() {
           <Link href="/wizualizator" className="nav-link" aria-current={cur("/wizualizator")}>wizualizator</Link>
           <Link href="/planer" className="nav-link">planer</Link>
         </div>
-        <a href="tel:+48000000000" className="btn btn-signal btn-sm">zadzwoń<span className="hide-sm">&nbsp;[telefon]</span></a>
+        <a href="tel:+48885879108" className="btn btn-signal btn-sm">zadzwoń<span className="hide-sm">&nbsp;885&nbsp;879&nbsp;108</span></a>
       </div>
     </header>
   );

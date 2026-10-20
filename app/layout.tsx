@@ -7,7 +7,7 @@ const archivo = Archivo({ variable: "--font-archivo", subsets: ["latin", "latin-
 export const viewport = { width: "device-width", initialScale: 1, viewportFit: "cover" as const };
 
 export const metadata: Metadata = {
-  title: "Kostka brukowa i ogrody | NAZWA MARKI [miasto]",
+  title: "Kostka brukowa i ogrody | NAZWA MARKI Białystok",
   description: "Układamy kostkę brukową i zakładamy ogrody: podjazdy, tarasy, ścieżki, trawniki, rabaty. Przymierz kostkę lub trawnik na zdjęciu swojego domu.",
 };
 

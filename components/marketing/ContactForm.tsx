@@ -20,7 +20,7 @@ export function ContactForm() {
     return (
       <div role="status" className="border border-[var(--color-ink)] bg-[var(--color-accent)] p-6">
         <p className="h3">to wersja demonstracyjna.</p>
-        <p className="mt-3 prose-m">Formularz nie jest jeszcze podłączony, więc wiadomość nie została wysłana. Zadzwoń: [telefon].</p>
+        <p className="mt-3 prose-m">Formularz nie jest jeszcze podłączony, więc wiadomość nie została wysłana. Zadzwoń: +48 885 879 108.</p>
       </div>
     );
   }

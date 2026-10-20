@@ -1,14 +1,14 @@
 import { ContactForm } from "@/components/marketing/ContactForm";
-export const metadata = { title: "Kontakt: zadzwoń lub zostaw numer — NAZWA MARKI [miasto]", description: "Telefon, godziny pracy i formularz oddzwonienia. Oglądamy teren i mówimy, ile to potrwa." };
+export const metadata = { title: "Kontakt: zadzwoń lub zostaw numer — NAZWA MARKI Białystok", description: "Telefon, godziny pracy i formularz oddzwonienia. Oglądamy teren i mówimy, ile to potrwa." };
 
 export default function Page() {
   return (
     <section className="pad py-[clamp(3rem,8vw,7rem)]">
       <h1 className="display">zadzwoń<span className="period" aria-hidden /></h1>
-      <p className="tnum mt-6 text-[var(--text-2xl)] font-extrabold tracking-tight">[telefon]</p>
+      <p className="mt-6"><a href="tel:+48885879108" className="tnum text-[var(--text-2xl)] font-extrabold tracking-tight">+48 885 879 108</a></p>
       <div className="mt-16 grid grid-cols-6 gap-y-10 md:grid-cols-12">
         <dl className="col-span-6 md:col-span-5">
-          {[["e-mail", "[adres e-mail]"], ["adres", "[adres firmy]"], ["godziny", "pn–pt [godziny]"], ["działamy", "[miasto i okolice, promień w km]"]].map(([k, v], i, a) => (
+          {[["kontakt", "Patryk Gryczewski"], ["e-mail", "[adres e-mail]"], ["adres", "ul. Tysiąclecia P.P, 15-111 Białystok"], ["godziny", "pn–pt 7:00–18:00"], ["działamy", "Białystok i okolice"], ["NIP", "5423470508"]].map(([k, v], i, a) => (
             <div key={k} className={`border-t border-[var(--color-rule)] py-4 ${i === a.length - 1 ? "border-b border-[var(--color-ink)]" : ""}`}>
               <dt className="label">{k}</dt>
               <dd className="mt-1 text-[var(--text-lg)] font-semibold">{v}</dd>

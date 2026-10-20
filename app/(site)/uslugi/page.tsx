@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { GroupHead, GRASS_IMGS, PAVER_IMGS } from "@/components/marketing/GroupHead";
-export const metadata = { title: "Kostka brukowa i ogrody: jak pracujemy — NAZWA MARKI [miasto]", description: "Etapy układania kostki brukowej i zakładania ogrodu: od oglądania terenu po odbiór. Podjazdy, tarasy, ścieżki, trawniki, rabaty i nasadzenia." };
+export const metadata = { title: "Kostka brukowa i ogrody: jak pracujemy — NAZWA MARKI Białystok", description: "Etapy układania kostki brukowej i zakładania ogrodu: od oglądania terenu po odbiór. Podjazdy, tarasy, ścieżki, trawniki, rabaty i nasadzenia." };
 
 const PAVING_STAGES: [string, string, string][] = [
   ["1.0", "oglądamy teren", "Mierzymy powierzchnię i sprawdzamy grunt, spadki oraz dojazd dla sprzętu. Ustalamy, co ma być położone i którędy spłynie woda."],
@@ -86,7 +86,7 @@ export default function Page() {
           <div className="col-span-6 flex flex-wrap gap-3 md:col-span-6 md:justify-end">
             <Link href="/wizualizator" className="btn btn-signal">przymierz kostkę</Link>
             <Link href="/planer" className="btn btn-line">planer ogrodu</Link>
-            <a href="tel:+48000000000" className="btn btn-line">zadzwoń&nbsp;[telefon]</a>
+            <a href="tel:+48885879108" className="btn btn-line">zadzwoń&nbsp;885&nbsp;879&nbsp;108</a>
           </div>
         </div>
       </section>

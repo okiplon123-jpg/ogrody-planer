@@ -53,10 +53,10 @@ export default function Home() {
           <div className="col-span-6 pad pb-[clamp(4rem,8vw,7rem)] pt-[clamp(2.5rem,4.5vw,4rem)] md:col-span-7">
             <h1 className="display-m">kostka brukowa i ogrody<span className="period" aria-hidden /></h1>
             <p className="prose-m mt-8 text-[var(--text-lg)] leading-snug">
-              Podjazdy, tarasy i ścieżki z każdej kostki. Trawniki, rabaty i całe ogrody, od projektu po nasadzenia. [miasto i okolice]
+              Podjazdy, tarasy i ścieżki z każdej kostki. Trawniki, rabaty i całe ogrody, od projektu po nasadzenia. Białystok i okolice
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <a href="tel:+48000000000" className="btn btn-signal">zadzwoń&nbsp;[telefon]</a>
+              <a href="tel:+48885879108" className="btn btn-signal">zadzwoń&nbsp;885&nbsp;879&nbsp;108</a>
               <a href="#wizualizator" className="btn btn-line">przymierz&nbsp;↓</a>
             </div>
           </div>
@@ -105,8 +105,8 @@ export default function Home() {
         <div className="plate-in">
           <div className="rails" aria-hidden />
           <div className="grid grid-cols-6 pad py-[clamp(4rem,9vw,8rem)] md:grid-cols-12">
-            <p className="display col-span-6 md:col-span-12">zadzwoń. <span className="tnum">[telefon]</span></p>
-            <p className="col-span-6 mt-8 text-[var(--text-lg)] leading-snug md:col-span-6">pn–pt [godziny] · [miasto i okolice]. Oglądamy teren i ustalamy zakres. [do potwierdzenia przez firmę]</p>
+            <p className="display col-span-6 md:col-span-12">zadzwoń. <span className="tnum">+48 885 879 108</span></p>
+            <p className="col-span-6 mt-8 text-[var(--text-lg)] leading-snug md:col-span-6">pn–pt 7:00–18:00 · Białystok i okolice. Oglądamy teren i ustalamy zakres. [do potwierdzenia przez firmę]</p>
           </div>
         </div>
       </section>
@@ -144,7 +144,7 @@ export default function Home() {
             <div className="mt-8 max-w-[32rem]"><ContactForm /></div>
           </div>
           <dl className="col-span-6 md:col-span-4 md:col-start-9">
-            {[["telefon", "[telefon]"], ["e-mail", "[adres e-mail]"], ["adres", "[adres firmy]"], ["godziny", "pn–pt [godziny]"], ["działamy", "[miasto i okolice, promień w km]"]].map(([k, v], i, a) => (
+            {[["kontakt", "Patryk Gryczewski"], ["telefon", "+48 885 879 108"], ["e-mail", "[adres e-mail]"], ["adres", "ul. Tysiąclecia P.P, 15-111 Białystok"], ["godziny", "pn–pt 7:00–18:00"], ["działamy", "Białystok i okolice"]].map(([k, v], i, a) => (
               <div key={k} className={`border-t border-[var(--color-rule)] py-4 ${i === a.length - 1 ? "border-b border-[var(--color-ink)]" : ""}`}>
                 <dt className="label">{k}</dt>
                 <dd className="tnum mt-1 text-[var(--text-lg)] font-semibold">{v}</dd>
