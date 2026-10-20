@@ -66,8 +66,8 @@ export function ContactForm({ service, compact = false, withArea = false, idp = 
         </div>
       )}
       <div>
-        <label className="flex items-start gap-3 text-[var(--text-sm)]">
-          <input type="checkbox" className="mt-1 h-4 w-4 accent-[var(--color-ink)]" checked={v.consent} onChange={(e) => setV({ ...v, consent: e.target.checked })} aria-invalid={!!err.consent} />
+        <label className="flex min-h-11 items-start gap-3 text-[var(--text-sm)]">
+          <input type="checkbox" className="mt-0.5 h-6 w-6 shrink-0 accent-[var(--color-ink)]" checked={v.consent} onChange={(e) => setV({ ...v, consent: e.target.checked })} aria-invalid={!!err.consent} />
           <span>Zgadzam się, żeby firma skontaktowała się ze mną w tej sprawie. <a href="/polityka-prywatnosci" className="underline underline-offset-4">Polityka prywatności</a></span>
         </label>
         <div className="err-slot" aria-live="polite">{err.consent && <p className="err">{err.consent}</p>}</div>
