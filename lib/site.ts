@@ -12,4 +12,4 @@ export const COMPANY = {
 };
 
 /** Google Tag Manager container ID (GTM-XXXXXXX). Empty = no tracking script is loaded at all. */
-export const GTM_ID = "";
+export const GTM_ID = "GTM-TWBZM876";
