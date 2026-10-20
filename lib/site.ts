@@ -13,3 +13,6 @@ export const COMPANY = {
 
 /** Google Tag Manager container ID (GTM-XXXXXXX). Empty = no tracking script is loaded at all. */
 export const GTM_ID = "GTM-TWBZM876";
+
+/** WhatsApp click-to-chat (same number as the phone). */
+export const WHATSAPP_URL = "https://wa.me/48885879108?text=" + encodeURIComponent("Dzień dobry, chciałbym umówić oględziny terenu i wycenę.");

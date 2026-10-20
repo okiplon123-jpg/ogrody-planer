@@ -222,3 +222,13 @@ input[type="checkbox"] { accent-color: var(--color-ink); }
   .sticky-call { padding-block: var(--space-xs); }
   .sticky-call-btn { width: 100%; min-height: 3.5rem; font-size: var(--text-base); justify-content: center; margin-left: 0; }
 }
+
+/* sticky bar: WhatsApp beside the call button */
+.sticky-actions { display: flex; gap: var(--space-xs); margin-left: auto; align-items: stretch; }
+.sticky-wa { min-height: 3rem; padding: 0 var(--space-sm); gap: var(--space-2xs); background: #1fa855; color: #fff; border-color: var(--color-ink); }
+.sticky-wa:hover { background: #17893f; color: #fff; }
+@media (max-width: 39.99rem) {
+  .sticky-actions { width: 100%; margin-left: 0; }
+  .sticky-wa { min-height: 3.5rem; flex: 0 0 3.5rem; padding: 0; justify-content: center; }
+  .sticky-actions .sticky-call-btn { flex: 1; width: auto; }
+}

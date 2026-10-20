@@ -21,12 +21,14 @@ const GARDEN: [string, string, string][] = [
   ["oświetlenie ogrodowe", "Światło przy ścieżkach, wejściu i tarasie.", "oswietlenie"],
 ];
 
+const LANDING: Record<string, string> = {"podjazdy": "podjazdy-z-kostki-brukowej-bialystok", "tarasy": "tarasy-z-kostki-i-plyt-bialystok", "sciezki": "sciezki-i-chodniki-z-kostki-bialystok", "place": "place-i-parkingi-z-kostki-bialystok", "trawniki": "trawniki-i-ogrody-bialystok", "nasadzenia": "trawniki-i-ogrody-bialystok", "projekt": "trawniki-i-ogrody-bialystok"};
+
 function Links({ rows }: { rows: [string, string, string][] }) {
   return (
     <ul>
       {rows.map(([t, , id]) => (
         <li key={id}>
-          <Link href={`/uslugi#${id}`} className="irow">
+          <Link href={LANDING[id] ? `/${LANDING[id]}` : `/uslugi#${id}`} className="irow">
             <span className="pad flex items-center justify-between py-4">
               <span className="h3 slide" style={{ fontSize: "clamp(1.25rem, 2vw, 1.6rem)" }}>{t}</span>
               <span aria-hidden>→</span>

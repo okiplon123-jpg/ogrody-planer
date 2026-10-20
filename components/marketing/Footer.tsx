@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SERVICES } from "@/lib/services";
 
 /* Ft4 dense colophon: contact and sitemap in one ruled block. */
 export function Footer() {
@@ -24,6 +25,7 @@ export function Footer() {
             <p className="label">strona</p>
             <ul className="mt-2 space-y-1">
               <li><Link href="/uslugi">usługi</Link></li>
+              {SERVICES.map((x) => <li key={x.slug}><Link href={`/${x.slug}`}>{x.short}</Link></li>)}
               <li><Link href="/wizualizator">wizualizator kostki</Link></li>
               <li><Link href="/planer">planer ogrodu</Link></li>
               <li><Link href="/o-nas">o nas</Link></li>

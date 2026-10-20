@@ -3,7 +3,7 @@ import { useState } from "react";
 import { sendLead } from "@/lib/contact";
 import { track } from "@/lib/track";
 
-export function ContactForm() {
+export function ContactForm({ service }: { service?: string }) {
   const [v, setV] = useState({ name: "", phone: "", msg: "", consent: false });
   const [err, setErr] = useState<Record<string, string>>({});
   const [done, setDone] = useState(false);
@@ -20,8 +20,8 @@ export function ContactForm() {
     setErr(x);
     if (Object.keys(x).length || sending) return;
     setSending(true); setFail(false);
-    const ok = await sendLead({ imię: v.name.trim(), telefon: v.phone.trim(), wiadomość: v.msg.trim() || "(brak opisu)" }, "Nowe zapytanie ze strony", hp);
-    if (ok) { setDone(true); track("generate_lead", { method: "formularz" }); } else setFail(true);
+    const ok = await sendLead({ imię: v.name.trim(), telefon: v.phone.trim(), ...(service ? { usługa: service } : {}), wiadomość: v.msg.trim() || "(brak opisu)" }, service ? `Nowe zapytanie: ${service}` : "Nowe zapytanie ze strony", hp);
+    if (ok) { setDone(true); track("generate_lead", { method: "formularz", ...(service ? { service } : {}) }); } else setFail(true);
     setSending(false);
   };
 

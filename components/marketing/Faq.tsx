@@ -7,10 +7,10 @@ const QA: [string, string][] = [
   ["Czy jest gwarancja?", "Tak. Jeśli po pracach coś jest nie tak, wracamy i poprawiamy."],
 ];
 
-export function Faq() {
+export function Faq({ items = QA }: { items?: [string, string][] }) {
   return (
     <div className="faq">
-      {QA.map(([q, a], i) => (
+      {items.map(([q, a], i) => (
         <details key={q} open={i === 0}>
           <summary>{q}<span className="tog" aria-hidden /></summary>
           <p className="prose-m pb-6 pr-10 text-[var(--color-ink-2)]">{a}</p>

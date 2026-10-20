@@ -39,6 +39,8 @@ export function Tracking() {
     const onClick = (e: MouseEvent) => {
       const a = (e.target as Element | null)?.closest?.("a[href^='tel:']");
       if (a) track("phone_click", { link_text: (a.textContent || "").trim().slice(0, 40), page_path: location.pathname });
+      const wa = (e.target as Element | null)?.closest?.("a[href*='wa.me']");
+      if (wa) track("whatsapp_click", { page_path: location.pathname });
     };
     document.addEventListener("click", onClick);
     return () => { window.removeEventListener("cookie-consent", onConsent); document.removeEventListener("click", onClick); };
