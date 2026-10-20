@@ -8,7 +8,7 @@ export default function Page() {
       <p className="mt-6"><a href="tel:+48885879108" className="tnum text-[var(--text-2xl)] font-extrabold tracking-tight">+48 885 879 108</a></p>
       <div className="mt-16 grid grid-cols-6 gap-y-10 md:grid-cols-12">
         <dl className="col-span-6 md:col-span-5">
-          {[["kontakt", "Patryk Gryczewski"], ["e-mail", "[adres e-mail]"], ["adres", "ul. Tysiąclecia P.P, 15-111 Białystok"], ["godziny", "pn–pt 7:00–18:00"], ["działamy", "Białystok i okolice"], ["NIP", "5423470508"]].map(([k, v], i, a) => (
+          {[["kontakt", "Patryk Gryczewski"], ["e-mail", "gryczewski.bud@gmail.com"], ["adres", "ul. Tysiąclecia P.P, 15-111 Białystok"], ["godziny", "pn–pt 7:00–18:00"], ["działamy", "Białystok i okolice"], ["NIP", "5423470508"]].map(([k, v], i, a) => (
             <div key={k} className={`border-t border-[var(--color-rule)] py-4 ${i === a.length - 1 ? "border-b border-[var(--color-ink)]" : ""}`}>
               <dt className="label">{k}</dt>
               <dd className="mt-1 text-[var(--text-lg)] font-semibold">{v}</dd>

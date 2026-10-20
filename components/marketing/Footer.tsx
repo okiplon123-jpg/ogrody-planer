@@ -15,7 +15,7 @@ export function Footer() {
             <p className="label">kontakt</p>
             <p className="mt-2">Patryk Gryczewski</p>
             <p><a href="tel:+48885879108" className="tnum font-bold">+48 885 879 108</a></p>
-            <p>[adres e-mail]</p>
+            <p>gryczewski.bud@gmail.com</p>
             <p>ul. Tysiąclecia P.P, 15-111 Białystok</p>
             <p>pn–pt 7:00–18:00</p>
             <p>NIP 5423470508</p>

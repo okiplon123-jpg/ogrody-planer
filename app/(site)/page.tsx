@@ -144,7 +144,7 @@ export default function Home() {
             <div className="mt-8 max-w-[32rem]"><ContactForm /></div>
           </div>
           <dl className="col-span-6 md:col-span-4 md:col-start-9">
-            {[["kontakt", "Patryk Gryczewski"], ["telefon", "+48 885 879 108"], ["e-mail", "[adres e-mail]"], ["adres", "ul. Tysiąclecia P.P, 15-111 Białystok"], ["godziny", "pn–pt 7:00–18:00"], ["działamy", "Białystok i okolice"]].map(([k, v], i, a) => (
+            {[["kontakt", "Patryk Gryczewski"], ["telefon", "+48 885 879 108"], ["e-mail", "gryczewski.bud@gmail.com"], ["adres", "ul. Tysiąclecia P.P, 15-111 Białystok"], ["godziny", "pn–pt 7:00–18:00"], ["działamy", "Białystok i okolice"]].map(([k, v], i, a) => (
               <div key={k} className={`border-t border-[var(--color-rule)] py-4 ${i === a.length - 1 ? "border-b border-[var(--color-ink)]" : ""}`}>
                 <dt className="label">{k}</dt>
                 <dd className="tnum mt-1 text-[var(--text-lg)] font-semibold">{v}</dd>

@@ -18,7 +18,7 @@ export default function Page() {
       <div className="mt-12">
         <S n="01" t="kto jest administratorem">
           <p>Administratorem Twoich danych osobowych jest Patryk Gryczewski, prowadzący działalność pod firmą ROBOTY BUDOWLANO-DROGOWE PATRYK GRYCZEWSKI, ul. Tysiąclecia P.P, 15-111 Białystok, NIP 5423470508.</p>
-          <p>Kontakt w sprawach danych: telefon <a href="tel:+48885879108" className="font-bold">+48 885 879 108</a>, e-mail [adres e-mail].</p>
+          <p>Kontakt w sprawach danych: telefon <a href="tel:+48885879108" className="font-bold">+48 885 879 108</a>, e-mail gryczewski.bud@gmail.com.</p>
         </S>
         <S n="02" t="kiedy zbieramy dane">
           <p><strong>Kontakt telefoniczny lub przez formularz.</strong> Podajesz imię, numer telefonu i opcjonalnie opis prac. Używamy ich, żeby oddzwonić, umówić oględziny terenu i odpowiedzieć na pytanie. Podstawa: nasz uzasadniony interes w odpowiedzi na zapytanie oraz działania przed zawarciem umowy (art. 6 ust. 1 lit. f i b RODO). Dane trzymamy do zakończenia rozmowy; jeśli dojdzie do umowy, przez czas wymagany przepisami podatkowymi i rachunkowymi oraz do przedawnienia roszczeń.</p>
@@ -34,7 +34,7 @@ export default function Page() {
           <p>Czcionki są serwowane z naszej strony, więc nie łączą się z zewnętrznymi usługami czcionek.</p>
         </S>
         <S n="05" t="komu przekazujemy dane">
-          <p>Dane nie są sprzedawane. Mogą je otrzymać wyłącznie podmioty, które pomagają nam prowadzić stronę i firmę (hosting, księgowość, obsługa IT) na podstawie umów powierzenia, oraz organy, jeśli wymaga tego prawo. [do potwierdzenia przez firmę: lista faktycznych odbiorców]</p>
+          <p>Dane nie są sprzedawane. Wiadomość z formularza przechodzi przez usługę FormSubmit (formsubmit.co), która przekazuje ją na naszą skrzynkę e-mail; usługa może przetwarzać dane poza Europejskim Obszarem Gospodarczym. Dane mogą też otrzymać podmioty, które pomagają nam prowadzić firmę (księgowość, hosting, obsługa IT), oraz organy, jeśli wymaga tego prawo.</p>
         </S>
         <S n="06" t="twoje prawa">
           <p>Masz prawo dostępu do danych, ich sprostowania, usunięcia, ograniczenia przetwarzania, przenoszenia oraz sprzeciwu wobec przetwarzania opartego na naszym uzasadnionym interesie. Aby z nich skorzystać, zadzwoń lub napisz na dane z punktu 01.</p>

@@ -5,22 +5,36 @@ export function ContactForm() {
   const [v, setV] = useState({ name: "", phone: "", msg: "", consent: false });
   const [err, setErr] = useState<Record<string, string>>({});
   const [done, setDone] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [fail, setFail] = useState(false);
+  const [hp, setHp] = useState("");
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     const x: Record<string, string> = {};
     if (v.name.trim().length < 3) x.name = "Wpisz imię, żebyśmy wiedzieli, kogo prosić do telefonu.";
     if (v.phone.replace(/\D/g, "").length < 9) x.phone = "Numer ma za mało cyfr. Wpisz pełny numer, np. 600 000 000.";
     if (!v.consent) x.consent = "Zaznacz zgodę na kontakt, inaczej nie możemy się z Tobą skontaktować.";
     setErr(x);
-    if (!Object.keys(x).length) setDone(true);
+    if (Object.keys(x).length || sending) return;
+    setSending(true); setFail(false);
+    try {
+      const r = await fetch("https://formsubmit.co/ajax/gryczewski.bud@gmail.com", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ _subject: "Nowe zapytanie ze strony", _captcha: "false", _template: "table", _honey: hp, imię: v.name.trim(), telefon: v.phone.trim(), wiadomość: v.msg.trim() || "(brak opisu)" }),
+      });
+      const j = await r.json().catch(() => ({}));
+      if (r.ok && j.success !== "false" && j.success !== false) setDone(true); else setFail(true);
+    } catch { setFail(true); }
+    setSending(false);
   };
 
   if (done) {
     return (
       <div role="status" className="border border-[var(--color-ink)] bg-[var(--color-accent)] p-6">
-        <p className="h3">to wersja demonstracyjna.</p>
-        <p className="mt-3 prose-m">Formularz nie jest jeszcze podłączony, więc wiadomość nie została wysłana. Zadzwoń: +48 885 879 108.</p>
+        <p className="h3">dziękujemy, wiadomość poszła.</p>
+        <p className="mt-3 prose-m">Odezwiemy się w godzinach pracy (pn–pt 7:00–18:00). Pilna sprawa? Zadzwoń: +48 885 879 108.</p>
       </div>
     );
   }
@@ -47,7 +61,9 @@ export function ContactForm() {
         </label>
         <div className="err-slot" aria-live="polite">{err.consent && <p className="err">{err.consent}</p>}</div>
       </div>
-      <button type="submit" className="btn btn-signal">poproś o kontakt</button>
+      <input type="text" name="website" value={hp} onChange={(e) => setHp(e.target.value)} tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 opacity-0" />
+      <button type="submit" disabled={sending} className="btn btn-signal">{sending ? "wysyłam…" : "poproś o kontakt"}</button>
+      <div className="err-slot" aria-live="polite">{fail && <p className="err">Nie udało się wysłać. Zadzwoń: +48 885 879 108 albo napisz na gryczewski.bud@gmail.com.</p>}</div>
     </form>
   );
 }
