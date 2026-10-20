@@ -55,7 +55,7 @@ export function Toolbox() {
         <input type="checkbox" checked={s.project.fence.enabled} onChange={(e) => s.patchProject({ fence: { ...s.project.fence, enabled: e.target.checked } })} /> Ogrodzenie wokół działki
       </label>
       <Quantities />
-      <button className="pl-btn text-left" onClick={() => s.loadSample()}>Wczytaj przykładowy projekt</button>
+      <button className="pl-btn w-full" onClick={() => s.loadSample()}>Wczytaj przykład</button>
     </div>
   );
 }

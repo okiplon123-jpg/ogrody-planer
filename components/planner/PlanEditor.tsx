@@ -327,7 +327,7 @@ export function PlanEditor() {
           <div className="pointer-events-auto max-w-xs border border-dashed border-[var(--color-ink)] bg-[var(--color-paper)] p-5 text-center text-[13px] leading-relaxed text-[var(--color-ink-2)]">
             <div className="h3">Zacznij od domu</div>
             Kliknij „Dom” po lewej albo przeciągnij go na plan.
-            <button className="pl-btn mt-3 block w-full" onClick={() => s.loadSample()}>Wczytaj przykładowy projekt</button>
+            <button className="pl-btn mt-3 block w-full" onClick={() => s.loadSample()}>Wczytaj przykład</button>
           </div>
         </div>
       )}
