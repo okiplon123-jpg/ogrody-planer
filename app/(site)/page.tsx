@@ -21,7 +21,8 @@ const GARDEN: [string, string, string][] = [
   ["oświetlenie ogrodowe", "Światło przy ścieżkach, wejściu i tarasie.", "oswietlenie"],
 ];
 
-const LANDING: Record<string, string> = {"podjazdy": "podjazdy-z-kostki-brukowej-bialystok", "tarasy": "tarasy-z-kostki-i-plyt-bialystok", "sciezki": "sciezki-i-chodniki-z-kostki-bialystok", "place": "place-i-parkingi-z-kostki-bialystok", "trawniki": "trawniki-i-ogrody-bialystok", "nasadzenia": "trawniki-i-ogrody-bialystok", "projekt": "trawniki-i-ogrody-bialystok"};
+const LANDING: Record<string, string> = {
+  ziemne: "prace-ziemne-i-korytowanie-bialystok","podjazdy": "podjazdy-z-kostki-brukowej-bialystok", "tarasy": "tarasy-z-kostki-i-plyt-bialystok", "sciezki": "sciezki-i-chodniki-z-kostki-bialystok", "place": "place-i-parkingi-z-kostki-bialystok", "trawniki": "trawniki-i-ogrody-bialystok", "nasadzenia": "trawniki-i-ogrody-bialystok", "projekt": "trawniki-i-ogrody-bialystok"};
 
 function Links({ rows }: { rows: [string, string, string][] }) {
   return (
@@ -48,7 +49,7 @@ export default function Home() {
           <div className="col-span-6 pad pb-[clamp(2.5rem,5vw,4.5rem)] pt-[clamp(2rem,3.5vw,3rem)] md:col-span-8">
             <h1 className="display-m" style={{ fontSize: "clamp(2.5rem, 5vw, 4.6rem)" }}>układanie kostki brukowej w Białymstoku<span className="period" aria-hidden /></h1>
             <p className="prose-m mt-8 text-[var(--text-lg)] leading-snug">
-              Wycena po obejrzeniu terenu, bez zobowiązań. Podjazdy, tarasy, ścieżki, a także trawniki i całe ogrody.
+              Wycena po obejrzeniu terenu, bez zobowiązań. Podjazdy, tarasy, ścieżki, trawniki i całe ogrody, a także prace ziemne ciężkim sprzętem.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a href="tel:+48885879108" className="btn btn-signal">zadzwoń&nbsp;885&nbsp;879&nbsp;108</a>
@@ -97,6 +98,17 @@ export default function Home() {
             <GroupHead title="ogrody" imgs={GRASS_IMGS} compact />
             <Links rows={GARDEN} />
           </div>
+        </div>
+        <div className="mt-0 border-t border-[var(--color-ink)]">
+          <Link href="/prace-ziemne-i-korytowanie-bialystok" className="irow">
+            <span className="pad flex items-center justify-between py-5">
+              <span>
+                <span className="h3 slide block" style={{ fontSize: "clamp(1.25rem, 2vw, 1.6rem)" }}>prace ziemne ciężkim sprzętem</span>
+                <span className="prose-m mt-1 block">Korytowanie, podbudowa, równanie terenu, drobne rozbiórki.</span>
+              </span>
+              <span aria-hidden>→</span>
+            </span>
+          </Link>
         </div>
         <p className="pad mt-6"><Link href="/uslugi" className="btn btn-line">jak pracujemy</Link></p>
       </section>

@@ -99,6 +99,7 @@ export default async function ServicePage({ params }: { params: Promise<{ usluga
         </div>
       </section>
 
+      {s.tools.length > 0 && (
       <section className="band">
         <div className="grid grid-cols-6 gap-y-6 pad md:grid-cols-12">
           <h2 className="h2 col-span-6 md:col-span-7">zobacz, zanim zadzwonisz.</h2>
@@ -120,6 +121,7 @@ export default async function ServicePage({ params }: { params: Promise<{ usluga
           )}
         </div>
       </section>
+      )}
 
       <section className="band">
         <div className="grid grid-cols-6 gap-y-8 pad md:grid-cols-12">

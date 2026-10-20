@@ -32,6 +32,13 @@ const GARDEN: [string, string, string][] = [
   ["oswietlenie", "oświetlenie ogrodowe", "Światło przy ścieżkach, wejściu i tarasie."],
 ];
 
+const GROUND: [string, string, string][] = [
+  ["korytowanie", "korytowanie", "Pod podjazdy, tarasy, ścieżki i place, na głębokość dopasowaną do gruntu i obciążenia."],
+  ["podbudowa-ziemna", "podbudowa", "Kruszywo układane i zagęszczane warstwami ciężkim sprzętem."],
+  ["rownanie", "równanie terenu", "Niwelacja działki, także pod trawnik i ogród."],
+  ["rozbiorki", "drobne rozbiórki", "Usunięcie tego, co stoi na drodze nowej nawierzchni lub ogrodu."],
+];
+
 function Stages({ title, stages, imgs }: { title: string; stages: [string, string, string][]; imgs: string[] }) {
   return (
     <>
@@ -78,6 +85,7 @@ export default function Page() {
         <h2 className="h2 pad">na co patrzymy.</h2>
         <Rows title="przy kostce" rows={PAVING} imgs={PAVER_IMGS} />
         <Rows title="przy ogrodzie" rows={GARDEN} imgs={GRASS_IMGS} />
+        <Rows title="przy pracach ziemnych" rows={GROUND} imgs={[]} />
       </section>
 
       <section className="band">

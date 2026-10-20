@@ -123,6 +123,13 @@ export function Visualizer() {
     g.drawImage(src, 0, 0, W, H);
     if (!list.length) return;
     const id = g.getImageData(0, 0, W, H), d = id.data;
+    // smooth lighting only: a heavily blurred copy of the photo, so trees, lamps and edges of the old surface don't shine through the new one
+    const bw = Math.max(8, Math.round(W / 26)), bh = Math.max(8, Math.round(H / 26));
+    const lo = document.createElement("canvas"); lo.width = bw; lo.height = bh;
+    const lg = lo.getContext("2d")!; lg.imageSmoothingQuality = "high"; lg.drawImage(o, 0, 0, bw, bh);
+    const up = document.createElement("canvas"); up.width = W; up.height = H;
+    const ug = up.getContext("2d", { willReadFrequently: true })!; ug.imageSmoothingEnabled = true; ug.imageSmoothingQuality = "high"; ug.drawImage(lo, 0, 0, W, H);
+    const bd = ug.getImageData(0, 0, W, H).data;
     let md: Uint8ClampedArray | null = null;
     if (mask.current) { const t = document.createElement("canvas"); t.width = W; t.height = H; const tg = t.getContext("2d")!; tg.drawImage(mask.current, 0, 0, W, H); md = tg.getImageData(0, 0, W, H).data; }
     for (const a of list) {
@@ -144,7 +151,7 @@ export function Visualizer() {
       };
       // mean luminance of the original surface
       let sum = 0, n = 0;
-      for (let y = y0; y <= y1; y += 3) for (let x = x0; x <= x1; x += 3) if (inside(x + 0.5, y + 0.5)) { const p = (y * W + x) * 4; sum += 0.299 * d[p] + 0.587 * d[p + 1] + 0.114 * d[p + 2]; n++; }
+      for (let y = y0; y <= y1; y += 3) for (let x = x0; x <= x1; x += 3) if (inside(x + 0.5, y + 0.5)) { const p = (y * W + x) * 4; sum += 0.299 * bd[p] + 0.587 * bd[p + 1] + 0.114 * bd[p + 2]; n++; }
       const mean = n ? sum / n : 128;
       const offs = [0.25, 0.75];
       for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) {
@@ -164,9 +171,9 @@ export function Visualizer() {
         let cov = cnt / 4;
         if (md) cov *= 1 - md[p + 3] / 255;
         if (cov <= 0) continue;
-        const lum = 0.299 * d[p] + 0.587 * d[p + 1] + 0.114 * d[p + 2];
-        let shade = Math.max(0.55, Math.min(1.5, lum / mean)); shade = 1 + (shade - 1) * 0.9;
-        const m = cov * 0.97;
+        const lum = 0.299 * bd[p] + 0.587 * bd[p + 1] + 0.114 * bd[p + 2];
+        let shade = Math.max(0.75, Math.min(1.3, lum / mean)); shade = 1 + (shade - 1) * 0.8;
+        const m = cov; // fully opaque inside the marked area
         d[p] = d[p] * (1 - m) + Math.min(255, (r / cnt) * shade) * m;
         d[p + 1] = d[p + 1] * (1 - m) + Math.min(255, (gg / cnt) * shade) * m;
         d[p + 2] = d[p + 2] * (1 - m) + Math.min(255, (b / cnt) * shade) * m;

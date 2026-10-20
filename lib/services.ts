@@ -111,6 +111,31 @@ export const SERVICES: Service[] = [
       ["Czy jest gwarancja?", "Tak. Jeśli po pracach coś jest nie tak, wracamy i poprawiamy."],
     ],
   },
+  {
+    slug: "prace-ziemne-i-korytowanie-bialystok",
+    short: "prace ziemne",
+    title: "Prace ziemne i korytowanie Białystok | Gryczewski",
+    description: "Prace ziemne ciężkim sprzętem w Białymstoku i okolicach: korytowanie, podbudowa, równanie terenu, drobne rozbiórki. Własna koparka. Wycena po obejrzeniu terenu.",
+    h1: "prace ziemne i korytowanie w Białymstoku",
+    lead: `Prace ziemne ciężkim sprzętem: korytowanie, podbudowa, równanie terenu i drobne rozbiórki. Pracujemy własną koparką kołową 8 t, miniładowarką 4 t, walcem 2 t i zagęszczarkami. ${FREE}`,
+    image: "/zdjecia/kostka-jodelka-szara.jpg",
+    includes: [
+      "Korytowanie pod podjazdy, tarasy, ścieżki i place",
+      "Wykonanie podbudowy z kruszywa, zagęszczanej warstwami",
+      "Równanie i niwelacja terenu, także pod trawnik",
+      "Drobne rozbiórki",
+      "Przygotowanie terenu pod kostkę, trawnik lub ogród",
+    ],
+    priceFactors: "Cena zależy od powierzchni i głębokości prac, rodzaju gruntu i dojazdu dla sprzętu. Dokładną kwotę podajemy po obejrzeniu terenu.",
+    tools: [],
+    faq: [
+      ["Czy robicie same prace ziemne, bez układania kostki?", "Tak. Prace ziemne możesz zamówić osobno albo razem z kostką lub ogrodem."],
+      ["Jakim sprzętem pracujecie?", "Własnym: koparką kołową 8 t, miniładowarką 4 t, walcem 2 t i zagęszczarkami w każdym rozmiarze."],
+      ["Co obejmują prace ziemne?", "Korytowanie, podbudowę, równanie i niwelację terenu oraz drobne rozbiórki."],
+      ["Czy muszę coś przygotować?", TERRAIN],
+      ["Czy jest gwarancja?", "Tak. Jeśli po pracach coś jest nie tak, wracamy i poprawiamy."],
+    ],
+  },
 ];
 
 export const bySlug = (s: string) => SERVICES.find((x) => x.slug === s);

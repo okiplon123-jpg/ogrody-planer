@@ -39,7 +39,7 @@ const jsonLd = {
   address: { "@type": "PostalAddress", streetAddress: COMPANY.street, postalCode: COMPANY.postalCode, addressLocality: COMPANY.city, addressCountry: "PL" },
   areaServed: { "@type": "City", name: "Białystok" },
   openingHoursSpecification: [{ "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], opens: "07:00", closes: "18:00" }],
-  makesOffer: ["Układanie kostki brukowej", "Podjazdy i wjazdy", "Tarasy", "Ścieżki i chodniki", "Zakładanie trawników", "Projekt i zakładanie ogrodów"].map((n) => ({ "@type": "Offer", itemOffered: { "@type": "Service", name: n } })),
+  makesOffer: ["Układanie kostki brukowej", "Podjazdy i wjazdy", "Tarasy", "Ścieżki i chodniki", "Zakładanie trawników", "Projekt i zakładanie ogrodów", "Prace ziemne i korytowanie"].map((n) => ({ "@type": "Offer", itemOffered: { "@type": "Service", name: n } })),
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
