@@ -43,7 +43,7 @@ export default function Home() {
     <>
       <section>
         <div className="grid grid-cols-6 md:grid-cols-12">
-          <div className="col-span-6 pad pb-[clamp(2.5rem,5vw,4.5rem)] pt-[clamp(2rem,3.5vw,3rem)] md:col-span-7">
+          <div className="col-span-6 pad pb-[clamp(2.5rem,5vw,4.5rem)] pt-[clamp(2rem,3.5vw,3rem)] md:col-span-8">
             <h1 className="display-m" style={{ fontSize: "clamp(2.5rem, 5vw, 4.6rem)" }}>układanie kostki brukowej w Białymstoku<span className="period" aria-hidden /></h1>
             <p className="prose-m mt-8 text-[var(--text-lg)] leading-snug">
               Wycena po obejrzeniu terenu, bez zobowiązań. Podjazdy, tarasy, ścieżki, a także trawniki i całe ogrody.
@@ -53,7 +53,7 @@ export default function Home() {
               <a href="#kontakt" className="btn btn-dark">umów oględziny</a>
             </div>
           </div>
-          <div className="col-span-6 border-[var(--color-ink)] md:col-span-5 md:border-l">
+          <div className="col-span-6 border-[var(--color-ink)] md:col-span-4 md:border-l">
             <Specimens />
           </div>
         </div>
