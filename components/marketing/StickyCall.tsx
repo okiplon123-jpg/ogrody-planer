@@ -3,7 +3,7 @@ import { WHATSAPP_URL } from "@/lib/site";
 /* C4 sticky bottom bar: the actions, always reachable. Phone first, WhatsApp beside it. */
 export function StickyCall() {
   return (
-    <aside className="sticky-call" aria-label="Szybki kontakt">
+    <aside className="sticky-call" aria-label="Szybki kontakt" data-nosnippet>
       <span className="label hide-sm">pn–pt 7:00–18:00 · Białystok i okolice</span>
       <div className="sticky-actions">
         <a href={WHATSAPP_URL} target="_blank" rel="noopener" className="btn sticky-wa" aria-label="Napisz na WhatsApp">

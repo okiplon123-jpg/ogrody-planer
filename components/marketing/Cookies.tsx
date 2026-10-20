@@ -19,7 +19,7 @@ export function CookieNotice() {
   }, []);
   if (!show) return null;
   return (
-    <div role="region" aria-label="Informacja o cookies" className="cookie-notice">
+    <div role="region" aria-label="Informacja o cookies" className="cookie-notice" data-nosnippet>
       {GTM_ID ? (
         <>
           <p className="prose-m">Używamy cookies do pomiaru ruchu i skuteczności reklam, ale tylko jeśli się zgodzisz. Niezbędne działają zawsze.</p>

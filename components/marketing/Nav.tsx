@@ -7,7 +7,7 @@ export function Nav() {
   const path = usePathname();
   const cur = (h: string) => (path.startsWith(h) ? "page" : undefined);
   return (
-    <header className="nav">
+    <header className="nav" data-nosnippet>
       <div className="nav-in">
         <Link href="/" className="wordmark" aria-label="gryczewski — strona główna">gryczewski<span className="period" aria-hidden /></Link>
         <div className="nav-row2">

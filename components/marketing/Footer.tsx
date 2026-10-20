@@ -4,7 +4,7 @@ import { SERVICES } from "@/lib/services";
 /* Ft4 dense colophon: contact and sitemap in one ruled block. */
 export function Footer() {
   return (
-    <footer className="colophon">
+    <footer className="colophon" data-nosnippet>
       <div className="shell">
         <div className="grid grid-cols-6 gap-y-8 pad py-12 md:grid-cols-12">
           <div className="col-span-6 md:col-span-5">

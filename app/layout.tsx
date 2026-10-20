@@ -13,6 +13,11 @@ export const metadata: Metadata = {
   title: { default: "Układanie kostki brukowej Białystok | Gryczewski", template: "%s" },
   description: "Układanie kostki brukowej w Białymstoku i okolicach. Wycena po obejrzeniu terenu, bez zobowiązań. Podjazdy, tarasy, ścieżki, trawniki i ogrody. Zaprojektuj działkę w planerze.",
   alternates: { canonical: "./" },
+  icons: {
+    icon: [{ url: "/favicon.ico", sizes: "any" }, { url: "/icon-48.png", sizes: "48x48", type: "image/png" }],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
+    shortcut: "/favicon.ico",
+  },
   openGraph: { type: "website", locale: "pl_PL", siteName: "Gryczewski: kostka brukowa i ogrody", url: "./" },
   twitter: { card: "summary_large_image" },
   robots: { index: true, follow: true },

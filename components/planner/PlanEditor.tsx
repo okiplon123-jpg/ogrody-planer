@@ -27,6 +27,9 @@ export function PlanEditor() {
   const [freePts, setFreePts] = useState<V2[]>([]);
   const [guides, setGuides] = useState<{ v: number[]; h: number[] }>({ v: [], h: [] });
   const drag = useRef<Drag>(null);
+  const lastType = useRef<string>("mouse");
+  const [coarse, setCoarse] = useState(false);
+  useEffect(() => { setCoarse(window.matchMedia("(pointer: coarse)").matches); }, []);
   const pointers = useRef(new Map<number, V2>());
   const pinch = useRef<{ d: number; z: number } | null>(null);
   const sel = project.objects.find((o) => o.id === selectedId);
@@ -75,6 +78,14 @@ export function PlanEditor() {
     return () => el.removeEventListener("wheel", onWheel);
   }, []);
 
+  // iOS Safari: stop the page from scrolling or rubber-banding while a finger draws or pans on the plan
+  useEffect(() => {
+    const el = wrap.current; if (!el) return;
+    const stop = (e: TouchEvent) => { if (!(e.target as Element).closest("[data-allow-touch]")) e.preventDefault(); };
+    el.addEventListener("touchmove", stop, { passive: false });
+    return () => el.removeEventListener("touchmove", stop);
+  }, []);
+
   // keyboard
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -121,6 +132,7 @@ export function PlanEditor() {
   };
 
   const onDown = (e: React.PointerEvent) => {
+    lastType.current = e.pointerType;
     (e.currentTarget as Element).setPointerCapture(e.pointerId);
     pointers.current.set(e.pointerId, [e.clientX, e.clientY]);
     if (pointers.current.size === 2) {
@@ -247,7 +259,7 @@ export function PlanEditor() {
     }
   };
   const onDbl = (e: React.MouseEvent) => {
-    if (tool === "draw") { s.finishDraw(); return; }
+    if (tool === "draw") { if (lastType.current !== "touch") s.finishDraw(); return; }
     if (!sel || !SHAPE_KINDS.includes(sel.kind)) return;
     const st = useStore.getState();
     const nodes = getNodes(sel), band = !!sel.band;
@@ -271,7 +283,7 @@ export function PlanEditor() {
 
   return (
     <div ref={wrap} onContextMenu={(e) => { if (tool !== "draw") return; e.preventDefault(); if (drawPts.length >= (drawMode === "band" ? 2 : 3)) s.finishDraw(); else s.cancelDraw(); }} onDragOver={(e) => e.preventDefault()} onDrop={onDrop} className="absolute inset-0 select-none overflow-hidden bg-[var(--color-paper-3)]" style={{ cursor: tool === "draw" || armed ? "crosshair" : "default", touchAction: "none" }}>
-      <svg ref={svgRef} className="absolute inset-0 h-full w-full" onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} onDoubleClick={onDbl} role="application" aria-label="Plan działki 2D">
+      <svg ref={svgRef} className="absolute inset-0 h-full w-full" style={{ touchAction: "none", WebkitTouchCallout: "none" }} onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} onDoubleClick={onDbl} role="application" aria-label="Plan działki 2D">
         <g transform={`translate(${cam.x} ${cam.y}) scale(${cam.z})`}>
           <PlanLayer project={project} grid={settings.grid}>
             {settings.dims && (
@@ -319,7 +331,7 @@ export function PlanEditor() {
                 ) : (
                   <polyline points={base.map((p) => p.join(",")).join(" ")} fill="rgba(0,0,0,0)" stroke="var(--color-ink)" strokeWidth={2 / cam.z} />
                 )}
-                {drawPts.map((p, i) => <circle key={i} cx={p[0]} cy={p[1]} r={(i === 0 ? 7 : 4) / cam.z} fill={i === 0 ? "var(--color-accent)" : "var(--color-ink)"} stroke="var(--color-ink)" strokeWidth={1.5 / cam.z} />)}
+                {drawPts.map((p, i) => <circle key={i} cx={p[0]} cy={p[1]} r={(coarse ? (i === 0 ? 13 : 9) : (i === 0 ? 7 : 4)) / cam.z} fill={i === 0 ? "var(--color-accent)" : "var(--color-ink)"} stroke="var(--color-ink)" strokeWidth={1.5 / cam.z} />)}
               </g>
             )}
           </PlanLayer>
@@ -337,7 +349,14 @@ export function PlanEditor() {
       )}
       <div className="pointer-events-none absolute left-3 right-3 top-14 flex max-w-[calc(100%-1.5rem)] flex-col gap-2 text-[11px] md:right-auto">
         {tool === "draw" && (
-          <div className="pointer-events-auto flex items-center gap-2 border border-[var(--color-ink)] bg-[var(--color-paper)] px-3 py-2 text-[var(--color-ink)]">
+          <div className="pointer-events-none flex justify-center md:hidden">
+            <p className="border border-[var(--color-ink)] bg-[var(--color-paper)] px-3 py-2 text-[13px] text-[var(--color-ink)]">
+              {drawMode === "free" ? "Przeciągnij palcem po planie" : `Dotykaj kolejnych punktów (${drawPts.length})`}
+            </p>
+          </div>
+        )}
+        {tool === "draw" && (
+          <div className="pointer-events-auto hidden items-center gap-2 border border-[var(--color-ink)] bg-[var(--color-paper)] px-3 py-2 text-[var(--color-ink)] md:flex">
             {drawMode === "free" ? "Przytrzymaj i narysuj kształt ręką. Puść, żeby go zamknąć." : drawMode === "band" ? `Kliknij punkty wzdłuż ścieżki (${drawPts.length}). Koniec: kliknij ostatni punkt jeszcze raz, dwuklik, Enter albo prawy przycisk. Esc anuluje.` : `Kliknij kolejne punkty obrysu (${drawPts.length}). Koniec: kliknij pierwszy punkt, dwuklik, Enter albo prawy przycisk. Esc anuluje.`}
             {drawMode !== "free" && <button className="pl-btn pl-btn-primary" onClick={() => s.finishDraw()} disabled={drawPts.length < (drawMode === "band" ? 2 : 3)}>Zakończ</button>}
             <button className="pl-btn" onClick={s.cancelDraw}>Anuluj</button>
@@ -349,8 +368,19 @@ export function PlanEditor() {
           </div>
         )}
       </div>
+      {tool === "draw" && (
+        <div data-allow-touch className="absolute inset-x-3 bottom-3 z-20 flex gap-2 md:hidden">
+          {drawMode !== "free" && (
+            <>
+              <button className="pl-btn flex-1 !min-h-[52px]" onClick={s.undoDrawPt} disabled={!drawPts.length}>↶ Cofnij</button>
+              <button className="pl-btn pl-btn-primary flex-[1.4] !min-h-[52px]" onClick={() => s.finishDraw()} disabled={drawPts.length < (drawMode === "band" ? 2 : 3)}>Gotowe</button>
+            </>
+          )}
+          <button className="pl-btn flex-1 !min-h-[52px]" onClick={s.cancelDraw}>Anuluj</button>
+        </div>
+      )}
 
-      <div className="absolute bottom-3 right-3 flex flex-col border border-[var(--color-rule)] bg-[var(--color-paper)]">
+      <div className={`absolute right-3 flex flex-col border border-[var(--color-rule)] bg-[var(--color-paper)] ${tool === "draw" ? "bottom-[5.25rem] md:bottom-3" : "bottom-3"}`}>
         {[["+", 1.25], ["−", 0.8]].map(([l, k]) => (
           <button key={l as string} aria-label={l === "+" ? "Przybliż" : "Oddal"} className="h-9 w-9 text-lg text-[var(--color-ink)] hover:bg-[var(--color-paper-2)]" onClick={() => setCam((c) => { const z = Math.max(3, Math.min(120, c.z * (k as number))); const mx = size.w / 2, my = size.h / 2, q = z / c.z; return { z, x: mx - (mx - c.x) * q, y: my - (my - c.y) * q }; })}>{l}</button>
         ))}

@@ -652,7 +652,7 @@ export default function Scene3D({ project, view, nonce, quality: wanted, visible
   // adaptive: if the device can't hold the frame rate, drop to the lighter tier and stay there
   const [slow, setSlow] = useState(false);
   const quality: "high" | "mid" | "low" = slow && wanted === "high" ? "mid" : wanted;
-  const dpr = quality === "low" || slow ? 1 : ([1, 1.5] as [number, number]);
+  const dpr = quality === "low" || slow ? 1 : quality === "mid" ? ([1, 2] as [number, number]) : ([1, 1.5] as [number, number]);
   return (
     <Canvas shadows={quality !== "low"} dpr={dpr} frameloop={visible ? "always" : "never"} camera={{ fov: 38, near: 0.1, far: 700, position: [m * 0.7, m * 0.8, m * 0.95] }} gl={{ antialias: quality !== "low", powerPreference: "high-performance" }}>
       <PerformanceMonitor flipflops={2} onDecline={() => setSlow(true)} />

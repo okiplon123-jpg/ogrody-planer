@@ -49,5 +49,5 @@ export interface Settings {
   grid: boolean;
   dims: boolean;
   waste: number; // %
-  quality: "high" | "low";
+  quality: "high" | "mid" | "low";
 }

@@ -19,7 +19,10 @@ export default function Planner() {
   const [mount3d, setMount3d] = useState(false);
 
   useEffect(() => {
-    if ((navigator.hardwareConcurrency ?? 8) <= 4 || window.innerWidth < 768) s.setSettings({ quality: "low" });
+    // phones and modest laptops get the balanced tier (sharp, antialiased, no heavy effects); "low" only for genuinely weak devices
+    const mem = (navigator as Navigator & { deviceMemory?: number }).deviceMemory;
+    if (mem !== undefined && mem <= 2) s.setSettings({ quality: "low" });
+    else if ((navigator.hardwareConcurrency ?? 8) <= 4 || window.innerWidth < 768) s.setSettings({ quality: "mid" });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { if (s.mode === "3d") setMount3d(true); }, [s.mode]);
   // while the 3D view is hidden, keep it on the last project it showed: rebuilding a heavy scene on every drag in 2D made editing stutter
@@ -75,7 +78,7 @@ export default function Planner() {
       </header>
 
       <div className="relative flex min-h-0 flex-1 flex-col-reverse lg:flex-row">
-        <aside className="scroll-thin z-20 max-h-[30vh] shrink-0 overflow-y-auto border-t border-[var(--color-ink)] bg-[var(--color-paper)] p-3 lg:max-h-none lg:w-[264px] lg:border-r lg:border-t-0 lg:p-4"><Toolbox /></aside>
+        <aside className={`scroll-thin z-20 max-h-[30vh] shrink-0 ${s.tool === "draw" ? "max-lg:hidden" : ""} overflow-y-auto border-t border-[var(--color-ink)] bg-[var(--color-paper)] p-3 lg:max-h-none lg:w-[264px] lg:border-r lg:border-t-0 lg:p-4`}><Toolbox /></aside>
 
         <main className="relative min-h-[300px] min-w-0 flex-1 overflow-hidden">
           <div className={`absolute inset-0 transition-opacity duration-500 ${s.mode === "2d" ? "opacity-100" : "pointer-events-none opacity-0"}`}><PlanEditor /></div>
@@ -91,7 +94,7 @@ export default function Planner() {
           </div>
           {s.mode === "3d" && (
             <>
-              <div className="absolute right-3 top-3 z-10 flex flex-col gap-2 border border-[var(--color-rule)] bg-[var(--color-paper)] p-2">
+              <div className="absolute right-3 top-14 z-10 flex flex-col gap-2 border border-[var(--color-rule)] bg-[var(--color-paper)] p-2 md:top-3">
                 <Seg<Lighting> value={s.project.lighting} onChange={(v) => s.patchProject({ lighting: v })} options={[{ id: "day", name: "Dzień" }, { id: "golden", name: "Zachód" }, { id: "evening", name: "Wieczór" }]} />
                 <Seg<ViewPreset> value={s.view3d} onChange={view} options={[{ id: "perspective", name: "Widok" }, { id: "top", name: "Z góry" }, { id: "eye", name: "Z ziemi" }]} />
               </div>
