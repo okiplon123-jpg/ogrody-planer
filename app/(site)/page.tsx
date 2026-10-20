@@ -52,12 +52,6 @@ export default function Home() {
               <a href="tel:+48885879108" className="btn btn-signal">zadzwoń&nbsp;885&nbsp;879&nbsp;108</a>
               <a href="#kontakt" className="btn btn-dark">umów oględziny</a>
             </div>
-            <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-[var(--text-sm)] font-semibold">
-              <li>ponad 200 realizacji</li>
-              <li>ekipa 7 osób</li>
-              <li>własny sprzęt</li>
-              <li>Białystok i okolice</li>
-            </ul>
           </div>
           <div className="col-span-6 border-[var(--color-ink)] md:col-span-5 md:border-l">
             <Specimens />
