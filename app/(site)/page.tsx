@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { Specimens } from "@/components/marketing/Specimens";
+import { GroupHead, GRASS_IMGS, PAVER_IMGS } from "@/components/marketing/GroupHead";
+import { PlannerShowcase } from "@/components/marketing/PlannerShowcase";
 import { Kinds } from "@/components/marketing/Kinds";
 import { Faq } from "@/components/marketing/Faq";
 import { ContactForm } from "@/components/marketing/ContactForm";
@@ -26,23 +28,6 @@ const LAYERS: [string, string, string, string][] = [
   ["nośność", "podbudowa", "Kruszywo zagęszczane warstwami. Grubość zależy od gruntu i obciążenia: inna pod ścieżką, inna pod samochodem.", "var(--color-rule)"],
   ["grunt", "grunt rodzimy", "Oceniamy, co jest pod spodem, zanim zdecydujemy o odwodnieniu i spadkach.", "var(--color-muted)"],
 ];
-
-/* A full-width ink band per service group: big title on the left, real material textures on the right. */
-function GroupHead({ title, imgs }: { title: string; imgs: string[] }) {
-  return (
-    <div className="grid grid-cols-6 border-y border-[var(--color-ink)] bg-[var(--color-ink)] text-[var(--color-paper)] md:grid-cols-12">
-      <h3 className="h2 col-span-6 flex items-center pad md:col-span-7 md:h-20" style={{ fontSize: "clamp(2rem, 4.6vw, 3.5rem)", lineHeight: 0.95 }}>{title}</h3>
-      <div className={`col-span-6 grid h-16 overflow-hidden md:col-span-5 md:h-20 ${imgs.length === 3 ? "grid-cols-3" : "grid-cols-2"}`}>
-        {imgs.map((src, i) => (
-          <span key={src} className={`cell-photo h-full ${i ? "border-l border-[var(--color-paper)]" : ""}`}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={src} alt="" loading="lazy" />
-          </span>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 function IndexRows({ rows, last = true }: { rows: [string, string, string][]; last?: boolean }) {
   return (
@@ -100,9 +85,9 @@ export default function Home() {
       <section id="uslugi" className="band">
         <h2 className="h2 pad">co robimy.</h2>
         <div className="mt-10">
-          <GroupHead title="kostka brukowa" imgs={["/zdjecia/kostka-jodelka-szara.jpg", "/zdjecia/kostka-geometryczna.jpg", "/zdjecia/kostka-jodelka-brazowa.jpg"]} />
+          <GroupHead title="kostka brukowa" imgs={PAVER_IMGS} />
           <IndexRows rows={PAVING} last={false} />
-          <div className="mt-16"><GroupHead title="ogrody" imgs={["/textures/grass_roll/grass_roll_diff_1k.jpg", "/textures/grass_natural/grass_natural_diff_1k.jpg"]} /></div>
+          <div className="mt-16"><GroupHead title="ogrody" imgs={GRASS_IMGS} /></div>
           <IndexRows rows={GARDEN} />
         </div>
       </section>
@@ -136,13 +121,11 @@ export default function Home() {
       </section>
 
       <section id="planer" className="band">
-        <div className="grid grid-cols-6 items-end gap-y-6 pad md:grid-cols-12">
-          <div className="col-span-6 md:col-span-7">
-            <h2 className="h2">zaplanuj ogród na działce.</h2>
-            <p className="prose-m mt-4">Ustaw dom, trawnik, rabaty i drzewa na planie działki i obejrzyj to w 3D. Działa w przeglądarce, projekt zapisuje się u Ciebie.</p>
-          </div>
-          <div className="col-span-6 md:col-span-5 md:flex md:justify-end"><Link href="/planer" className="btn btn-dark">otwórz planer ogrodu</Link></div>
+        <div className="grid grid-cols-6 gap-y-6 pad md:grid-cols-12">
+          <h2 className="h2 col-span-6 md:col-span-7">planer ogrodu.</h2>
+          <p className="prose-m col-span-6 md:col-span-4 md:col-start-9">Plan 2D i model 3D tej samej działki. Ustaw dom, narysuj ścieżkę, trawnik i rabaty, dodaj drzewa. Planer sam liczy, ile kostki i trawnika potrzeba.</p>
         </div>
+        <div className="mt-10"><PlannerShowcase /></div>
       </section>
 
       <section className="band">

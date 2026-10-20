@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { GroupHead, GRASS_IMGS, PAVER_IMGS } from "@/components/marketing/GroupHead";
 export const metadata = { title: "Kostka brukowa i ogrody: jak pracujemy — NAZWA MARKI [miasto]", description: "Etapy układania kostki brukowej i zakładania ogrodu: od oglądania terenu po odbiór. Podjazdy, tarasy, ścieżki, trawniki, rabaty i nasadzenia." };
 
 const PAVING_STAGES: [string, string, string][] = [
@@ -31,10 +32,10 @@ const GARDEN: [string, string, string][] = [
   ["oswietlenie", "oświetlenie ogrodowe", "Światło przy ścieżkach, wejściu i tarasie."],
 ];
 
-function Stages({ title, stages }: { title: string; stages: [string, string, string][] }) {
+function Stages({ title, stages, imgs }: { title: string; stages: [string, string, string][]; imgs: string[] }) {
   return (
     <>
-      <h2 className="h2 pad pb-8 pt-16">{title}</h2>
+      <div className="mt-16"><GroupHead title={title} imgs={imgs} /></div>
       {stages.map(([n, t, d]) => (
         <section key={title + n} className="stage py-[clamp(2.5rem,6vw,5rem)]">
           <div className="grid grid-cols-6 items-start gap-y-4 pad md:grid-cols-12">
@@ -69,8 +70,8 @@ export default function Page() {
         <p className="prose-m mt-8 text-[var(--text-lg)] leading-snug">Kostka brukowa i ogrody: dwa rodzaje prac, każdy w swojej kolejności. [opis etapów do potwierdzenia przez firmę]</p>
       </section>
 
-      <Stages title="kostka brukowa" stages={PAVING_STAGES} />
-      <Stages title="ogrody" stages={GARDEN_STAGES} />
+      <Stages title="kostka brukowa" stages={PAVING_STAGES} imgs={PAVER_IMGS} />
+      <Stages title="ogrody" stages={GARDEN_STAGES} imgs={GRASS_IMGS} />
 
       <section className="band">
         <h2 className="h2 pad">na co patrzymy przy…</h2>
