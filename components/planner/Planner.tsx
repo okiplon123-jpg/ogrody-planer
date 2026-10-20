@@ -59,6 +59,8 @@ export default function Planner() {
             <div className="w-[84px]"><NumField value={plot.l} min={5} max={120} onCommit={(v) => s.setPlot(plot.w, v)} /></div>
           </div>
           <div className="ml-auto flex items-center gap-1.5">
+            <span className="hidden lg:inline-flex"><a href="tel:+48885879108" className="pl-btn !px-3" aria-label="Zadzwoń">☎ 885 879 108</a></span>
+            <span className="inline-flex sm:hidden"><a href="tel:+48885879108" className="pl-btn !px-3" aria-label="Zadzwoń: 885 879 108">☎</a></span>
             <button className="pl-btn !px-3" aria-label="Cofnij" disabled={!s.past.length} onClick={s.undo}>↶</button>
             <button className="pl-btn !px-3" aria-label="Ponów" disabled={!s.future.length} onClick={s.redo}>↷</button>
             <span className="hidden sm:inline-flex"><button className="pl-btn" onClick={s.save}>Zapisz</button></span>
@@ -74,7 +76,7 @@ export default function Planner() {
       </header>
 
       <div className="relative flex min-h-0 flex-1 flex-col-reverse lg:flex-row">
-        <aside className="scroll-thin z-20 max-h-[38vh] shrink-0 overflow-y-auto border-t border-[var(--color-ink)] bg-[var(--color-paper)] p-3 lg:max-h-none lg:w-[264px] lg:border-r lg:border-t-0 lg:p-4"><Toolbox /></aside>
+        <aside className="scroll-thin z-20 max-h-[30vh] shrink-0 overflow-y-auto border-t border-[var(--color-ink)] bg-[var(--color-paper)] p-3 lg:max-h-none lg:w-[264px] lg:border-r lg:border-t-0 lg:p-4"><Toolbox /></aside>
 
         <main className="relative min-h-[300px] min-w-0 flex-1 overflow-hidden">
           <div className={`absolute inset-0 transition-opacity duration-500 ${s.mode === "2d" ? "opacity-100" : "pointer-events-none opacity-0"}`}><PlanEditor /></div>

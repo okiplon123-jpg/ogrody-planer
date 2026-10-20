@@ -16,13 +16,13 @@ export function Toolbox() {
     <div className="flex flex-col gap-4">
       <div>
         <h2 className="text-[11px] uppercase tracking-wider text-[var(--color-ink)]">Dodaj do działki</h2>
-        <p className="mt-1 text-[12px] leading-snug text-[var(--color-ink-2)]">Kliknij element albo przeciągnij go na plan.</p>
+        <p className="mt-1 hidden text-[12px] leading-snug text-[var(--color-ink-2)] lg:block">Kliknij element albo przeciągnij go na plan.</p>
       </div>
-      <div className="grid grid-cols-3 gap-2 lg:grid-cols-3">
+      <div className="scroll-thin -mx-3 flex gap-2 overflow-x-auto px-3 pb-1 lg:mx-0 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0">
         {SIMPLE_ITEMS.map((it) => (
           <button key={it.id} draggable onDragStart={(e) => { e.dataTransfer.setData("text/lib", it.id); e.dataTransfer.effectAllowed = "copy"; }}
             onClick={() => { s.set({ mode: "2d", tool: "select", drawPts: [] }); s.addFromLib(it); }}
-            className="flex flex-col items-center gap-1.5 border border-[var(--color-rule)] bg-[var(--color-paper)] p-2 text-[12px] text-[var(--color-ink-2)] transition hover:border-[var(--color-ink)] active:translate-y-px">
+            className="flex w-[76px] shrink-0 flex-col items-center gap-1.5 border border-[var(--color-rule)] bg-[var(--color-paper)] p-2 text-[12px] lg:w-auto lg:shrink text-[var(--color-ink-2)] transition hover:border-[var(--color-ink)] active:translate-y-px">
             <ItemThumb item={it} />{it.name}
           </button>
         ))}
@@ -30,9 +30,9 @@ export function Toolbox() {
 
       <div className="border-t border-[var(--color-ink)] pt-4">
         <h2 className="text-[11px] uppercase tracking-wider text-[var(--color-ink)]">Narysuj własny kształt</h2>
-        <p className="mt-1 text-[12px] leading-snug text-[var(--color-muted)]">Kliknij rodzaj kształtu, potem rysuj na planie: kręta ścieżka, oczko trawnika, zaokrąglona rabata. Po narysowaniu przeciągaj kółka na krawędzi; dwuklik na krawędzi dodaje punkt.</p>
+        <p className="mt-1 hidden text-[12px] leading-snug text-[var(--color-muted)] lg:block">Kliknij rodzaj kształtu, potem rysuj na planie: kręta ścieżka, oczko trawnika, zaokrąglona rabata. Po narysowaniu przeciągaj kółka na krawędzi; dwuklik na krawędzi dodaje punkt.</p>
         <div className="mt-3 space-y-3">
-          <div className="grid grid-cols-2 gap-2" role="group" aria-label="Rysuj kształt">
+          <div className="grid grid-cols-4 gap-2 lg:grid-cols-2" role="group" aria-label="Rysuj kształt">
             {(Object.keys(DRAW_TARGETS) as DrawTarget[]).map((t) => {
               const on = s.tool === "draw" && s.drawTarget === t;
               return (

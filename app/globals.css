@@ -212,3 +212,13 @@ input[type="checkbox"] { accent-color: var(--color-ink); }
 /* cookie notice: informational strip above the sticky call bar */
 .cookie-notice { position: fixed; z-index: 46; left: var(--space-sm); right: var(--space-sm); bottom: calc(4rem + env(safe-area-inset-bottom, 0px)); display: grid; gap: var(--space-xs); background: var(--color-paper); border: 1px solid var(--color-ink); padding: var(--space-sm); }
 @media (min-width: 56rem) { .cookie-notice { left: var(--space-lg); right: auto; max-width: 30rem; } }
+
+/* planner is the main asset: marked in the nav */
+.nav-link-hot { background: var(--color-accent); color: var(--color-accent-ink); padding-inline: var(--space-xs); border-bottom-color: transparent; }
+.nav-link-hot:hover { border-bottom-color: var(--color-ink); }
+/* phone: the call action fills the bottom bar so it is easy to hit with a thumb */
+.sticky-call-btn { min-height: 3rem; padding: 0 var(--space-md); }
+@media (max-width: 39.99rem) {
+  .sticky-call { padding-block: var(--space-xs); }
+  .sticky-call-btn { width: 100%; min-height: 3.5rem; font-size: var(--text-base); justify-content: center; margin-left: 0; }
+}

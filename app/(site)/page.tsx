@@ -49,8 +49,8 @@ export default function Home() {
               Podjazdy, tarasy i ścieżki z każdej kostki. Trawniki, rabaty i całe ogrody, od projektu po nasadzenia. Białystok i okolice
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/planer" className="btn btn-dark">zaprojektuj ogród w planerze</Link>
               <a href="tel:+48885879108" className="btn btn-signal">zadzwoń&nbsp;885&nbsp;879&nbsp;108</a>
-              <a href="#wizualizator" className="btn btn-line">przymierz&nbsp;↓</a>
             </div>
           </div>
           <div className="col-span-6 border-[var(--color-ink)] md:col-span-5 md:border-l">
@@ -59,6 +59,23 @@ export default function Home() {
         </div>
       </section>
 
+      <section id="planer" className="border-t border-[var(--color-ink)]">
+        <div className="plate">
+          <div className="plate-in">
+            <div className="rails" aria-hidden />
+            <div className="grid grid-cols-6 items-end gap-y-6 pad py-[clamp(2.5rem,6vw,5rem)] md:grid-cols-12">
+              <h2 className="h2 col-span-6 md:col-span-8" style={{ fontSize: "clamp(2.25rem, 6vw, 4.75rem)" }}>zaprojektuj swój ogród w planerze.</h2>
+              <div className="col-span-6 md:col-span-4">
+                <p className="leading-snug">Rysujesz działkę, podjazd, trawnik i rabaty, a planer pokazuje je w 2D i w 3D i liczy, ile kostki i trawnika potrzeba. Gotowy projekt wysyłasz do nas jednym kliknięciem.</p>
+                <Link href="/planer" className="btn btn-dark mt-6">otwórz planer</Link>
+              </div>
+            </div>
+          </div>
+        </div>
+        <PlannerShowcase />
+      </section>
+
+
       <section id="wizualizator" className="band">
         <div className="grid grid-cols-6 gap-y-6 pad md:grid-cols-12">
           <h2 className="h2 col-span-6 md:col-span-7">przymierz kostkę lub trawnik na swoim zdjęciu.</h2>
@@ -66,15 +83,6 @@ export default function Home() {
         </div>
         <div className="mt-10 border-y border-[var(--color-ink)] pad py-6"><VisualizerLoader /></div>
       </section>
-
-      <section id="planer" className="band">
-        <div className="grid grid-cols-6 gap-y-6 pad md:grid-cols-12">
-          <h2 className="h2 col-span-6 md:col-span-7">planer ogrodu.</h2>
-          <p className="prose-m col-span-6 md:col-span-4 md:col-start-9">Plan 2D i model 3D tej samej działki. Ustaw dom, narysuj ścieżkę, trawnik i rabaty, dodaj drzewa. Planer sam liczy, ile kostki i trawnika potrzeba.</p>
-        </div>
-        <div className="mt-10"><PlannerShowcase /></div>
-      </section>
-
 
       <section id="uslugi" className="band">
         <h2 className="h2 pad">co robimy.</h2>
