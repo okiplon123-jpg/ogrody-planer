@@ -208,3 +208,7 @@ input[type="checkbox"] { accent-color: var(--color-ink); }
   .pl-input, .input { font-size: 16px; }   /* iOS Safari zooms the page on focus below 16px */
   .nav-in { gap: var(--space-sm); }
 }
+
+/* cookie notice: informational strip above the sticky call bar */
+.cookie-notice { position: fixed; z-index: 46; left: var(--space-sm); right: var(--space-sm); bottom: calc(4rem + env(safe-area-inset-bottom, 0px)); display: grid; gap: var(--space-xs); background: var(--color-paper); border: 1px solid var(--color-ink); padding: var(--space-sm); }
+@media (min-width: 56rem) { .cookie-notice { left: var(--space-lg); right: auto; max-width: 30rem; } }

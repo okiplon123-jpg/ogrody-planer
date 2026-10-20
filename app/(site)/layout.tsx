@@ -1,5 +1,6 @@
 import { Nav } from "@/components/marketing/Nav";
 import { Footer } from "@/components/marketing/Footer";
+import { CookieNotice } from "@/components/marketing/Cookies";
 import { StickyCall } from "@/components/marketing/StickyCall";
 
 export default function SiteLayout({ children }: { children: React.ReactNode }) {
@@ -13,6 +14,7 @@ export default function SiteLayout({ children }: { children: React.ReactNode }) 
       </main>
       <Footer />
       <StickyCall />
+      <CookieNotice />
     </div>
   );
 }
