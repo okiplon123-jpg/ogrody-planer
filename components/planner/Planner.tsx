@@ -22,6 +22,10 @@ export default function Planner() {
     if ((navigator.hardwareConcurrency ?? 8) <= 4 || window.innerWidth < 768) s.setSettings({ quality: "low" });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { if (s.mode === "3d") setMount3d(true); }, [s.mode]);
+  // while the 3D view is hidden, keep it on the last project it showed: rebuilding a heavy scene on every drag in 2D made editing stutter
+  const visible3d = s.mode === "3d" || s.summaryOpen;
+  const [scene3dProject, setScene3dProject] = useState(s.project);
+  useEffect(() => { if (visible3d) setScene3dProject(s.project); }, [visible3d, s.project]);
   useEffect(() => {
     // a shared link (#p=...) opens that exact project, e.g. one a client sent to the company
     const m = location.hash.match(/^#p=(.+)$/);
@@ -76,7 +80,7 @@ export default function Planner() {
           <div className={`absolute inset-0 transition-opacity duration-500 ${s.mode === "2d" ? "opacity-100" : "pointer-events-none opacity-0"}`}><PlanEditor /></div>
           {mount3d && (
             <div className={`absolute inset-0 transition-opacity duration-500 ${s.mode === "3d" ? "opacity-100" : "pointer-events-none opacity-0"}`}>
-              <Scene3D project={s.project} view={s.view3d} nonce={s.cameraNonce} quality={s.settings.quality} visible={s.mode === "3d" || s.summaryOpen} captureRef={captureRef} />
+              <Scene3D project={scene3dProject} view={s.view3d} nonce={s.cameraNonce} quality={s.settings.quality} visible={s.mode === "3d" || s.summaryOpen} captureRef={captureRef} />
             </div>
           )}
           <div className="absolute left-1/2 top-3 z-10 flex -translate-x-1/2 border border-[var(--color-rule)] bg-[var(--color-paper)] shadow-lg" role="tablist" aria-label="Tryb widoku">

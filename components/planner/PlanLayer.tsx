@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { memo, useEffect, useMemo, useState } from "react";
 import type { PlanObject, Project } from "@/lib/types";
 import { localPoly } from "@/lib/geometry";
 import { SPECIES, matById } from "@/lib/catalog";
@@ -176,7 +176,26 @@ export function Ground({ project }: { project: Project }) {
   );
 }
 
+/* one object: re-renders only when that object changes, so dragging one shape no longer repaints the whole plan */
+const Obj = memo(function Obj({ o, lit }: { o: PlanObject; lit: boolean }) {
+  return (
+    <g data-id={o.id} transform={`translate(${o.x} ${o.y}) rotate(${o.rot})`}>
+      <Glyph o={o} lit={lit} />
+    </g>
+  );
+});
+
+/* the plan itself; memoised so overlays (cursor, guides, handles) in PlanEditor don't re-render it on every pointer move */
 export function PlanLayer({ project, grid = false, children }: { project: Project; grid?: boolean; children?: React.ReactNode }) {
+  return (
+    <g>
+      <PlanBase project={project} grid={grid} />
+      {children}
+    </g>
+  );
+}
+
+const PlanBase = memo(function PlanBase({ project, grid }: { project: Project; grid: boolean }) {
   const mounted = useMounted();
   const { w, l } = project.plot;
   const lit = project.lighting !== "day";
@@ -191,14 +210,9 @@ export function PlanLayer({ project, grid = false, children }: { project: Projec
           {Array.from({ length: Math.floor(l) + 1 }, (_, i) => <line key={`h${i}`} y1={i} y2={i} x1={0} x2={w} strokeOpacity={i % 5 ? 0.09 : 0.2} />)}
         </g>
       )}
-      {mounted && sorted.map((o) => (
-        <g key={o.id} data-id={o.id} transform={`translate(${o.x} ${o.y}) rotate(${o.rot})`}>
-          <Glyph o={o} lit={lit} />
-        </g>
-      ))}
+      {mounted && sorted.map((o) => <Obj key={o.id} o={o} lit={lit} />)}
       {project.fence.enabled && <rect x={0} y={0} width={w} height={l} fill="none" stroke={project.fence.style === "wood" ? "#7b5a3c" : project.fence.style === "light" ? "#d7d4c8" : "#202426"} strokeWidth={0.16} pointerEvents="none" />}
       {mounted && project.objects.filter((o) => o.kind === "gate").map((o) => <g key={"g" + o.id} transform={`translate(${o.x} ${o.y}) rotate(${o.rot})`} pointerEvents="none"><Glyph o={o} lit={lit} /></g>)}
-      {children}
     </g>
   );
-}
+});

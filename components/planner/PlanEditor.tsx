@@ -168,7 +168,7 @@ export function PlanEditor() {
     if (drag.current && e.pointerType === "mouse" && e.buttons === 0) { onUp(e); return; }
     if (pointers.current.has(e.pointerId)) pointers.current.set(e.pointerId, [e.clientX, e.clientY]);
     const w = toWorld(e);
-    setCursor(w);
+    if (tool === "draw") setCursor(w); // the rubber-band preview is the only user of the cursor; tracking it otherwise repainted the whole editor on every mouse move
     if (pinch.current && pointers.current.size === 2) {
       const [a, b] = [...pointers.current.values()];
       const z = Math.max(3, Math.min(120, pinch.current.z * (Math.hypot(a[0] - b[0], a[1] - b[1]) / pinch.current.d)));

@@ -1,7 +1,7 @@
 "use client";
-import { Suspense, useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { OrbitControls, useGLTF, useTexture } from "@react-three/drei";
+import { OrbitControls, useGLTF, useTexture, PerformanceMonitor } from "@react-three/drei";
 import { EffectComposer, N8AO } from "@react-three/postprocessing";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
 import * as THREE from "three";
@@ -416,7 +416,7 @@ function LawnBlades({ lawns }: { lawns: PlanObject[] }) {
   const data = useMemo(() => {
     const out: { x: number; z: number; h: number; ry: number; lean: number; c: number }[] = [];
     lawns.forEach((o, k) => {
-      const poly = localPoly(o), target = Math.min(9000, Math.round(objectArea(o) * 55));
+      const poly = localPoly(o), target = Math.min(5000, Math.round(objectArea(o) * 32));
       let placed = 0;
       for (let t = 0; t < target * 5 && placed < target; t++) {
         const lx = (hash(t + k * 977, 1) - 0.5) * o.w, ly = (hash(t + k * 977, 2) - 0.5) * o.h;
@@ -426,7 +426,7 @@ function LawnBlades({ lawns }: { lawns: PlanObject[] }) {
         placed++;
       }
     });
-    return out.slice(0, 26000);
+    return out.slice(0, 12000);
   }, [lawns]);
   useLayoutEffect(() => {
     const m = ref.current; if (!m) return;
@@ -567,7 +567,7 @@ function Atmosphere({ lighting, quality }: { lighting: Lighting; quality: "high"
       <color attach="background" args={[P.bg]} />
       <fog attach="fog" args={[P.bg, 70, 230]} />
       <hemisphereLight ref={hemi} args={[P.sky, P.ground, P.hemiI]} />
-      <directionalLight ref={sun} position={P.sun} intensity={P.sunI} color={P.sunColor} castShadow={quality !== "low"} shadow-mapSize={quality === "mid" ? [1024, 1024] : [2048, 2048]} shadow-camera-left={-34} shadow-camera-right={34} shadow-camera-top={34} shadow-camera-bottom={-34} shadow-camera-near={1} shadow-camera-far={140} shadow-bias={-0.0004} shadow-normalBias={0.04} />
+      <directionalLight ref={sun} position={P.sun} intensity={P.sunI} color={P.sunColor} castShadow={quality !== "low"} shadow-mapSize={quality === "mid" ? [1024, 1024] : [1536, 1536]} shadow-camera-left={-34} shadow-camera-right={34} shadow-camera-top={34} shadow-camera-bottom={-34} shadow-camera-near={1} shadow-camera-far={140} shadow-bias={-0.0004} shadow-normalBias={0.04} />
     </>
   );
 }
@@ -645,18 +645,23 @@ export interface Scene3DProps {
   captureRef?: React.MutableRefObject<(() => string) | null>;
   autoRotate?: boolean; lockZoom?: boolean; onReady?: () => void;
 }
-export default function Scene3D({ project, view, nonce, quality, visible = true, captureRef, autoRotate, lockZoom, onReady }: Scene3DProps) {
+export default function Scene3D({ project, view, nonce, quality: wanted, visible = true, captureRef, autoRotate, lockZoom, onReady }: Scene3DProps) {
   const fallback = useRef<(() => string) | null>(null);
   const reduced = typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
   const m = Math.max(project.plot.w, project.plot.l);
+  // adaptive: if the device can't hold the frame rate, drop to the lighter tier and stay there
+  const [slow, setSlow] = useState(false);
+  const quality: "high" | "mid" | "low" = slow && wanted === "high" ? "mid" : wanted;
+  const dpr = quality === "low" || slow ? 1 : ([1, 1.5] as [number, number]);
   return (
-    <Canvas shadows={quality !== "low"} dpr={quality === "low" ? 1 : [1, 2]} frameloop={visible ? "always" : "never"} camera={{ fov: 38, near: 0.1, far: 700, position: [m * 0.7, m * 0.8, m * 0.95] }} gl={{ antialias: quality === "high" }}>
+    <Canvas shadows={quality !== "low"} dpr={dpr} frameloop={visible ? "always" : "never"} camera={{ fov: 38, near: 0.1, far: 700, position: [m * 0.7, m * 0.8, m * 0.95] }} gl={{ antialias: quality !== "low", powerPreference: "high-performance" }}>
+      <PerformanceMonitor flipflops={2} onDecline={() => setSlow(true)} />
       <Atmosphere lighting={project.lighting} quality={quality} />
       <Suspense fallback={null}><World project={project} quality={quality} onReady={onReady} /></Suspense>
       <OrbitControls makeDefault enableDamping dampingFactor={0.08} maxPolarAngle={Math.PI / 2 - 0.02} minDistance={2} maxDistance={160} enableZoom={!lockZoom} autoRotate={autoRotate} autoRotateSpeed={0.5} />
       {quality === "high" && (
-        <EffectComposer multisampling={4}>
-          <N8AO aoRadius={1.6} distanceFalloff={1} intensity={2.4} color="black" quality="medium" />
+        <EffectComposer multisampling={2}>
+          <N8AO aoRadius={1.6} distanceFalloff={1} intensity={2.2} color="black" quality="performance" halfRes />
         </EffectComposer>
       )}
       <Rig view={view} nonce={nonce} plot={project.plot} reduced={!!reduced} />
