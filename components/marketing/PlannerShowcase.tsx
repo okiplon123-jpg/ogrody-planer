@@ -21,9 +21,12 @@ export function PlannerShowcase() {
   const sum = useMemo(() => summarize(project, 8), [project]);
   const ref = useRef<HTMLDivElement>(null);
   const [show3d, setShow3d] = useState(false);
-  const [low, setLow] = useState(false);
+  const [phone, setPhone] = useState(false);
   useEffect(() => {
-    setLow(window.innerWidth < 768);
+    // phones get the pre-rendered picture and load the live 3D scene only on tap; desktops load it when the section nears the viewport
+    const isPhone = window.innerWidth < 768;
+    setPhone(isPhone);
+    if (isPhone) return;
     const io = new IntersectionObserver(([e]) => e.isIntersecting && (setShow3d(true), io.disconnect()), { rootMargin: "300px" });
     io.observe(ref.current!);
     return () => io.disconnect();
@@ -43,8 +46,12 @@ export function PlannerShowcase() {
           <figcaption className="label absolute left-3 top-3 bg-[var(--color-paper)] px-2 py-1">plan 2D</figcaption>
         </figure>
         <figure className="relative min-h-[360px] border-t border-[var(--color-ink)] bg-[var(--color-paper-3)] md:col-span-7 md:min-h-[560px] md:border-l md:border-t-0">
-          {show3d ? <Scene3D project={project} view="perspective" nonce={0} quality={low ? "low" : "high"} autoRotate lockZoom /> : <div className="grid h-full place-items-center text-[var(--color-muted)]">ładowanie modelu 3D…</div>}
-          <figcaption className="label absolute left-3 top-3 bg-[var(--color-paper)] px-2 py-1">model 3D — przeciągnij, aby obrócić</figcaption>
+          {/* pre-rendered frame of the same scene: instant, sharp, and the fallback while the live model loads */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/zdjecia/model-3d.jpg" srcSet="/zdjecia/model-3d-sm.jpg 900w, /zdjecia/model-3d.jpg 1748w" sizes="(min-width: 768px) 58vw, 100vw" alt="Model 3D przykładowego ogrodu: dom z garażem, trawnik, rabaty i ścieżka" className="absolute inset-0 h-full w-full object-cover" />
+          {show3d && <div className="absolute inset-0"><Scene3D project={project} view="perspective" nonce={0} quality={phone ? "low" : "high"} autoRotate lockZoom /></div>}
+          {phone && !show3d && <button type="button" className="btn btn-dark absolute bottom-4 left-1/2 -translate-x-1/2" onClick={() => setShow3d(true)}>obróć model w 3D</button>}
+          <figcaption className="label absolute left-3 top-3 bg-[var(--color-paper)] px-2 py-1">{show3d ? "model 3D — przeciągnij, aby obrócić" : "model 3D"}</figcaption>
         </figure>
       </div>
 
