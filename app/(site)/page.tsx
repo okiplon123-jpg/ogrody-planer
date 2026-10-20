@@ -66,7 +66,7 @@ export default function Home() {
             <div className="grid grid-cols-6 items-end gap-y-6 pad py-[clamp(2.5rem,6vw,5rem)] md:grid-cols-12">
               <h2 className="h2 col-span-6 md:col-span-8" style={{ fontSize: "clamp(2.25rem, 6vw, 4.75rem)" }}>zaprojektuj swój ogród w planerze.</h2>
               <div className="col-span-6 md:col-span-4">
-                <p className="leading-snug">Rysujesz działkę, podjazd, trawnik i rabaty, a planer pokazuje je w 2D i w 3D i liczy, ile kostki i trawnika potrzeba. Gotowy projekt wysyłasz do nas jednym kliknięciem.</p>
+                <p className="leading-snug">Rysujesz działkę, podjazd, trawnik i rabaty, a planer pokazuje je w 2D i w 3D i liczy, ile kostki i trawnika potrzeba. Gotowy projekt możesz od razu wysłać do nas.</p>
                 <Link href="/planer" className="btn btn-dark mt-6">otwórz planer</Link>
               </div>
             </div>

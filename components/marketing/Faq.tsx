@@ -1,10 +1,10 @@
 const QA: [string, string][] = [
   ["Ile trwa położenie podjazdu?", "Zależy od rodzaju robót i wielkości zlecenia. Zazwyczaj jest to około 2 tygodnie."],
-  ["Czy można układać kostkę zimą?", "Zimą staramy się kostki nie układać. Wszystko zależy jednak od pogody, więc termin ustalamy, gdy widzimy, jakie są warunki."],
+  ["Czy można układać kostkę zimą?", "Zimą staramy się nie układać kostki. Decyduje pogoda, więc termin ustalamy, kiedy widać, jakie są warunki."],
   ["Czy potrzebuję pozwolenia?", "Nie, na samo położenie kostki pozwolenie nie jest potrzebne."],
   ["Od czego zależy cena?", "Zależy od powierzchni, gruntu, grubości podbudowy, wybranej kostki, odwodnienia i dojazdu dla sprzętu."],
   ["Jaką kostkę układacie?", "Każdą: betonową, granitową, klinkierową, kamienną, w każdym kolorze i wzorze. Możesz też przymierzyć ją najpierw na własnym zdjęciu w wizualizatorze."],
-  ["Czy jest gwarancja?", "Tak. Jeśli po wykonaniu prac coś się wydarzy, wracamy i to naprawiamy."],
+  ["Czy jest gwarancja?", "Tak. Jeśli po pracach coś jest nie tak, wracamy i poprawiamy."],
 ];
 
 export function Faq() {

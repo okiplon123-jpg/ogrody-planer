@@ -1,5 +1,5 @@
 import { ContactForm } from "@/components/marketing/ContactForm";
-export const metadata = { title: "Kontakt: zadzwoń lub zostaw numer — Gryczewski Białystok", description: "Telefon, godziny pracy i formularz kontaktowy. Oglądamy teren i mówimy, ile to potrwa." };
+export const metadata = { title: "Kontakt: zadzwoń lub zostaw numer — Gryczewski Białystok", description: "Telefon, godziny pracy i formularz kontaktowy. Oglądamy teren i ustalamy zakres prac. Wycena bez zobowiązań." };
 
 export default function Page() {
   return (

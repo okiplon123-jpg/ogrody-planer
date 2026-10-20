@@ -68,7 +68,7 @@ export default function Page() {
     <>
       <section className="pad pb-[clamp(4rem,8vw,7rem)] pt-[clamp(2.5rem,4.5vw,4rem)]">
         <h1 className="display-m max-w-[18ch]">jak pracujemy<span className="period" aria-hidden /></h1>
-        <p className="prose-m mt-8 text-[var(--text-lg)] leading-snug">Kostka brukowa i ogrody: dwa rodzaje prac, każdy w swojej kolejności.</p>
+        <p className="prose-m mt-8 text-[var(--text-lg)] leading-snug">Tak wyglądają prace przy kostce i przy ogrodzie, etap po etapie.</p>
       </section>
 
       <Stages title="kostka brukowa" stages={PAVING_STAGES} imgs={PAVER_IMGS} />
