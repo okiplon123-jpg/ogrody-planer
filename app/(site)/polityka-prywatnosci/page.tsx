@@ -1,4 +1,5 @@
 import { CookieSettings } from "@/components/marketing/Cookies";
+import { GTM_ID } from "@/lib/site";
 export const metadata = { title: "Polityka prywatności i cookies — Gryczewski Białystok", description: "Kto przetwarza Twoje dane, po co, jak długo i jakie masz prawa. Informacja o cookies i pamięci przeglądarki." };
 
 const S = ({ n, t, children }: { n: string; t: string; children: React.ReactNode }) => (
@@ -43,8 +44,17 @@ export default function Page() {
           <p>Nie podejmujemy wobec Ciebie decyzji w sposób zautomatyzowany i nie profilujemy Cię.</p>
         </S>
         <S n="07" t="cookies i pamięć przeglądarki">
-          <p>Ta strona nie ustawia cookies analitycznych, reklamowych ani śledzących. Zapisuje w przeglądarce tylko dwie rzeczy: projekt z planera (jeśli go zapiszesz) i Twój wybór ustawień poniżej. Oba zapisy zostają na Twoim urządzeniu.</p>
-          <p>Jeśli w przyszłości dodamy narzędzia analityczne lub reklamowe, włączymy je dopiero po Twojej zgodzie i zaktualizujemy tę stronę.</p>
+          {GTM_ID ? (
+            <>
+              <p>Niezbędne zapisy w przeglądarce to projekt z planera (jeśli go zapiszesz) i Twój wybór ustawień poniżej. Zostają na Twoim urządzeniu.</p>
+              <p>Za Twoją zgodą korzystamy z Google Tag Manager, Google Analytics i Google Ads (Google Ireland Ltd.; dane mogą być przekazywane do USA). Służą do pomiaru ruchu, skuteczności reklam i remarketingu: zapisują pliki cookies i dane o Twojej wizycie (np. odwiedzone podstrony, kliknięcia w numer telefonu, wysłanie formularza). Bez zgody te narzędzia nie zapisują cookies. Zgodę możesz zmienić lub cofnąć w ustawieniach poniżej w każdej chwili.</p>
+            </>
+          ) : (
+            <>
+              <p>Ta strona nie ustawia cookies analitycznych, reklamowych ani śledzących. Zapisuje w przeglądarce tylko dwie rzeczy: projekt z planera (jeśli go zapiszesz) i Twój wybór ustawień poniżej. Oba zapisy zostają na Twoim urządzeniu.</p>
+              <p>Jeśli w przyszłości dodamy narzędzia analityczne lub reklamowe, włączymy je dopiero po Twojej zgodzie i zaktualizujemy tę stronę.</p>
+            </>
+          )}
         </S>
       </div>
 

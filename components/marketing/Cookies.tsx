@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { GTM_ID } from "@/lib/site";
 
 const KEY = "cookie-consent";
 type Choice = { v: 1; analytics: boolean; marketing: boolean; at: string };
@@ -19,11 +20,24 @@ export function CookieNotice() {
   if (!show) return null;
   return (
     <div role="region" aria-label="Informacja o cookies" className="cookie-notice">
-      <p className="prose-m">Strona nie używa cookies analitycznych ani reklamowych. Zapisuje w przeglądarce tylko to, co sam zapiszesz w planerze.</p>
-      <div className="flex flex-wrap gap-2">
-        <button type="button" className="btn btn-signal btn-sm" onClick={() => write({ v: 1, analytics: false, marketing: false, at: new Date().toISOString() })}>rozumiem</button>
-        <Link href="/polityka-prywatnosci#cookies" className="btn btn-line btn-sm">ustawienia</Link>
-      </div>
+      {GTM_ID ? (
+        <>
+          <p className="prose-m">Używamy cookies do pomiaru ruchu i skuteczności reklam, ale tylko jeśli się zgodzisz. Niezbędne działają zawsze.</p>
+          <div className="flex flex-wrap gap-2">
+            <button type="button" className="btn btn-signal btn-sm" onClick={() => write({ v: 1, analytics: true, marketing: true, at: new Date().toISOString() })}>akceptuję</button>
+            <button type="button" className="btn btn-line btn-sm" onClick={() => write({ v: 1, analytics: false, marketing: false, at: new Date().toISOString() })}>tylko niezbędne</button>
+            <Link href="/polityka-prywatnosci#cookies" className="btn btn-line btn-sm">ustawienia</Link>
+          </div>
+        </>
+      ) : (
+        <>
+          <p className="prose-m">Strona nie używa cookies analitycznych ani reklamowych. Zapisuje w przeglądarce tylko to, co sam zapiszesz w planerze.</p>
+          <div className="flex flex-wrap gap-2">
+            <button type="button" className="btn btn-signal btn-sm" onClick={() => write({ v: 1, analytics: false, marketing: false, at: new Date().toISOString() })}>rozumiem</button>
+            <Link href="/polityka-prywatnosci#cookies" className="btn btn-line btn-sm">ustawienia</Link>
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -37,8 +51,8 @@ export function CookieSettings() {
   const save = (a: boolean, m: boolean) => { write({ v: 1, analytics: a, marketing: m, at: new Date().toISOString() }); setSaved(true); };
   const rows: [string, string, boolean | null, (v: boolean) => void][] = [
     ["niezbędne", "Zawsze włączone. Zapis projektu z planera w pamięci przeglądarki (klucz ogrody-planer:project) i zapamiętanie tego wyboru (klucz cookie-consent). Nie są to pliki śledzące i nie opuszczają Twojego urządzenia.", null, () => {}],
-    ["analityczne", "Obecnie nie używamy żadnych narzędzi analitycznych. Jeśli się pojawią, włączymy je tylko za Twoją zgodą.", analytics, setAnalytics],
-    ["marketingowe", "Obecnie nie używamy żadnych cookies reklamowych. Jeśli się pojawią, włączymy je tylko za Twoją zgodą.", marketing, setMarketing],
+    ["analityczne", GTM_ID ? "Pomiar ruchu na stronie (Google Analytics przez Google Tag Manager). Włączamy tylko za Twoją zgodą." : "Obecnie nie używamy żadnych narzędzi analitycznych. Jeśli się pojawią, włączymy je tylko za Twoją zgodą.", analytics, setAnalytics],
+    ["marketingowe", GTM_ID ? "Pomiar skuteczności reklam i remarketing (Google Ads). Włączamy tylko za Twoją zgodą." : "Obecnie nie używamy żadnych cookies reklamowych. Jeśli się pojawią, włączymy je tylko za Twoją zgodą.", marketing, setMarketing],
   ];
   return (
     <div className="mt-6 border-y border-[var(--color-ink)]">

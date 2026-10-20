@@ -6,6 +6,7 @@ import { fmtArea } from "@/lib/geometry";
 import { PlanLayer } from "./PlanLayer";
 import { sendLead } from "@/lib/contact";
 import { encodeProject } from "@/lib/share";
+import { track } from "@/lib/track";
 
 export function Summary() {
   const s = useStore();
@@ -30,6 +31,7 @@ export function Summary() {
     ];
     const ok = await sendLead({ imię: lead.name.trim(), telefon: lead.phone.trim(), uwagi: notes.trim() || "(brak)", zestawienie: lines.join(" | "), "link do projektu": link }, "Zgłoszenie z planera ogrodu");
     setLeadState(ok ? "sent" : "fail");
+    if (ok) track("generate_lead", { method: "planer" });
   };
   const rows: [string, number, string][] = [
     ["Podjazd", sum.driveway, "var(--data-driveway)"], ["Taras", sum.terrace, "var(--data-terrace)"], ["Ścieżki", sum.path, "var(--data-path)"],

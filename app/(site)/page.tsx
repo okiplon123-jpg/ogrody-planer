@@ -43,15 +43,21 @@ export default function Home() {
     <>
       <section>
         <div className="grid grid-cols-6 md:grid-cols-12">
-          <div className="col-span-6 pad pb-[clamp(4rem,8vw,7rem)] pt-[clamp(2.5rem,4.5vw,4rem)] md:col-span-7">
-            <h1 className="display-m">kostka brukowa i ogrody<span className="period" aria-hidden /></h1>
+          <div className="col-span-6 pad pb-[clamp(2.5rem,5vw,4.5rem)] pt-[clamp(2rem,3.5vw,3rem)] md:col-span-7">
+            <h1 className="display-m" style={{ fontSize: "clamp(2.5rem, 5vw, 4.6rem)" }}>układanie kostki brukowej w Białymstoku<span className="period" aria-hidden /></h1>
             <p className="prose-m mt-8 text-[var(--text-lg)] leading-snug">
-              Podjazdy, tarasy i ścieżki z każdej kostki. Trawniki, rabaty i całe ogrody, od projektu po nasadzenia. Białystok i okolice
+              Wycena po obejrzeniu terenu, bez zobowiązań. Podjazdy, tarasy, ścieżki, a także trawniki i całe ogrody.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Link href="/planer" className="btn btn-dark">zaprojektuj ogród w planerze</Link>
               <a href="tel:+48885879108" className="btn btn-signal">zadzwoń&nbsp;885&nbsp;879&nbsp;108</a>
+              <a href="#kontakt" className="btn btn-dark">umów oględziny</a>
             </div>
+            <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-[var(--text-sm)] font-semibold">
+              <li>ponad 200 realizacji</li>
+              <li>ekipa 7 osób</li>
+              <li>własny sprzęt</li>
+              <li>Białystok i okolice</li>
+            </ul>
           </div>
           <div className="col-span-6 border-[var(--color-ink)] md:col-span-5 md:border-l">
             <Specimens />
@@ -109,8 +115,8 @@ export default function Home() {
       <section id="kontakt" className="band">
         <div className="grid grid-cols-6 gap-y-10 pad md:grid-cols-12">
           <div className="col-span-6 md:col-span-6">
-            <h2 className="h2">poproś o kontakt.</h2>
-            <p className="prose-m mt-4">Zostaw numer. Odezwiemy się w godzinach pracy i umówimy oglądanie terenu.</p>
+            <h2 className="h2">umów oględziny.</h2>
+            <p className="prose-m mt-4">Zostaw numer, a oddzwonimy w godzinach pracy i umówimy oględziny terenu. Wycena po obejrzeniu, bez zobowiązań.</p>
             <div className="mt-8 max-w-[32rem]"><ContactForm /></div>
           </div>
         </div>

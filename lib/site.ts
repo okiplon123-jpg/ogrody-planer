@@ -10,3 +10,6 @@ export const COMPANY = {
   postalCode: "15-111",
   city: "Białystok",
 };
+
+/** Google Tag Manager container ID (GTM-XXXXXXX). Empty = no tracking script is loaded at all. */
+export const GTM_ID = "";

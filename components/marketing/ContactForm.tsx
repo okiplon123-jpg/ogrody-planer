@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { sendLead } from "@/lib/contact";
+import { track } from "@/lib/track";
 
 export function ContactForm() {
   const [v, setV] = useState({ name: "", phone: "", msg: "", consent: false });
@@ -20,7 +21,7 @@ export function ContactForm() {
     if (Object.keys(x).length || sending) return;
     setSending(true); setFail(false);
     const ok = await sendLead({ imię: v.name.trim(), telefon: v.phone.trim(), wiadomość: v.msg.trim() || "(brak opisu)" }, "Nowe zapytanie ze strony", hp);
-    if (ok) setDone(true); else setFail(true);
+    if (ok) { setDone(true); track("generate_lead", { method: "formularz" }); } else setFail(true);
     setSending(false);
   };
 
@@ -56,7 +57,7 @@ export function ContactForm() {
         <div className="err-slot" aria-live="polite">{err.consent && <p className="err">{err.consent}</p>}</div>
       </div>
       <input type="text" name="website" value={hp} onChange={(e) => setHp(e.target.value)} tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 opacity-0" />
-      <button type="submit" disabled={sending} className="btn btn-signal">{sending ? "wysyłam…" : "poproś o kontakt"}</button>
+      <button type="submit" disabled={sending} className="btn btn-signal">{sending ? "wysyłam…" : "umów oględziny"}</button>
       <div className="err-slot" aria-live="polite">{fail && <p className="err">Nie udało się wysłać. Zadzwoń: +48 885 879 108 albo napisz na gryczewski.bud@gmail.com.</p>}</div>
     </form>
   );

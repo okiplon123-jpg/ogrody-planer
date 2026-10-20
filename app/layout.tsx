@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Archivo } from "next/font/google";
 import "./globals.css";
 import { COMPANY, SITE_URL } from "@/lib/site";
+import { Tracking } from "@/components/marketing/Tracking";
 
 const archivo = Archivo({ variable: "--font-archivo", subsets: ["latin", "latin-ext"], weight: ["400", "500", "600", "700", "800"], display: "swap" });
 
@@ -9,8 +10,8 @@ export const viewport = { width: "device-width", initialScale: 1, viewportFit: "
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: { default: "Kostka brukowa i ogrody Białystok | Gryczewski", template: "%s" },
-  description: "Układamy kostkę brukową i zakładamy ogrody w Białymstoku i okolicach: podjazdy, tarasy, ścieżki, trawniki, rabaty. Przymierz kostkę lub trawnik na zdjęciu swojego domu.",
+  title: { default: "Układanie kostki brukowej Białystok | Gryczewski", template: "%s" },
+  description: "Układanie kostki brukowej w Białymstoku i okolicach. Wycena po obejrzeniu terenu, bez zobowiązań. Podjazdy, tarasy, ścieżki, trawniki i ogrody. Zaprojektuj działkę w planerze.",
   alternates: { canonical: "./" },
   openGraph: { type: "website", locale: "pl_PL", siteName: "Gryczewski: kostka brukowa i ogrody", url: "./" },
   twitter: { card: "summary_large_image" },
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="pl" className={archivo.variable}>
       <body>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        <Tracking />
         {children}
       </body>
     </html>
