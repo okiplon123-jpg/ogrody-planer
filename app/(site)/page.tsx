@@ -31,10 +31,10 @@ const LAYERS: [string, string, string, string][] = [
 function GroupHead({ title, imgs }: { title: string; imgs: string[] }) {
   return (
     <div className="grid grid-cols-6 border-y border-[var(--color-ink)] bg-[var(--color-ink)] text-[var(--color-paper)] md:grid-cols-12">
-      <h3 className="h2 col-span-6 pad py-8 md:col-span-7 md:py-12" style={{ fontSize: "var(--text-display-s)", lineHeight: 0.95 }}>{title}</h3>
-      <div className={`col-span-6 grid h-24 md:col-span-5 md:h-auto ${imgs.length === 3 ? "grid-cols-3" : "grid-cols-2"}`}>
+      <h3 className="h2 col-span-6 flex items-center pad md:col-span-7 md:h-20" style={{ fontSize: "clamp(2rem, 4.6vw, 3.5rem)", lineHeight: 0.95 }}>{title}</h3>
+      <div className={`col-span-6 grid h-16 overflow-hidden md:col-span-5 md:h-20 ${imgs.length === 3 ? "grid-cols-3" : "grid-cols-2"}`}>
         {imgs.map((src, i) => (
-          <span key={src} className={`cell-photo ${i ? "border-l border-[var(--color-paper)]" : ""}`}>
+          <span key={src} className={`cell-photo h-full ${i ? "border-l border-[var(--color-paper)]" : ""}`}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={src} alt="" loading="lazy" />
           </span>
