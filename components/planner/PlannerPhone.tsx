@@ -32,6 +32,7 @@ const ICON = {
   undo: "M9 14L4 9l5-5M4 9h10a6 6 0 0 1 0 12h-3",
   redo: "M15 14l5-5-5-5M20 9H10a6 6 0 0 0 0 12h3",
   check: "M5 12l5 5 9-10",
+  send: "M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z",
   x: "M6 6l12 12M18 6L6 18",
 };
 
@@ -100,6 +101,7 @@ export default function PlannerPhone() {
       <div className="space-y-2 p-2">
         <Seg<Lighting> value={s.project.lighting} onChange={(v) => s.patchProject({ lighting: v })} options={[{ id: "day", name: "Dzień" }, { id: "golden", name: "Zachód" }, { id: "evening", name: "Wieczór" }]} />
         <Seg<ViewPreset> value={s.view3d} onChange={view} options={[{ id: "perspective", name: "Widok" }, { id: "top", name: "Z góry" }, { id: "eye", name: "Z ziemi" }]} />
+        <button type="button" className="pl-btn pl-btn-primary !min-h-12 w-full" onClick={() => s.set({ summaryOpen: true })}>Wyślij projekt do firmy</button>
       </div>
     );
   } else if (sel) {
@@ -119,6 +121,7 @@ export default function PlannerPhone() {
         <DockBtn icon={ICON.pencil} label="Rysuj" onClick={() => setSheet("draw")} />
         <DockBtn icon={ICON.bars} label="Ilości" onClick={() => setSheet("qty")} />
         <DockBtn icon={ICON.sliders} label="Działka" onClick={() => setSheet("plot")} />
+        <DockBtn icon={ICON.send} label="Wyślij" tone="primary" onClick={() => s.set({ summaryOpen: true })} />
       </div>
     );
   }
@@ -130,7 +133,7 @@ export default function PlannerPhone() {
         <div className="ml-auto flex items-center gap-1.5">
           <button className="pl-btn !min-h-11 !px-3" aria-label="Cofnij" disabled={!s.past.length} onClick={s.undo}><I d={ICON.undo} size={20} /></button>
           <button className="pl-btn !min-h-11 !px-3" aria-label="Ponów" disabled={!s.future.length} onClick={s.redo}><I d={ICON.redo} size={20} /></button>
-          <button className="pl-btn pl-btn-primary !min-h-11" onClick={() => s.set({ summaryOpen: true })}>Gotowe</button>
+          <button className="pl-btn pl-btn-primary !min-h-11" onClick={() => s.set({ summaryOpen: true })}>Wyślij</button>
         </div>
       </header>
 

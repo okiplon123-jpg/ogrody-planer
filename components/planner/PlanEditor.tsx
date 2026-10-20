@@ -51,7 +51,7 @@ export function PlanEditor({ phone = false }: { phone?: boolean }) {
     return () => ro.disconnect();
   }, []);
   useEffect(fit, [s.fitNonce, size.w > 0, s.mode]); // eslint-disable-line react-hooks/exhaustive-deps
-  useEffect(() => { if (coarse) fit(); }, [size.h, tool === "draw"]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (coarse || phone) fit(); }, [size.h, size.w, tool === "draw"]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     // keep "view centre" fresh for objects added from the library
