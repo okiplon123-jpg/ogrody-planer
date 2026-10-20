@@ -18,8 +18,8 @@ export const metadata: Metadata = {
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
     shortcut: "/favicon.ico",
   },
-  openGraph: { type: "website", locale: "pl_PL", siteName: "Gryczewski: kostka brukowa i ogrody", url: "./" },
-  twitter: { card: "summary_large_image" },
+  openGraph: { type: "website", locale: "pl_PL", siteName: "Gryczewski: kostka brukowa i ogrody", url: "./", images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Układanie kostki brukowej i ogrody, Białystok i okolice" }] },
+  twitter: { card: "summary_large_image", images: ["/og-image.png"] },
   robots: { index: true, follow: true },
 };
 
@@ -30,6 +30,8 @@ const jsonLd = {
   name: COMPANY.legalName,
   alternateName: "Gryczewski: kostka brukowa i ogrody",
   url: SITE_URL,
+  image: `${SITE_URL}/og-image.png`,
+  logo: `${SITE_URL}/apple-touch-icon.png`,
   telephone: "+48 885 879 108",
   email: COMPANY.email,
   taxID: COMPANY.nip,

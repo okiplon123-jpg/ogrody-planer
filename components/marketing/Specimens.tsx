@@ -12,10 +12,7 @@ export function Specimens() {
       {SPECIMENS.map(([src, n, href], i) => (
         <li key={src} className={`flex min-h-0 flex-col ${i ? "border-l border-[var(--color-ink)] md:border-l-0 md:border-t" : ""}`}>
           <Link href={href} className="group flex h-full flex-col" aria-label={`Przymierz: ${n}`}>
-            <span className="cell-photo relative aspect-square md:aspect-auto md:min-h-0 md:flex-1">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={src} alt="" loading="eager" className="md:absolute md:inset-0" />
-            </span>
+            <span className="cell-photo relative aspect-square bg-cover bg-center md:aspect-auto md:min-h-0 md:flex-1" style={{ backgroundImage: `url(${src})` }} aria-hidden />
             <span className="label spec-cap block border-t border-[var(--color-rule)] px-2 py-2">{n}</span>
           </Link>
         </li>
