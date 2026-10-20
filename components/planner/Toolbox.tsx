@@ -21,7 +21,7 @@ export function Toolbox() {
       <div className="grid grid-cols-3 gap-2 lg:grid-cols-3">
         {SIMPLE_ITEMS.map((it) => (
           <button key={it.id} draggable onDragStart={(e) => { e.dataTransfer.setData("text/lib", it.id); e.dataTransfer.effectAllowed = "copy"; }}
-            onClick={() => { s.set({ mode: "2d" }); s.addFromLib(it); }}
+            onClick={() => { s.set({ mode: "2d", tool: "select", drawPts: [] }); s.addFromLib(it); }}
             className="flex flex-col items-center gap-1.5 border border-[var(--color-rule)] bg-[var(--color-paper)] p-2 text-[12px] text-[var(--color-ink-2)] transition hover:border-[var(--color-ink)] active:translate-y-px">
             <ItemThumb item={it} />{it.name}
           </button>

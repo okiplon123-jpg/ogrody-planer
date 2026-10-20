@@ -134,7 +134,9 @@ export function PlanEditor() {
     if (tool === "draw") {
       if (drawMode === "free") { drag.current = { t: "free" }; setFreePts([w]); return; }
       const p: V2 = [sn(w[0]), sn(w[1])];
+      const last = drawPts[drawPts.length - 1];
       if (drawMode === "points" && drawPts.length >= 3 && Math.hypot(p[0] - drawPts[0][0], p[1] - drawPts[0][1]) < 14 / cam.z) s.finishDraw();
+      else if (drawMode === "band" && drawPts.length >= 2 && last && Math.hypot(p[0] - last[0], p[1] - last[1]) < 14 / cam.z) s.finishDraw();
       else s.addDrawPt(p);
       return;
     }
@@ -162,6 +164,8 @@ export function PlanEditor() {
   };
 
   const onMove = (e: React.PointerEvent) => {
+    // a lost pointer-up (released outside the window, tab switch) must never leave a stroke or drag following the mouse
+    if (drag.current && e.pointerType === "mouse" && e.buttons === 0) { onUp(e); return; }
     if (pointers.current.has(e.pointerId)) pointers.current.set(e.pointerId, [e.clientX, e.clientY]);
     const w = toWorld(e);
     setCursor(w);
@@ -266,7 +270,7 @@ export function PlanEditor() {
   const previewPoly: V2[] | null = tool !== "draw" ? null : drawMode === "band" && base.length >= 2 ? shapePoints(base, drawSmooth, drawWidth) : drawMode === "points" && drawSmooth && base.length >= 3 ? smoothCurve(base, true, 10) : null;
 
   return (
-    <div ref={wrap} onDragOver={(e) => e.preventDefault()} onDrop={onDrop} className="absolute inset-0 select-none overflow-hidden bg-[var(--color-paper-3)]" style={{ cursor: tool === "draw" || armed ? "crosshair" : "default", touchAction: "none" }}>
+    <div ref={wrap} onContextMenu={(e) => { if (tool !== "draw") return; e.preventDefault(); if (drawPts.length >= (drawMode === "band" ? 2 : 3)) s.finishDraw(); else s.cancelDraw(); }} onDragOver={(e) => e.preventDefault()} onDrop={onDrop} className="absolute inset-0 select-none overflow-hidden bg-[var(--color-paper-3)]" style={{ cursor: tool === "draw" || armed ? "crosshair" : "default", touchAction: "none" }}>
       <svg ref={svgRef} className="absolute inset-0 h-full w-full" onPointerDown={onDown} onPointerMove={onMove} onPointerUp={onUp} onPointerCancel={onUp} onDoubleClick={onDbl} role="application" aria-label="Plan działki 2D">
         <g transform={`translate(${cam.x} ${cam.y}) scale(${cam.z})`}>
           <PlanLayer project={project} grid={settings.grid}>
@@ -334,7 +338,7 @@ export function PlanEditor() {
       <div className="pointer-events-none absolute left-3 right-3 top-14 flex max-w-[calc(100%-1.5rem)] flex-col gap-2 text-[11px] md:right-auto">
         {tool === "draw" && (
           <div className="pointer-events-auto flex items-center gap-2 border border-[var(--color-ink)] bg-[var(--color-paper)] px-3 py-2 text-[var(--color-ink)]">
-            {drawMode === "free" ? "Przytrzymaj i narysuj kształt ręką. Puść, żeby go zamknąć." : drawMode === "band" ? `Kliknij punkty wzdłuż ścieżki (${drawPts.length}). Koniec: dwuklik lub Enter. Backspace cofa punkt.` : `Kliknij kolejne punkty obrysu (${drawPts.length}). Koniec: pierwszy punkt, dwuklik lub Enter. Backspace cofa punkt.`}
+            {drawMode === "free" ? "Przytrzymaj i narysuj kształt ręką. Puść, żeby go zamknąć." : drawMode === "band" ? `Kliknij punkty wzdłuż ścieżki (${drawPts.length}). Koniec: kliknij ostatni punkt jeszcze raz, dwuklik, Enter albo prawy przycisk. Esc anuluje.` : `Kliknij kolejne punkty obrysu (${drawPts.length}). Koniec: kliknij pierwszy punkt, dwuklik, Enter albo prawy przycisk. Esc anuluje.`}
             {drawMode !== "free" && <button className="pl-btn pl-btn-primary" onClick={() => s.finishDraw()} disabled={drawPts.length < (drawMode === "band" ? 2 : 3)}>Zakończ</button>}
             <button className="pl-btn" onClick={s.cancelDraw}>Anuluj</button>
           </div>

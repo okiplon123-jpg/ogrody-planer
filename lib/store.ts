@@ -162,7 +162,7 @@ export const useStore = create<State>((set, get) => ({
     const shape = shapeFromWorld(pts, st.drawSmooth, band ? st.drawWidth : undefined);
     const area = polyArea(shape.poly ?? []) * shape.w * shape.h;
     if (area < 0.4) {
-      set({ drawPts: [] });
+      set({ tool: "select", drawPts: [] });
       get().notify(band ? "Ścieżka jest za krótka. Kliknij co najmniej dwa punkty daleko od siebie." : "Obrys jest za mały albo prosty. Narysuj większy kształt (obrys musi coś obejmować).");
       return;
     }
