@@ -14,13 +14,13 @@ export default function Page() {
       {/* the editor is a client-side app, so crawlers and screen readers get this description of it */}
       <div className="sr-only">
         <h1>Planer ogrodu 2D/3D</h1>
-        <p>Narysuj działkę, podjazd, taras, ścieżki, trawnik i rabaty. Planer pokaże projekt w 2D i w 3D, policzy, ile kostki brukowej i trawnika potrzeba, a gotowy projekt możesz wysłać do firmy Gryczewski z Białegostoku. Wycena po obejrzeniu terenu, bez zobowiązań. Telefon: 885 879 108.</p>
+        <p>Narysuj działkę, podjazd, taras, ścieżki, trawnik i rabaty. Planer pokaże projekt w 2D i w 3D. Policzy, ile kostki brukowej i trawnika potrzeba. Gotowy projekt możesz wysłać do firmy Gryczewski z Białegostoku. Wycena po obejrzeniu terenu, bez zobowiązań. Telefon: 885 879 108.</p>
         <h2>Jak działa planer</h2>
-        <p>Dodajesz elementy (dom, garaż, podjazd, taras, ścieżkę, trawnik, rabatę, drzewa, krzewy, lampy) albo rysujesz własne kształty z zaokrąglonymi krawędziami. Plan 2D i model 3D to ten sam projekt, więc zmiana w jednym od razu widać w drugim. Model 3D możesz oglądać w świetle dziennym, o zachodzie i wieczorem.</p>
+        <p>Dodajesz elementy: dom, garaż, podjazd, taras, ścieżkę, trawnik, rabatę, drzewa, krzewy i lampy. Możesz też rysować własne kształty z zaokrąglonymi krawędziami. Plan 2D i model 3D to ten sam projekt. Zmianę w jednym od razu widać w drugim. Model 3D oglądasz w świetle dziennym, o zachodzie i wieczorem.</p>
         <h2>Co planer liczy</h2>
-        <p>Powierzchnię kostki i nawierzchni (także z zapasem), trawnika i rabat, długość obrzeży, ogrodzenia i żywopłotu, liczbę drzew, krzewów i lamp. Wyniki są orientacyjne, a dokładną wycenę podajemy po obejrzeniu terenu.</p>
+        <p>Planer liczy powierzchnię kostki i nawierzchni, także z zapasem. Liczy też trawnik i rabaty. Podaje długość obrzeży, ogrodzenia i żywopłotu oraz liczbę drzew, krzewów i lamp. Wyniki są orientacyjne. Dokładną wycenę podajemy po obejrzeniu terenu.</p>
         <h2>Dla kogo jest planer</h2>
-        <p>Dla właścicieli domów i działek w Białymstoku i okolicach, którzy chcą przed rozmową z wykonawcą zobaczyć, jak mogą wyglądać podjazd, taras, ścieżki, trawnik i rabaty, oraz mniej więcej policzyć potrzebny materiał. Projekt zapisuje się na Twoim urządzeniu. Możesz go wysłać do nas jednym przyciskiem, a my oddzwonimy i umówimy oględziny terenu.</p>
+        <p>Planer jest dla właścicieli domów i działek w Białymstoku i okolicach. Pomaga zobaczyć przed rozmową z wykonawcą, jak mogą wyglądać podjazd, taras, ścieżki, trawnik i rabaty. Pomaga też z grubsza policzyć materiał. Projekt zapisuje się na Twoim urządzeniu. Możesz go wysłać do nas jednym przyciskiem. Oddzwonimy i umówimy oględziny terenu.</p>
         <h2>Co dalej</h2>
         <nav aria-label="Strony serwisu">
           <ul>
