@@ -1,5 +1,5 @@
 "use client";
-import { Suspense, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { OrbitControls, useGLTF, useTexture, PerformanceMonitor } from "@react-three/drei";
 import { EffectComposer, N8AO } from "@react-three/postprocessing";
@@ -653,11 +653,15 @@ export default function Scene3D({ project, view, nonce, quality: wanted, visible
   const [slow, setSlow] = useState(false);
   const quality: "high" | "mid" | "low" = slow && wanted === "high" ? "mid" : wanted;
   const dpr = quality === "low" || slow ? 1 : quality === "mid" ? ([1, 2] as [number, number]) : ([1, 1.5] as [number, number]);
+  const [ready, setReady] = useState(false);
+  const readyCb = useRef(onReady); readyCb.current = onReady;
+  const done = useCallback(() => { setReady(true); readyCb.current?.(); }, []);
   return (
+    <>
     <Canvas shadows={quality !== "low"} dpr={dpr} frameloop={visible ? "always" : "never"} camera={{ fov: 38, near: 0.1, far: 700, position: [m * 0.7, m * 0.8, m * 0.95] }} gl={{ antialias: quality !== "low", powerPreference: "high-performance" }}>
       <PerformanceMonitor flipflops={2} onDecline={() => setSlow(true)} />
       <Atmosphere lighting={project.lighting} quality={quality} />
-      <Suspense fallback={null}><World project={project} quality={quality} onReady={onReady} /></Suspense>
+      <Suspense fallback={null}><World project={project} quality={quality} onReady={done} /></Suspense>
       <OrbitControls makeDefault enableDamping dampingFactor={0.08} maxPolarAngle={Math.PI / 2 - 0.02} minDistance={2} maxDistance={160} enableZoom={!lockZoom} autoRotate={autoRotate} autoRotateSpeed={0.5} />
       {quality === "high" && (
         <EffectComposer multisampling={2}>
@@ -667,5 +671,14 @@ export default function Scene3D({ project, view, nonce, quality: wanted, visible
       <Rig view={view} nonce={nonce} plot={project.plot} reduced={!!reduced} />
       <Capture fn={captureRef ?? fallback} />
     </Canvas>
+    {!ready && (
+      <div className="pointer-events-none absolute inset-0 z-10 grid place-items-center bg-[var(--color-paper)]/85" role="status">
+        <div className="flex items-center gap-3 border border-[var(--color-ink)] bg-[var(--color-paper)] px-4 py-3 text-[13px] text-[var(--color-ink)]">
+          <span className="h-4 w-4 animate-spin rounded-full border-2 border-[var(--color-ink)] border-t-transparent" aria-hidden />
+          Ładuję podgląd 3D…
+        </div>
+      </div>
+    )}
+    </>
   );
 }
