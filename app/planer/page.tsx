@@ -19,6 +19,8 @@ export default function Page() {
         <p>Dodajesz elementy (dom, garaż, podjazd, taras, ścieżkę, trawnik, rabatę, drzewa, krzewy, lampy) albo rysujesz własne kształty z zaokrąglonymi krawędziami. Plan 2D i model 3D to ten sam projekt, więc zmiana w jednym od razu widać w drugim. Model 3D możesz oglądać w świetle dziennym, o zachodzie i wieczorem.</p>
         <h2>Co planer liczy</h2>
         <p>Powierzchnię kostki i nawierzchni (także z zapasem), trawnika i rabat, długość obrzeży, ogrodzenia i żywopłotu, liczbę drzew, krzewów i lamp. Wyniki są orientacyjne, a dokładną wycenę podajemy po obejrzeniu terenu.</p>
+        <h2>Dla kogo jest planer</h2>
+        <p>Dla właścicieli domów i działek w Białymstoku i okolicach, którzy chcą przed rozmową z wykonawcą zobaczyć, jak mogą wyglądać podjazd, taras, ścieżki, trawnik i rabaty, oraz mniej więcej policzyć potrzebny materiał. Projekt zapisuje się na Twoim urządzeniu. Możesz go wysłać do nas jednym przyciskiem, a my oddzwonimy i umówimy oględziny terenu.</p>
         <h2>Co dalej</h2>
         <nav aria-label="Strony serwisu">
           <ul>
