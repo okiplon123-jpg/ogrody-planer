@@ -12,5 +12,5 @@ export function GroupHead({ title, imgs, compact = false, level = 3 }: { title: 
     </div>
   );
 }
-export const PAVER_IMGS = ["/zdjecia/kostka-jodelka-szara.jpg", "/zdjecia/kostka-geometryczna.jpg", "/zdjecia/kostka-jodelka-brazowa.jpg"];
-export const GRASS_IMGS = ["/textures/grass_roll/grass_roll_diff_512.jpg", "/textures/grass_natural/grass_natural_diff_512.jpg"];
+export const PAVER_IMGS = ["/zdjecia/kostka-jodelka-szara-sm.webp", "/zdjecia/kostka-geometryczna-sm.webp", "/zdjecia/kostka-jodelka-brazowa-sm.webp"];
+export const GRASS_IMGS = ["/textures/grass_roll/grass_roll_diff_512.webp", "/textures/grass_natural/grass_natural_diff_512.webp"];

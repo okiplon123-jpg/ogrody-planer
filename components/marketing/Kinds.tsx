@@ -2,11 +2,11 @@ import Link from "next/link";
 
 /* Real textures (CC0, see public/zdjecia/ZRODLA.md). Only a sample: the claim is "every kind", this grid just shows a spread. */
 const KINDS: [string, string][] = [
-  ["/zdjecia/kostka-jodelka-szara.jpg", "szara, jodełka"],
-  ["/zdjecia/kostka-geometryczna.jpg", "szara, kształt Z"],
+  ["/zdjecia/kostka-jodelka-szara-sm.webp", "szara, jodełka"],
+  ["/zdjecia/kostka-geometryczna-sm.webp", "szara, kształt Z"],
   ["/textures/concrete_pavers/concrete_pavers_diff_512.jpg", "behaton"],
-  ["/zdjecia/kostka-jodelka-brazowa.jpg", "brązowa"],
-  ["/zdjecia/kostka-czerwona.jpg", "ceglasta"],
+  ["/zdjecia/kostka-jodelka-brazowa-sm.webp", "brązowa"],
+  ["/zdjecia/kostka-czerwona-sm.webp", "ceglasta"],
   ["/textures/brick_pavement_02/brick_pavement_02_diff_512.jpg", "granitowa"],
   ["/textures/floor_klinkers_01/floor_klinkers_01_diff_512.jpg", "klinkierowa"],
   ["/textures/cobblestone_floor_01/cobblestone_floor_01_diff_512.jpg", "bruk kamienny"],

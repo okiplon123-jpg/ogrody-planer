@@ -2,8 +2,8 @@ import Link from "next/link";
 
 /* Specimen cells: real textures (CC0, see public/zdjecia/ZRODLA.md): two pavers, two lawns. Swap for the firm's own sample boards and job photos when they exist. */
 const SPECIMENS: [string, string, string][] = [
-  ["/zdjecia/kostka-jodelka-brazowa.jpg", "kostka brukowa", "/wizualizator"],
-  ["/textures/grass_roll/grass_roll_diff_512.jpg", "ogrody", "/wizualizator"],
+  ["/zdjecia/kostka-jodelka-brazowa-sm.webp", "kostka brukowa", "/wizualizator"],
+  ["/textures/grass_roll/grass_roll_diff_512.webp", "ogrody", "/wizualizator"],
 ];
 
 export function Specimens() {
