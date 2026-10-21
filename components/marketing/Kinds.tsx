@@ -4,12 +4,12 @@ import Link from "next/link";
 const KINDS: [string, string][] = [
   ["/zdjecia/kostka-jodelka-szara.jpg", "szara, jodełka"],
   ["/zdjecia/kostka-geometryczna.jpg", "szara, kształt Z"],
-  ["/textures/concrete_pavers/concrete_pavers_diff_1k.jpg", "behaton"],
+  ["/textures/concrete_pavers/concrete_pavers_diff_512.jpg", "behaton"],
   ["/zdjecia/kostka-jodelka-brazowa.jpg", "brązowa"],
   ["/zdjecia/kostka-czerwona.jpg", "ceglasta"],
-  ["/textures/brick_pavement_02/brick_pavement_02_diff_1k.jpg", "granitowa"],
-  ["/textures/floor_klinkers_01/floor_klinkers_01_diff_1k.jpg", "klinkierowa"],
-  ["/textures/cobblestone_floor_01/cobblestone_floor_01_diff_1k.jpg", "bruk kamienny"],
+  ["/textures/brick_pavement_02/brick_pavement_02_diff_512.jpg", "granitowa"],
+  ["/textures/floor_klinkers_01/floor_klinkers_01_diff_512.jpg", "klinkierowa"],
+  ["/textures/cobblestone_floor_01/cobblestone_floor_01_diff_512.jpg", "bruk kamienny"],
 ];
 
 export function Kinds() {

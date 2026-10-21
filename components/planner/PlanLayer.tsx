@@ -24,7 +24,7 @@ function Patterns({ objects }: { objects: PlanObject[] }) {
       const pat = m.tex === "bricks" ? o.pattern ?? m.pattern : undefined;
       seen.set(patId(m.id, pat), { mat: m.id, pat });
     }
-    return [...seen].map(([id, v]) => { const mm = matById(v.mat); return { id, url: mm.photo ? `/textures/${mm.photo.dir}/${mm.photo.dir}_diff_1k.jpg` : textureUrl(v.mat, v.pat as never), size: mm.photo?.tileM ?? TILE_M }; });
+    return [...seen].map(([id, v]) => { const mm = matById(v.mat); return { id, url: mm.photo ? `/textures/${mm.photo.dir}/${mm.photo.dir}_diff_512.jpg` : textureUrl(v.mat, v.pat as never), size: mm.photo?.tileM ?? TILE_M }; });
   }, [objects]);
   return (
     <defs>

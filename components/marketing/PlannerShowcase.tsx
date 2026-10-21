@@ -14,11 +14,18 @@ export function PlannerShowcase() {
   const [ready, setReady] = useState(false);
   const [phone, setPhone] = useState(false);
   useEffect(() => {
-    // the pre-rendered picture shows instantly; the live scene loads automatically when the section nears the viewport (phones get a lighter "mid" scene)
+    // the pre-rendered picture shows instantly; the live scene loads once the visitor has interacted (scroll/touch/key) and the section is near the viewport,
+    // so it never competes with the first paint (phones get a lighter "mid" scene)
     setPhone(window.innerWidth < 768);
-    const io = new IntersectionObserver(([e]) => e.isIntersecting && (setShow3d(true), io.disconnect()), { rootMargin: "300px" });
+    let near = false, touched = false;
+    const go = () => { if (near && touched) { setShow3d(true); cleanup(); } };
+    const io = new IntersectionObserver(([e]) => { near = e.isIntersecting; go(); }, { rootMargin: "300px" });
     io.observe(ref.current!);
-    return () => io.disconnect();
+    const evs = ["scroll", "pointerdown", "touchstart", "keydown", "wheel"] as const;
+    const on = () => { touched = true; go(); };
+    evs.forEach((n) => window.addEventListener(n, on, { passive: true, once: true }));
+    function cleanup() { io.disconnect(); evs.forEach((n) => window.removeEventListener(n, on)); }
+    return cleanup;
   }, []);
   return (
     <div ref={ref}>

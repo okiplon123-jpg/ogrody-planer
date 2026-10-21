@@ -94,7 +94,7 @@ export const SERVICES: Service[] = [
     description: "Zakładanie trawników z rolki i z siewu, rabaty, nasadzenia i ogrody od zera w Białymstoku i okolicach. Wycena po obejrzeniu, bez zobowiązań.",
     h1: "trawniki i ogrody w Białymstoku",
     lead: `Zakładamy ogrody od zera: od projektu i prac ziemnych po trawnik, rabaty i nasadzenia. ${FREE}`,
-    image: "/textures/grass_roll/grass_roll_diff_1k.jpg",
+    image: "/textures/grass_roll/grass_roll_diff_512.jpg",
     includes: [
       "Oględziny działki: nasłonecznienie, grunt, spadki",
       "Projekt: strefy, trawnik, rabaty, ścieżki, miejsce na taras",
