@@ -14,3 +14,4 @@ export function GroupHead({ title, imgs, compact = false, level = 3 }: { title: 
 }
 export const PAVER_IMGS = ["/zdjecia/kostka-jodelka-szara-sm.webp", "/zdjecia/kostka-geometryczna-sm.webp", "/zdjecia/kostka-jodelka-brazowa-sm.webp"];
 export const GRASS_IMGS = ["/textures/grass_roll/grass_roll_diff_512.webp", "/textures/grass_natural/grass_natural_diff_512.webp"];
+export const EARTH_IMGS = ["/textures/bicolour_gravel/bicolour_gravel_diff_512.webp", "/textures/cobblestone_floor_01/cobblestone_floor_01_diff_512.webp"];

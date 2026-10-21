@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Specimens } from "@/components/marketing/Specimens";
-import { GroupHead, GRASS_IMGS, PAVER_IMGS } from "@/components/marketing/GroupHead";
+import { GroupHead, GRASS_IMGS, PAVER_IMGS, EARTH_IMGS } from "@/components/marketing/GroupHead";
 import { PlannerShowcase } from "@/components/marketing/PlannerShowcase";
 import { Faq } from "@/components/marketing/Faq";
 import { ContactForm } from "@/components/marketing/ContactForm";
@@ -100,12 +100,10 @@ export default function Home() {
           </div>
         </div>
         <div className="mt-0 border-t border-[var(--color-ink)]">
-          <Link href="/prace-ziemne-i-korytowanie-bialystok" className="irow">
-            <span className="pad flex items-center justify-between py-5">
-              <span>
-                <span className="h3 slide block" style={{ fontSize: "clamp(1.25rem, 2vw, 1.6rem)" }}>prace ziemne ciężkim sprzętem</span>
-                <span className="prose-m mt-1 block">Korytowanie, podbudowa, równanie terenu, drobne rozbiórki.</span>
-              </span>
+          <Link href="/prace-ziemne-i-korytowanie-bialystok" className="irow block">
+            <GroupHead title="prace ziemne ciężkim sprzętem" imgs={EARTH_IMGS} compact />
+            <span className="pad flex items-center justify-between py-4">
+              <span className="prose-m">Korytowanie, podbudowa, równanie terenu, drobne rozbiórki.</span>
               <span aria-hidden>→</span>
             </span>
           </Link>
