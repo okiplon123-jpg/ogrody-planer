@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { GroupHead, GRASS_IMGS, PAVER_IMGS } from "@/components/marketing/GroupHead";
-export const metadata = { title: "Usługi i etapy prac: kostka brukowa i ogrody | Gryczewski", description: "Co robimy i jak pracujemy: układanie kostki brukowej (podjazdy, tarasy, ścieżki, place) i zakładanie ogrodów w Białymstoku i okolicach, od oględzin po odbiór." };
+export const metadata = { title: "Usługi i etapy prac: kostka brukowa i ogrody | Gryczewski", description: "Układanie kostki brukowej, zakładanie ogrodów i prace ziemne w Białymstoku: od oględzin po odbiór. Własny sprzęt, wycena po obejrzeniu terenu." };
 
 const PAVING_STAGES: [string, string, string][] = [
   ["1.0", "oglądamy teren", "Mierzymy powierzchnię i sprawdzamy grunt, spadki oraz dojazd dla sprzętu. Ustalamy, co ma być położone i którędy spłynie woda."],
@@ -42,7 +42,7 @@ const GROUND: [string, string, string][] = [
 function Stages({ title, stages, imgs }: { title: string; stages: [string, string, string][]; imgs: string[] }) {
   return (
     <>
-      <div className="mt-16"><GroupHead title={title} imgs={imgs} /></div>
+      <div className="mt-16"><GroupHead title={title} imgs={imgs} level={2} /></div>
       {stages.map(([n, t, d]) => (
         <section key={title + n} className="stage py-[clamp(2.5rem,6vw,5rem)]">
           <div className="grid grid-cols-6 items-start gap-y-4 pad md:grid-cols-12">

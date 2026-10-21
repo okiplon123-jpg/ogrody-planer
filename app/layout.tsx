@@ -11,7 +11,7 @@ export const viewport = { width: "device-width", initialScale: 1, viewportFit: "
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: "Układanie kostki brukowej Białystok | Gryczewski", template: "%s" },
-  description: "Układanie kostki brukowej w Białymstoku i okolicach. Wycena po obejrzeniu terenu, bez zobowiązań. Podjazdy, tarasy, ścieżki, trawniki i ogrody. Zaprojektuj działkę w planerze.",
+  description: "Układanie kostki brukowej w Białymstoku i okolicach. Wycena po obejrzeniu terenu, bez zobowiązań. Podjazdy, tarasy, ścieżki, ogrody, prace ziemne.",
   alternates: { canonical: "./" },
   icons: {
     icon: [{ url: "/favicon.ico", sizes: "any" }, { url: "/icon-48.png", sizes: "48x48", type: "image/png" }],

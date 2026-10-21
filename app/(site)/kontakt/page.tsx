@@ -20,6 +20,17 @@ export default function Page() {
           <div className="mt-6"><ContactForm /></div>
         </div>
       </div>
+
+      <section className="mt-20 border-t border-[var(--color-ink)] pt-10">
+        <h2 className="h3">jak wygląda kontakt z nami</h2>
+        <ol className="prose-m mt-4 max-w-[44rem] space-y-3">
+          <li><strong>Dzwonisz albo zostawiasz numer.</strong> Odbieramy w godzinach pracy, pn–pt 7:00–18:00. Jeśli nie odbierzemy, oddzwonimy.</li>
+          <li><strong>Umawiamy oględziny terenu.</strong> Przyjeżdżamy do Ciebie w Białymstoku lub okolicach, sprawdzamy grunt, spadki i dojazd dla sprzętu.</li>
+          <li><strong>Dostajesz wycenę po obejrzeniu terenu.</strong> Bez zobowiązań. Dopiero potem decydujesz, czy robimy prace.</li>
+        </ol>
+        <h2 className="h3 mt-10">w czym pomagamy</h2>
+        <p className="prose-m mt-3 max-w-[44rem]">Układamy kostkę brukową (podjazdy, tarasy, ścieżki, place), zakładamy trawniki i ogrody oraz wykonujemy prace ziemne ciężkim sprzętem: korytowanie, podbudowę, równanie terenu i drobne rozbiórki. Możesz też zaplanować działkę w planerze albo przymierzyć kostkę na zdjęciu swojego domu w wizualizatorze.</p>
+      </section>
     </section>
   );
 }

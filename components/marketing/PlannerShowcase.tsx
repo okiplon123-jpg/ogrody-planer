@@ -30,7 +30,7 @@ export function PlannerShowcase() {
         <figure className="relative min-h-[360px] border-t border-[var(--color-ink)] bg-[var(--color-paper-3)] md:col-span-7 md:min-h-[560px] md:border-l md:border-t-0">
           {/* pre-rendered frame of the same scene: instant, sharp, and the fallback while the live model loads */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/zdjecia/model-3d.jpg" srcSet="/zdjecia/model-3d-sm.jpg 900w, /zdjecia/model-3d.jpg 1748w" sizes="(min-width: 768px) 58vw, 100vw" alt="Model 3D przykładowego ogrodu: dom z garażem, trawnik, rabaty i ścieżka" className="absolute inset-0 h-full w-full object-cover" />
+          <img src="/zdjecia/model-3d.webp" srcSet="/zdjecia/model-3d-sm.webp 900w, /zdjecia/model-3d.webp 1600w" sizes="(min-width: 768px) 58vw, 100vw" width={1600} height={1025} alt="Model 3D przykładowego ogrodu: dom z garażem, trawnik, rabaty i ścieżka" className="absolute inset-0 h-full w-full object-cover" />
           {show3d && <div className={`absolute inset-0 transition-opacity duration-700 ${ready ? "opacity-100" : "opacity-0"}`}><Scene3D project={project} view="perspective" nonce={0} quality={phone ? "mid" : "high"} autoRotate lockZoom onReady={() => setReady(true)} /></div>}
           <figcaption className="label absolute left-3 top-3 bg-[var(--color-paper)] px-2 py-1">{show3d ? "model 3D — przeciągnij, aby obrócić" : "model 3D"}</figcaption>
         </figure>

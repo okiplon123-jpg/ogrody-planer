@@ -65,7 +65,7 @@ export default async function ServicePage({ params }: { params: Promise<{ usluga
       </section>
 
       <section className="band">
-        <h2 className="h2 pad">jak to wygląda.</h2>
+        <h2 className="h2 pad">{s.short}: jak to wygląda.</h2>
         <ol className="mt-10 grid border-y border-[var(--color-ink)] md:grid-cols-3">
           {STEPS.map(([n, t, d], i) => (
             <li key={n} className={`px-6 py-8 ${i ? "border-t border-[var(--color-ink)] md:border-l md:border-t-0" : ""}`}>
@@ -79,7 +79,7 @@ export default async function ServicePage({ params }: { params: Promise<{ usluga
 
       <section className="band">
         <div className="grid grid-cols-6 gap-y-8 pad md:grid-cols-12">
-          <h2 className="h2 col-span-6 md:col-span-5">co obejmuje.</h2>
+          <h2 className="h2 col-span-6 md:col-span-5">{s.short}: co obejmuje.</h2>
           <div className="col-span-6 md:col-span-7">
             <ul>
               {s.includes.map((x, i) => (
@@ -102,7 +102,7 @@ export default async function ServicePage({ params }: { params: Promise<{ usluga
       {s.tools.length > 0 && (
       <section className="band">
         <div className="grid grid-cols-6 gap-y-6 pad md:grid-cols-12">
-          <h2 className="h2 col-span-6 md:col-span-7">zobacz, zanim zadzwonisz.</h2>
+          <h2 className="h2 col-span-6 md:col-span-7">{s.short}: zobacz, zanim zadzwonisz.</h2>
         </div>
         <div className="mt-10 grid border-y border-[var(--color-ink)] md:grid-cols-2">
           {s.tools.includes("wizualizator") && (
@@ -125,7 +125,7 @@ export default async function ServicePage({ params }: { params: Promise<{ usluga
 
       <section className="band">
         <div className="grid grid-cols-6 gap-y-8 pad md:grid-cols-12">
-          <h2 className="h2 col-span-6 md:col-span-5">pytania.</h2>
+          <h2 className="h2 col-span-6 md:col-span-5">{s.short}: pytania.</h2>
           <div className="col-span-6 md:col-span-6 md:col-start-7"><Faq items={s.faq} /></div>
         </div>
       </section>
@@ -133,7 +133,7 @@ export default async function ServicePage({ params }: { params: Promise<{ usluga
       <section id="formularz" className="band scroll-mt-20">
         <div className="grid grid-cols-6 gap-y-8 pad md:grid-cols-12">
           <div className="col-span-6 md:col-span-6">
-            <h2 className="h2">umów oględziny.</h2>
+            <h2 className="h2">{s.short}: umów oględziny.</h2>
             <p className="prose-m mt-4">Zostaw numer, a oddzwonimy w godzinach pracy. Wycena po obejrzeniu terenu, bez zobowiązań.</p>
             <div className="mt-8 max-w-[32rem]"><ContactForm service={s.short} withArea idp="bot" /></div>
           </div>

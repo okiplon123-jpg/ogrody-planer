@@ -1,4 +1,4 @@
-export const metadata = { title: "O firmie: kostka i ogrody w Białymstoku | Gryczewski", description: "Roboty budowlano-drogowe Patryk Gryczewski: układanie kostki brukowej i zakładanie ogrodów w Białymstoku i okolicach. Własny sprzęt, ponad 200 realizacji." };
+export const metadata = { title: "O firmie: kostka i ogrody w Białymstoku | Gryczewski", description: "Roboty budowlano-drogowe Patryk Gryczewski: kostka brukowa, ogrody i prace ziemne w Białymstoku. Własny sprzęt, ponad 200 realizacji." };
 
 export default function Page() {
   return (
@@ -6,8 +6,11 @@ export default function Page() {
       <h1 className="h2">o nas.</h1>
       <div className="mt-10 grid grid-cols-6 gap-y-10 md:grid-cols-12">
         <article className="col-span-6 space-y-6 text-[var(--text-lg)] leading-relaxed md:col-span-7">
+          <h2 className="h3">kim jesteśmy</h2>
           <p>Jesteśmy firmą z Białegostoku i działamy w całych okolicach. Układamy kostkę brukową i zakładamy ogrody, bo na jednej posesji często jedno łączy się z drugim: podjazd z trawnikiem, taras z rabatami, ścieżka z oświetleniem. Dzięki temu rozmawiasz z jedną ekipą, a nie z trzema. Mamy za sobą ponad 200 realizacji: podjazdów, ogrodów, tarasów i ścieżek.</p>
-          <p>Na pomiar przyjeżdża Patryk Gryczewski, a potem ta sama ekipa robi wykop, podbudowę, układa kostkę i sadzi rośliny. Pracujemy na własnym sprzęcie: koparkę kołową 8 t, miniładowarkę 4 t, walec 2 t i zagęszczarki w każdym rozmiarze, więc teren przygotowujemy sami.</p>
+          <h2 className="h3 pt-4">kto robi i czym</h2>
+          <p>Na pomiar przyjeżdża Patryk Gryczewski, a potem ta sama ekipa robi wykop, podbudowę, układa kostkę i sadzi rośliny. Mamy własny sprzęt: koparkę kołową 8 t, miniładowarkę 4 t, walec 2 t i zagęszczarki w każdym rozmiarze, więc teren przygotowujemy sami.</p>
+          <h2 className="h3 pt-4">jak zaczynamy</h2>
           <p>Zwykle zaczyna się tak: oglądamy podwórko, mierzymy, patrzymy, którędy spływa woda i którędy wjeżdża auto. Potem mówimy wprost, co warto zrobić, a co można odpuścić. Typowy podjazd zajmuje około dwóch tygodni, a jeśli po pracach coś jest nie tak, wracamy i to poprawiamy.</p>
         </article>
         <dl className="col-span-6 md:col-span-4 md:col-start-9">
