@@ -95,13 +95,48 @@ export function PlanEditor({ phone = false }: { phone?: boolean }) {
   useEffect(() => {
     const el = svgRef.current; if (!el) return;
     const mk = (t: Touch) => ({ native: true, pointerId: 1000 + t.identifier, clientX: t.clientX, clientY: t.clientY, target: t.target, currentTarget: el, pointerType: "touch", buttons: 1 });
-    const run = (kind: "down" | "move" | "up") => (e: TouchEvent) => { e.preventDefault(); for (const t of Array.from(e.changedTouches)) handlersRef.current?.[kind](mk(t) as never); };
+    const handled = new WeakSet<Event>(); // one TouchEvent reaches both the touched element and the svg: process it once
+    // a lost touchend (system gesture, re-rendered target) must never leave a phantom finger behind: the list of live touches is the truth
+    const sync = (e: TouchEvent) => {
+      const live = new Set(Array.from(e.touches).map((t) => 1000 + t.identifier));
+      for (const k of Array.from(pointers.current.keys())) if (k >= 1000 && !live.has(k)) pointers.current.delete(k);
+      if (pointers.current.size < 2) pinch.current = null;
+    };
+    const reset = () => { pointers.current.clear(); pinch.current = null; drag.current = null; tapRef.current = null; setGuides({ v: [], h: [] }); };
+    const run = (kind: "down" | "move" | "up") => (e: TouchEvent) => {
+      if (handled.has(e)) return;
+      handled.add(e);
+      e.preventDefault();
+      if (kind === "down" && e.touches.length === e.changedTouches.length) reset(); // first finger down: start from a clean slate
+      else if (kind !== "down") sync(e);
+      for (const t of Array.from(e.changedTouches)) handlersRef.current?.[kind](mk(t) as never);
+      if (kind === "up" && e.touches.length === 0) reset();
+    };
     const a = run("down"), b = run("move"), c = run("up");
-    el.addEventListener("touchstart", a, { passive: false });
+    // the touched element keeps receiving the finger's events even if React replaces it mid-gesture; the svg would never see them
+    const bindTarget = (e: TouchEvent) => {
+      for (const t of Array.from(e.changedTouches)) {
+        const tg = t.target as unknown as HTMLElement;
+        if (!tg || (tg as unknown as Element) === el) continue;
+        const end = (ev: TouchEvent) => {
+          c(ev);
+          if (Array.from(ev.changedTouches).some((x) => x.identifier === t.identifier)) { tg.removeEventListener("touchmove", b); tg.removeEventListener("touchend", end); tg.removeEventListener("touchcancel", end); }
+        };
+        tg.addEventListener("touchmove", b, { passive: false });
+        tg.addEventListener("touchend", end, { passive: false });
+        tg.addEventListener("touchcancel", end, { passive: false });
+      }
+    };
+    const down = (e: TouchEvent) => { bindTarget(e); a(e); };
+    // backstop: when every finger is up, nothing may stay dragging
+    const lift = (e: TouchEvent) => { if (e.touches.length === 0 && (drag.current || pointers.current.size)) reset(); };
+    el.addEventListener("touchstart", down, { passive: false });
     el.addEventListener("touchmove", b, { passive: false });
     el.addEventListener("touchend", c, { passive: false });
     el.addEventListener("touchcancel", c, { passive: false });
-    return () => { el.removeEventListener("touchstart", a); el.removeEventListener("touchmove", b); el.removeEventListener("touchend", c); el.removeEventListener("touchcancel", c); };
+    window.addEventListener("touchend", lift, { passive: true });
+    window.addEventListener("touchcancel", lift, { passive: true });
+    return () => { el.removeEventListener("touchstart", down); el.removeEventListener("touchmove", b); el.removeEventListener("touchend", c); el.removeEventListener("touchcancel", c); window.removeEventListener("touchend", lift); window.removeEventListener("touchcancel", lift); };
   }, []);
 
   // keyboard
