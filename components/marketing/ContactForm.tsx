@@ -24,7 +24,7 @@ export function ContactForm({ service, compact = false, withArea = false, idp = 
     if (Object.keys(x).length || sending) return;
     setSending(true); setFail(false);
     const ok = await sendLead({ imię: v.name.trim(), telefon: v.phone.trim(), ...(service ? { usługa: service } : {}), ...(area ? { "powierzchnia (orientacyjnie)": area } : {}), wiadomość: v.msg.trim() || "(brak opisu)" }, service ? `Nowe zapytanie: ${service}` : "Nowe zapytanie ze strony", hp);
-    if (ok) { setDone(true); track("generate_lead", { method: "formularz", ...(service ? { service } : {}) }); } else setFail(true);
+    if (ok) { setDone(true); track("generate_lead", { method: "formularz", lead_type: "formularz", form_id: idp, interaction_location: location.pathname, ...(service ? { service, service_type: service } : {}), ...(area ? { surface_bucket: area } : {}) }); } else setFail(true);
     setSending(false);
   };
 

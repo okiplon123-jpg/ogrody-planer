@@ -1,4 +1,5 @@
 "use client";
+import { track } from "@/lib/track";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { MATERIALS, PATTERNS, matById } from "@/lib/catalog";
 import { TILE_M, makeCanvas } from "@/lib/textures";
@@ -85,6 +86,7 @@ function loadSampleScene(): Promise<HTMLCanvasElement> {
 }
 
 export function Visualizer() {
+  useEffect(() => { track("visualizer_open", { tool_name: "wizualizator", interaction_location: location.pathname }); }, []);
   const [dims, setDims] = useState<{ w: number; h: number } | null>(null);
   const [areas, setAreas] = useState<Area[]>([]);
   const [sel, setSel] = useState<number | null>(null);
@@ -204,6 +206,7 @@ export function Visualizer() {
   };
   const onFile = (f?: File) => {
     if (!f) return; setErr(""); setBusy(true);
+    track("visualizer_upload", { tool_name: "wizualizator" });
     const url = URL.createObjectURL(f); const im = new Image();
     im.onload = () => {
       const s = Math.min(1, MAX_DIM / Math.max(im.width, im.height));
@@ -263,6 +266,7 @@ export function Visualizer() {
 
   const patch = (p: Partial<Area>) => sel !== null && setAreas((as) => as.map((a) => (a.id === sel ? { ...a, ...p } : a)));
   const download = () => {
+    track("visualizer_download", { tool_name: "wizualizator" });
     render(false, areas);
     out.current!.toBlob((b) => { if (!b) return; const a = document.createElement("a"); a.href = URL.createObjectURL(b); a.download = "wizualizacja-kostki.png"; a.click(); }, "image/png");
   };
@@ -347,7 +351,7 @@ export function Visualizer() {
             </div>
             <div className="mt-3 grid grid-cols-5 gap-1.5">
               {brickMats.filter((m) => groupOf(m.cat) === activeGroup).map((m) => (
-                <button key={m.id} title={m.name} onClick={() => patch({ mat: m.id, pattern: m.pattern ?? "classic" })} aria-pressed={selArea.mat === m.id} aria-label={m.name} className={`border-2 text-left ${selArea.mat === m.id ? "border-[var(--color-ink)]" : "border-transparent hover:border-[var(--color-ink)]"}`}>
+                <button key={m.id} title={m.name} onClick={() => { track("visualizer_material_select", { tool_name: "wizualizator", material: m.id }); patch({ mat: m.id, pattern: m.pattern ?? "classic" }); }} aria-pressed={selArea.mat === m.id} aria-label={m.name} className={`border-2 text-left ${selArea.mat === m.id ? "border-[var(--color-ink)]" : "border-transparent hover:border-[var(--color-ink)]"}`}>
                   <span className="block aspect-square w-full" style={{ backgroundImage: m.photo ? `url(/textures/${m.photo.dir}/${m.photo.dir}_diff_1k.jpg)` : `url(${makeCanvas(m.id, m.pattern).toDataURL()})`, backgroundSize: m.photo ? "170%" : "220%" }} />
                 </button>
               ))}

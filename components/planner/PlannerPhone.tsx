@@ -1,4 +1,5 @@
 "use client";
+import { track } from "@/lib/track";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -38,6 +39,7 @@ const ICON = {
 
 /** Phone shell for the full planner: same plan, 3D, quantities and send-to-company, with a bottom dock and slide-up panels instead of side palettes and floating bars. */
 export default function PlannerPhone() {
+  useEffect(() => { track("planner_open", { tool_name: "planer", interaction_location: location.pathname }); }, []);
   const s = useStore();
   const captureRef = useRef<(() => string) | null>(null);
   const [mount3d, setMount3d] = useState(false);
@@ -68,6 +70,7 @@ export default function PlannerPhone() {
 
   const setMode = (m: "2d" | "3d") => {
     if (m === "2d" && s.mode === "3d") { const d = captureRef.current?.(); if (d) s.set({ preview3d: d }); }
+    if (m === "3d" && s.mode !== "3d") track("planner_view_3d", { tool_name: "planer" });
     s.set({ mode: m, tool: "select", armed: null, drawPts: [] });
     setSheet(null);
   };

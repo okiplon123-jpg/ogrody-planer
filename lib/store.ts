@@ -1,4 +1,5 @@
 "use client";
+import { track } from "@/lib/track";
 import { create } from "zustand";
 import type { Edging, Lighting, Pattern, PlanObject, Project, Settings, SurfaceUse } from "./types";
 import { emptyProject, sampleProject } from "./sample";
@@ -211,6 +212,7 @@ export const useStore = create<State>((set, get) => ({
       const savedAt = Date.now();
       localStorage.setItem(KEY, JSON.stringify({ version: 1, savedAt, project: get().project }));
       set({ savedAt });
+      track("planner_save", { tool_name: "planer" });
       get().notify("Projekt zapisany lokalnie w tej przeglądarce (tryb demonstracyjny — bez konta i serwera).");
     } catch { get().notify("Nie udało się zapisać projektu (zablokowany localStorage)."); }
   },

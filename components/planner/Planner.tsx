@@ -1,4 +1,5 @@
 "use client";
+import { track } from "@/lib/track";
 import { decodeProject } from "@/lib/share";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -14,6 +15,7 @@ import type { Lighting } from "@/lib/types";
 const Scene3D = dynamic(() => import("./Scene3D"), { ssr: false, loading: () => <div className="absolute inset-0 grid place-items-center text-sm text-[var(--color-muted)]">Ładowanie sceny 3D…</div> });
 
 export default function Planner() {
+  useEffect(() => { track("planner_open", { tool_name: "planer", interaction_location: location.pathname }); }, []);
   const s = useStore();
   const captureRef = useRef<(() => string) | null>(null);
   const [mount3d, setMount3d] = useState(false);
@@ -45,6 +47,7 @@ export default function Planner() {
 
   const setMode = (m: "2d" | "3d") => {
     if (m === "2d" && s.mode === "3d") { const d = captureRef.current?.(); if (d) s.set({ preview3d: d }); }
+    if (m === "3d" && s.mode !== "3d") track("planner_view_3d", { tool_name: "planer" });
     s.set({ mode: m, tool: "select", armed: null, drawPts: [] });
   };
   const view = (v: ViewPreset) => s.set({ view3d: v, cameraNonce: s.cameraNonce + 1 });

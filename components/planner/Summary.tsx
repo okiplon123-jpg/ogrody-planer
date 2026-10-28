@@ -21,6 +21,7 @@ export function Summary() {
     if (lead.phone.replace(/\D/g, "").length < 9) return setLeadErr("Numer telefonu ma za mało cyfr.");
     if (!lead.consent) return setLeadErr("Zaznacz zgodę na kontakt.");
     setLeadErr(""); setLeadState("sending");
+    track("planner_send_start", { tool_name: "planer" });
     const link = `${location.origin}/planer#p=${await encodeProject(project)}`;
     const lines = [
       `Projekt: ${project.name}, działka ${project.plot.w} × ${project.plot.l} m`,
@@ -31,7 +32,7 @@ export function Summary() {
     ];
     const ok = await sendLead({ imię: lead.name.trim(), telefon: lead.phone.trim(), uwagi: notes.trim() || "(brak)", zestawienie: lines.join(" | "), "link do projektu": link }, "Zgłoszenie z planera ogrodu");
     setLeadState(ok ? "sent" : "fail");
-    if (ok) track("generate_lead", { method: "planer" });
+    if (ok) track("generate_lead", { method: "planer", lead_type: "planer", form_id: "planer_summary", tool_name: "planer", interaction_location: location.pathname });
   };
   const rows: [string, number, string][] = [
     ["Podjazd", sum.driveway, "var(--data-driveway)"], ["Taras", sum.terrace, "var(--data-terrace)"], ["Ścieżki", sum.path, "var(--data-path)"],

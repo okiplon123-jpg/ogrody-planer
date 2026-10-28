@@ -1,3 +1,4 @@
+import { TrackView } from "@/components/marketing/TrackView";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -42,6 +43,7 @@ export default async function ServicePage({ params }: { params: Promise<{ usluga
   };
   return (
     <>
+      <TrackView service={s.slug} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify([faqLd, serviceLd, crumbLd]) }} />
 
       <section>
