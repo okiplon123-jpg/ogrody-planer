@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Specimens } from "@/components/marketing/Specimens";
 import { GroupHead, GRASS_IMGS, PAVER_IMGS, EARTH_IMGS } from "@/components/marketing/GroupHead";
 import { PlannerShowcase } from "@/components/marketing/PlannerShowcase";
+import { Realizacje } from "@/components/marketing/Realizacje";
 import { Faq } from "@/components/marketing/Faq";
 import { ContactForm } from "@/components/marketing/ContactForm";
 import { VisualizerLoader } from "@/components/visualizer/VisualizerLoader";
@@ -110,6 +111,8 @@ export default function Home() {
         </div>
         <p className="pad mt-6"><Link href="/uslugi" className="btn btn-line">jak pracujemy</Link></p>
       </section>
+
+      <Realizacje />
 
       <section className="band">
         <div className="grid grid-cols-6 gap-y-8 pad md:grid-cols-12">

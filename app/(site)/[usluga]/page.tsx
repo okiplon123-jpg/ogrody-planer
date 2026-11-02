@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { SERVICES, bySlug } from "@/lib/services";
 import { SITE_URL, WHATSAPP_URL } from "@/lib/site";
 import { Faq } from "@/components/marketing/Faq";
+import { ServicePhotos } from "@/components/marketing/Realizacje";
 import { ContactForm } from "@/components/marketing/ContactForm";
 
 export const dynamicParams = false;
@@ -78,6 +79,8 @@ export default async function ServicePage({ params }: { params: Promise<{ usluga
           ))}
         </ol>
       </section>
+
+      <ServicePhotos slug={s.slug} title={s.short} />
 
       <section className="band">
         <div className="grid grid-cols-6 gap-y-8 pad md:grid-cols-12">
